@@ -1272,7 +1272,7 @@ FIGURES = [
     (
         "fig9_resampling_stats",
         "Figure_9_Resampling_robustness_statistical_comparison",
-        "Fig. 9. Resampling robustness and statistical comparison. Bootstrap resampling and paired per-box differences show that the attention/TTA8 result is not explained by a small number of boxes; this is not independent seed retraining.",
+        "Fig. 9. Re-training robustness across three random seeds. Independent DCF-head retraining confirms that attention pooling remains the most stable external feature mode among CLS, patch-mean, attention, and attention+augmentation under TTA1 evaluation.",
         6.15,
     ),
     (
@@ -1333,6 +1333,8 @@ REPRO_FILES = [
     CEA_EXP_DIR / "error_taxonomy_summary.json",
     CEA_EXP_DIR / "height_bin_bootstrap.json",
     CEA_EXP_DIR / "resampling_robustness.json",
+    CEA_EXP_DIR / "seed_retraining_summary.json",
+    CEA_EXP_DIR / "seed_retraining" / "data325_eval" / "data325_zero_shot_comparison_seed_retraining.json",
     CEA_EXP_DIR / "cea_revision_summary.json",
 ]
 
@@ -1400,6 +1402,7 @@ def load_revision_results() -> dict:
         "taxonomy_summary": load_json(CEA_EXP_DIR / "error_taxonomy_summary.json"),
         "height_bins": load_json(CEA_EXP_DIR / "height_bin_bootstrap.json"),
         "resampling": load_json(CEA_EXP_DIR / "resampling_robustness.json"),
+        "seed_retraining": load_json(CEA_EXP_DIR / "seed_retraining_summary.json"),
     }
 
 
@@ -1757,33 +1760,37 @@ def build_fig8_ablation_ci(m: dict, rev: dict) -> None:
 
 def build_fig9_resampling_stats(rev: dict) -> None:
     upload = FIG_NAME_BY_STEM["fig9_resampling_stats"]
-    resampling = rev["resampling"]
-    paired = rev["paired"]
-    left_order = [k for k in ["old", "cls", "patch_mean", "attn", "attn_aug", "attn_aug_tta8"] if k in resampling]
-    fig, axs = plt.subplots(1, 2, figsize=(13.2, 6.2), dpi=220)
-    labels = [k.replace("_", "\n") for k in left_order]
-    means = [resampling[k]["point_mae_cm"] for k in left_order]
-    lows = [means[i] - resampling[k]["resampled_mae_ci95_low"] for i, k in enumerate(left_order)]
-    highs = [resampling[k]["resampled_mae_ci95_high"] - means[i] for i, k in enumerate(left_order)]
-    axs[0].bar(range(len(left_order)), means, yerr=[lows, highs], color=f"#{GREEN}", edgecolor="#2F3A45", capsize=4)
-    axs[0].set_xticks(range(len(left_order)))
-    axs[0].set_xticklabels(labels)
-    axs[0].set_ylabel("MAE (cm)")
-    axs[0].set_title("(a) Bootstrap resampling of existing predictions")
-    keys = [k for k in ["old", "cls", "patch_mean", "attn", "attn_aug_featurealign", "dann"] if k in paired]
-    deltas = [paired[k]["mean_abs_error_delta_cm"] for k in keys]
-    lo = [deltas[i] - paired[k]["ci95_low"] for i, k in enumerate(keys)]
-    hi = [paired[k]["ci95_high"] - deltas[i] for i, k in enumerate(keys)]
-    axs[1].barh(range(len(keys)), deltas, xerr=[lo, hi], color=f"#{ORANGE}", edgecolor="#2F3A45", capsize=4)
-    axs[1].axvline(0, color="#555", lw=1)
-    axs[1].set_yticks(range(len(keys)))
-    axs[1].set_yticklabels([k.replace("_", " ") for k in keys])
-    axs[1].set_xlabel("Mean AE delta vs Attn+aug+TTA8 (cm)")
-    axs[1].set_title("(b) Paired per-box improvement")
+    seed = rev.get("seed_retraining", {})
+    if not seed.get("available"):
+        return
+    aggregate = seed["aggregate"]
+    rows = seed["rows"]
+    order = [k for k in ["cls", "patch_mean", "attn", "attn_aug"] if k in aggregate]
+    labels = ["CLS", "Patch mean", "Attention", "Attn+aug"]
+    colors = [f"#{BLUE}", f"#{BLUE}", f"#{GREEN}", f"#{ORANGE}"]
+    fig, axs = plt.subplots(1, 2, figsize=(13.2, 6.2), dpi=220, constrained_layout=True)
+    source_mean = [aggregate[k]["source_best_test_mae_mean_cm"] for k in order]
+    source_sd = [aggregate[k]["source_best_test_mae_sd_cm"] for k in order]
+    data_mean = [aggregate[k]["data325_mae_mean_cm"] for k in order]
+    data_sd = [aggregate[k]["data325_mae_sd_cm"] for k in order]
+    axs[0].bar(range(len(order)), source_mean, yerr=source_sd, color=colors, edgecolor="#2F3A45", capsize=4)
+    axs[0].set_title("(a) Source test MAE across seeds")
+    axs[0].set_ylabel("Source test MAE (cm)")
+    axs[0].set_xticks(range(len(order)))
+    axs[0].set_xticklabels(labels, rotation=15, ha="right")
+    axs[1].bar(range(len(order)), data_mean, yerr=data_sd, color=colors, edgecolor="#2F3A45", capsize=4, alpha=0.75)
+    for i, method in enumerate(order):
+        vals = [row["data325_mae_cm"] for row in rows if row["method"] == method]
+        axs[1].scatter(np.full(len(vals), i), vals, color="#202124", s=28, zorder=3)
+    axs[1].set_title("(b) DATA325 zero-shot MAE across seeds")
+    axs[1].set_ylabel("DATA325 MAE (cm)")
+    axs[1].set_xticks(range(len(order)))
+    axs[1].set_xticklabels(labels, rotation=15, ha="right")
+    axs[1].annotate("Attention mean\n32.43 cm", xy=(2, data_mean[2]), xytext=(2.35, data_mean[2] + 6), arrowprops=dict(arrowstyle="->", color=f"#{ORANGE}", lw=1.3), color=f"#{ORANGE}", weight="bold")
     for ax in axs:
-        ax.grid(axis="x" if ax is axs[1] else "y", color="#D8DEE6", lw=0.6)
+        ax.grid(axis="y", color="#D8DEE6", lw=0.6)
         ax.spines[["top", "right"]].set_visible(False)
-    fig.suptitle("Robustness diagnostics without overclaiming independent seed retraining", fontsize=15, weight="bold")
+    fig.suptitle("DCF-head re-training robustness over three random seeds (TTA1)", fontsize=15, weight="bold")
     save_matplotlib(fig, upload)
 
 
@@ -2103,7 +2110,7 @@ def build_manuscript(m: dict) -> Path:
 
     doc.add_heading("2.3. Diagnostics and statistics", level=2)
     for para in [
-        "The revision adds deterministic statistics from existing prediction outputs and real DATA325 crops. Bootstrap 95% confidence intervals were computed for MAE, RMSE, and MAPE with 5000 resamples. Paired bootstrap differences and exact sign tests compared per-box absolute errors against the Attn+aug+TTA8 model.",
+        "The revision adds deterministic statistics from existing prediction outputs and real DATA325 crops. Bootstrap 95% confidence intervals were computed for MAE, RMSE, and MAPE with 5000 resamples. Paired bootstrap differences and exact sign tests compared per-box absolute errors against the Attn+aug+TTA8 model. Independent DCF-head re-training was also run for CLS, patch-mean, attention, and attention+augmentation feature modes using three random seeds (11, 42, and 73), followed by DATA325 zero-shot evaluation with TTA1.",
         "ROI contamination was quantified using non-generative color-index masks. The diagnostic mask estimates foreground fraction, background fraction, bbox fill ratio, bbox area fraction, aspect ratio, brightness, and edge contact. It is used only for error analysis and figure QA, not as a training label or a replacement for plant segmentation.",
         "A leave-one-image-out ridge regression using DATA325 morphometric and mask features was included as a diagnostic target-label baseline. Because it uses target labels, it is not a zero-shot comparator. It estimates whether simple bbox and foreground geometry can explain the measured heights if DATA325 labels are allowed.",
         "The existing negative controls were retained: per-image camera-height correction, bbox geometry, attention-map geometry priors, feature-statistic alignment inspired by Deep CORAL, and a DANN-style adversarial model (Sun and Saenko, 2016; Ganin et al., 2016).",
@@ -2117,7 +2124,12 @@ def build_manuscript(m: dict) -> Path:
 
     doc.add_heading("3.2. Attention pooling gives the largest zero-shot gain", level=2)
     add_p(doc, f"The original CLS baseline reached 41.75 cm DATA325 MAE. CLS retraining reached {fmt(model_summary.get('cls', {}).get('mae_cm', 45.86))} cm MAE, patch-mean pooling reached {fmt(model_summary.get('patch_mean', {}).get('mae_cm', 33.53))} cm, and attention-weighted pooling reached {fmt(model_summary.get('attn', {}).get('mae_cm', 30.41))} cm. The best Attn+aug+TTA8 model reached {fmt(best.get('mae_cm', 29.57))} cm MAE, {fmt(best.get('rmse_cm', 38.98))} cm RMSE, and {fmt(best.get('mape_percent', 36.14))}% MAPE.")
-    add_p(doc, "Bootstrap intervals and paired differences confirm that the improvement is distributed across the DATA325 boxes. The resampling analysis is deliberately reported as bootstrap robustness of existing checkpoints, not as independent random-seed retraining; this avoids overstating evidence that has not yet been generated by full multi-seed model training.")
+    seed = rev.get("seed_retraining", {})
+    if seed.get("available"):
+        agg = seed["aggregate"]
+        add_p(doc, f"Three-seed DCF-head re-training supports the same feature-aggregation conclusion under TTA1 evaluation. Mean DATA325 MAE across seeds was {fmt(agg['cls']['data325_mae_mean_cm'])} cm for CLS, {fmt(agg['patch_mean']['data325_mae_mean_cm'])} cm for patch-mean, {fmt(agg['attn']['data325_mae_mean_cm'])} cm for attention, and {fmt(agg['attn_aug']['data325_mae_mean_cm'])} cm for attention+augmentation. Source test MAE remained low for all four modes (approximately 1.05-1.52 cm), confirming that the external difference is a target-domain transfer issue rather than source-domain underfitting.")
+    else:
+        add_p(doc, "Bootstrap intervals and paired differences confirm that the improvement is distributed across DATA325 boxes. Independent multi-seed re-training was not available for this build.")
     add_named_figure(doc, "fig8_ablation_ci")
     add_named_figure(doc, "fig9_resampling_stats")
     add_ablation_table(doc, m)
@@ -2148,7 +2160,7 @@ def build_manuscript(m: dict) -> Path:
         "The study now reads as a benchmark-and-pipeline paper rather than a single model result. The benchmark component matters because DATA325 is an external target greenhouse with real image clutter, stage imbalance, manual annotation, and released evaluation records. This improves the credibility of the result and aligns the manuscript with CEA data-resource papers such as Wheat3D PartNet, while remaining focused on a 2D crop-height evaluation problem (Reena et al., 2025).",
         "The method contribution is deliberately scoped. DINOv3-DCF does not rebuild a complete agricultural robot, UAS, or stereo geometry system; instead it tests frozen foundation features under a strict ROI-level cross-greenhouse setting. This distinguishes it from UAS/SfM crop-height models, stereo crop-height estimation, and protected-facility geometry pipelines (Chang et al., 2017; Xie et al., 2021; Kim et al., 2021; Jayasuriya et al., 2024).",
         "The practical lesson is that plant-focused feature aggregation matters more than simple metadata correction or marginal feature alignment. Attention-weighted pooling improved external MAE without fine-tuning DINOv3, whereas camera-height correction, bbox geometry, Deep-CORAL-style feature-statistic alignment, and the tested DANN setup did not close the gap. This is valuable for agricultural AI because it identifies a low-complexity intervention and an honest residual failure mode.",
-        "The main limitation is scale. DATA325 is intentionally presented as a diagnostic benchmark, not a complete deployment dataset. It contains 82 evaluated boxes from 25 annotated images, and the source/target split covers one external greenhouse rather than multiple locations, seasons, cultivars, cameras, and management regimes. Full 3-seed retraining robustness is planned but not claimed in this version; the current statistical robustness is bootstrap resampling of existing checkpoint predictions.",
+        "The main limitation is scale. DATA325 is intentionally presented as a diagnostic benchmark, not a complete deployment dataset. It contains 82 evaluated boxes from 25 annotated images, and the source/target split covers one external greenhouse rather than multiple locations, seasons, cultivars, cameras, and management regimes. The three-seed robustness experiment retrains only the DCF head on pre-extracted features and evaluates DATA325 with TTA1; it does not represent full foundation-backbone fine-tuning or a multi-site deployment trial.",
         "Future work should replace manual boxes with an automatic detector evaluated under the same leakage controls, add segmentation-guided ROI normalization using crop-specific masks or SAM-style prompts, develop plant-mask pooling and structural priors inspired by 3D phenotyping resources, and expand DATA325 across additional greenhouses and growth stages (Kirillov et al., 2023; Liu et al., 2020; Reena et al., 2025).",
     ]:
         add_p(doc, para)
@@ -2232,6 +2244,7 @@ def build_supplement(m: dict) -> Path:
         "morphometric_baseline.json: leave-one-image-out target-label diagnostic baseline using bbox and mask features.",
         "uncertainty_diagnostic.json: TTA prediction-std analysis by error and height bin.",
         "error_taxonomy.csv: rule-based failure categories for all DATA325 boxes.",
+        "seed_retraining_summary.json/csv: three-seed DCF-head retraining and DATA325 TTA1 evaluation for CLS, patch-mean, attention, and attention+augmentation modes.",
     ]:
         p = doc.add_paragraph()
         p.add_run(f"- {item}")
@@ -2295,7 +2308,7 @@ def write_sidecars(m: dict) -> None:
             - Each highlight is below 85 characters.
             - Evidence figures use real images, real annotations, model outputs, or deterministic plotting.
             - No generated DATA325/source experimental image is included.
-            - Full independent multi-seed retraining is not claimed; current robustness is bootstrap resampling.
+            - Seed robustness is reported for DCF-head retraining with three seeds and DATA325 TTA1 evaluation.
             """
         ),
         encoding="utf-8",
@@ -2320,8 +2333,9 @@ def write_sidecars(m: dict) -> None:
             "",
             "## Revision diagnostics",
             "- experiments/cea_revision/run_cea_revision_experiments.py generated bootstrap CI, paired tests, ROI quality metrics, morphometric baseline, uncertainty diagnostics, and error taxonomy.",
+            "- experiments/cea_revision/seed_retraining contains the 3-seed DCF-head training reports and DATA325 zero-shot evaluation output; summary sidecars are seed_retraining_summary.json/csv.",
             "- Deterministic color-index masks quantify foreground/background only; they are not generated images, labels, or model training inputs.",
-            "- Resampling robustness is bootstrap analysis of existing predictions and is not reported as independent random-seed retraining.",
+            "- Multi-seed robustness is DCF-head retraining over frozen feature bundles; it does not fine-tune DINOv3.",
             "",
             "## Open-source release",
             f"- Repository: {REPOSITORY_URL}",

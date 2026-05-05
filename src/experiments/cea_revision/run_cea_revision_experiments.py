@@ -23,6 +23,8 @@ ROOT = Path(r"D:\cornTrain\DINOV3")
 OUT = ROOT / "experiments" / "cea_revision"
 MASK_DIR = OUT / "mask_examples"
 DATA325_IMAGE_DIR = ROOT / "images"
+SEED_RETRAIN_DIR = OUT / "seed_retraining"
+SEED_EVAL_JSON = SEED_RETRAIN_DIR / "data325_eval" / "data325_zero_shot_comparison_seed_retraining.json"
 
 MODEL_JSONS = [
     ("cls", ROOT / "data325_zero_shot" / "data325_zero_shot_comparison.json"),
@@ -518,6 +520,92 @@ def resampling_robustness(models: dict[str, dict[str, Any]]) -> dict[str, Any]:
     return out
 
 
+def parse_training_report(path: Path) -> dict[str, float]:
+    out: dict[str, float] = {}
+    if not path.exists():
+        return out
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        if ":" not in line:
+            continue
+        key, value = line.split(":", 1)
+        key = key.strip().lower().replace(" ", "_")
+        value = value.strip()
+        if key in {"initial_train_mae", "initial_test_mae", "final_train_mae", "final_test_mae", "best_test_mae"}:
+            try:
+                out[key + "_cm"] = float(value.split()[0])
+            except (ValueError, IndexError):
+                pass
+    return out
+
+
+def seed_retraining_summary() -> dict[str, Any]:
+    if not SEED_EVAL_JSON.exists():
+        return {
+            "available": False,
+            "note": "Seed retraining outputs were not found; bootstrap robustness is available instead.",
+        }
+    data = json.loads(SEED_EVAL_JSON.read_text(encoding="utf-8"))
+    rows: list[dict[str, Any]] = []
+    for result in data.get("model_results", []):
+        label = result["label"]
+        method, seed_text = label.rsplit("_s", 1)
+        seed = int(seed_text)
+        report = SEED_RETRAIN_DIR / f"seed_{method}_{seed}_report.txt"
+        training = parse_training_report(report)
+        summary = result.get("summary", {})
+        rows.append(
+            {
+                "method": method,
+                "seed": seed,
+                "feature_mode": result.get("feature_mode", ""),
+                "source_best_test_mae_cm": training.get("best_test_mae_cm", float("nan")),
+                "source_final_test_mae_cm": training.get("final_test_mae_cm", float("nan")),
+                "data325_mae_cm": float(summary.get("mae_cm", float("nan"))),
+                "data325_rmse_cm": float(summary.get("rmse_cm", float("nan"))),
+                "data325_median_abs_error_cm": float(summary.get("median_abs_error_cm", float("nan"))),
+                "checkpoint": Path(result.get("checkpoint_path", "")).name,
+            }
+        )
+    aggregate: dict[str, Any] = {}
+    for method in sorted({row["method"] for row in rows}):
+        sub = [row for row in rows if row["method"] == method]
+        aggregate[method] = {
+            "n_seeds": len(sub),
+            "source_best_test_mae_mean_cm": float(np.nanmean([row["source_best_test_mae_cm"] for row in sub])),
+            "source_best_test_mae_sd_cm": float(np.nanstd([row["source_best_test_mae_cm"] for row in sub], ddof=1)),
+            "data325_mae_mean_cm": float(np.nanmean([row["data325_mae_cm"] for row in sub])),
+            "data325_mae_sd_cm": float(np.nanstd([row["data325_mae_cm"] for row in sub], ddof=1)),
+            "data325_rmse_mean_cm": float(np.nanmean([row["data325_rmse_cm"] for row in sub])),
+            "data325_median_abs_error_mean_cm": float(
+                np.nanmean([row["data325_median_abs_error_cm"] for row in sub])
+            ),
+        }
+    write_csv(
+        OUT / "seed_retraining_summary.csv",
+        rows,
+        [
+            "method",
+            "seed",
+            "feature_mode",
+            "source_best_test_mae_cm",
+            "source_final_test_mae_cm",
+            "data325_mae_cm",
+            "data325_rmse_cm",
+            "data325_median_abs_error_cm",
+            "checkpoint",
+        ],
+    )
+    return {
+        "available": True,
+        "seeds": sorted({row["seed"] for row in rows}),
+        "methods": sorted(aggregate.keys()),
+        "evaluation_tta_count": data.get("model_results", [{}])[0].get("tta", {}).get("count", 1),
+        "rows": rows,
+        "aggregate": aggregate,
+        "note": "Independent DCF-head retraining for 3 random seeds per feature mode; DATA325 evaluation used tta_count=1.",
+    }
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     MASK_DIR.mkdir(parents=True, exist_ok=True)
@@ -535,6 +623,7 @@ def main() -> None:
     taxonomy_rows, taxonomy_summary = error_taxonomy(target_rows, roi_metrics_rows)
     height_bins = height_bin_bootstrap(target_rows)
     robustness = resampling_robustness(models)
+    seed_summary = seed_retraining_summary()
 
     model_summary = {
         label: {
@@ -556,10 +645,7 @@ def main() -> None:
         "uncertainty_summary": uncertainty.get("overall", {}),
         "error_taxonomy_summary": taxonomy_summary,
         "height_bin_bootstrap": height_bins,
-        "note_on_seed_robustness": (
-            "Independent random-seed retraining is not inferred from this script. "
-            "The provided robustness file summarizes bootstrap resampling of the available checkpoints."
-        ),
+        "seed_retraining_summary": seed_summary,
     }
 
     write_json(OUT / "bootstrap_ci.json", bootstrap)
@@ -572,6 +658,7 @@ def main() -> None:
     write_json(OUT / "error_taxonomy_summary.json", taxonomy_summary)
     write_json(OUT / "height_bin_bootstrap.json", height_bins)
     write_json(OUT / "resampling_robustness.json", robustness)
+    write_json(OUT / "seed_retraining_summary.json", seed_summary)
     write_json(OUT / "cea_revision_summary.json", summary)
 
     print(f"Wrote CEA revision diagnostics to {OUT}")

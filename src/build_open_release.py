@@ -48,6 +48,8 @@ REPRO_JSONS = [
     CEA_EXP_DIR / "error_taxonomy_summary.json",
     CEA_EXP_DIR / "height_bin_bootstrap.json",
     CEA_EXP_DIR / "resampling_robustness.json",
+    CEA_EXP_DIR / "seed_retraining_summary.json",
+    CEA_EXP_DIR / "seed_retraining" / "data325_eval" / "data325_zero_shot_comparison_seed_retraining.json",
     CEA_EXP_DIR / "cea_revision_summary.json",
 ]
 
@@ -353,6 +355,8 @@ def copy_assets() -> None:
         copy_file(src, OUT / "results" / "cea_revision" / src.name)
     for src in sorted(CEA_EXP_DIR.glob("*.json")):
         if src not in REPRO_JSONS:
+            if src.name.endswith("_local.json"):
+                continue
             copy_file(src, OUT / "results" / "cea_revision" / src.name)
     for src in sorted((CEA_EXP_DIR / "mask_examples").glob("*.jpg")):
         copy_file(src, OUT / "results" / "cea_revision" / "mask_examples" / src.name)
@@ -378,7 +382,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
         - DATA325 greenhouse photographs in `data/DATA325/images/`.
         - Clean DATA325 image metadata, bounding boxes, plant-height labels, camera-height values, and final Attn+aug+TTA8 predictions in `data/DATA325/annotations/` and `data/DATA325/predictions/`.
         - Sanitized evaluation JSON files in `results/reproducibility_json/`.
-        - CEA revision diagnostics in `results/cea_revision/`, including ROI quality metrics, error taxonomy, mask QA examples, bootstrap confidence intervals, and paired tests.
+        - CEA revision diagnostics in `results/cea_revision/`, including ROI quality metrics, error taxonomy, mask QA examples, bootstrap confidence intervals, paired tests, and 3-seed DCF-head retraining summaries.
         - Selected DiffCorn-Fusion/DCF checkpoints in `checkpoints/`.
         - Source-domain feature bundles in `data/source_feature_bundles/`.
         - Paper figures and table sidecars in `paper_assets/`.
@@ -457,7 +461,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
         2. Inspect final predictions in `data/DATA325/predictions/data325_predictions_attn_aug_tta8.csv`.
         3. Run `python scripts/summarize_data325.py` to recompute MAE/RMSE/median absolute error from the CSV.
         4. Compare detailed method outputs in `results/reproducibility_json/`.
-        5. Inspect `results/cea_revision/` for bootstrap CI, paired tests, ROI contamination diagnostics, morphometric baseline output, uncertainty diagnostics, and rule-based error taxonomy.
+        5. Inspect `results/cea_revision/` for bootstrap CI, paired tests, ROI contamination diagnostics, morphometric baseline output, uncertainty diagnostics, 3-seed DCF-head retraining summaries, and rule-based error taxonomy.
 
         ## Full model path
 

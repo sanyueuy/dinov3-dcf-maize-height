@@ -14,7 +14,7 @@ Repository: https://github.com/sanyueuy/dinov3-dcf-maize-height
 - DATA325 greenhouse photographs in `data/DATA325/images/`.
 - Clean DATA325 image metadata, bounding boxes, plant-height labels, camera-height values, and final Attn+aug+TTA8 predictions in `data/DATA325/annotations/` and `data/DATA325/predictions/`.
 - Sanitized evaluation JSON files in `results/reproducibility_json/`.
-- CEA revision diagnostics in `results/cea_revision/`, including ROI quality metrics, error taxonomy, mask QA examples, bootstrap confidence intervals, and paired tests.
+- CEA revision diagnostics in `results/cea_revision/`, including ROI quality metrics, error taxonomy, mask QA examples, bootstrap confidence intervals, paired tests, and 3-seed DCF-head retraining summaries.
 - Selected DiffCorn-Fusion/DCF checkpoints in `checkpoints/`.
 - Source-domain feature bundles in `data/source_feature_bundles/`.
 - Paper figures and table sidecars in `paper_assets/`.

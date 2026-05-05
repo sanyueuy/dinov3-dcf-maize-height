@@ -8,7 +8,7 @@ The release is designed to preserve the manuscript evaluation assets rather than
 2. Inspect final predictions in `data/DATA325/predictions/data325_predictions_attn_aug_tta8.csv`.
 3. Run `python scripts/summarize_data325.py` to recompute MAE/RMSE/median absolute error from the CSV.
 4. Compare detailed method outputs in `results/reproducibility_json/`.
-5. Inspect `results/cea_revision/` for bootstrap CI, paired tests, ROI contamination diagnostics, morphometric baseline output, uncertainty diagnostics, and rule-based error taxonomy.
+5. Inspect `results/cea_revision/` for bootstrap CI, paired tests, ROI contamination diagnostics, morphometric baseline output, uncertainty diagnostics, 3-seed DCF-head retraining summaries, and rule-based error taxonomy.
 
 ## Full model path
 

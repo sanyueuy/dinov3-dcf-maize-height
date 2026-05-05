@@ -17,7 +17,7 @@
 - figures/Figure_6_Attention_pooling_real_ROIs.png and .pdf: Fig. 6. Attention pooling with real maize ROIs. Real DATA325 crops are paired with deterministic foreground diagnostics and the attention-weighted token-pooling mechanism; the mask overlay is a QA diagnostic, not generated experimental evidence.
 - figures/Figure_7_Feature_domain_shift_with_ROI_thumbnails.png and .pdf: Fig. 7. Feature-space domain shift with ROI thumbnails. DINOv3 feature embeddings separate source and DATA325 ROIs, and thumbnail panels show that the clusters correspond to visibly different greenhouse and growth-stage conditions.
 - figures/Figure_8_Main_ablation_results_with_CI.png and .pdf: Fig. 8. Main ablation results with bootstrap confidence intervals. Attention-weighted pooling provides the largest external DATA325 gain; augmentation and TTA8 provide smaller additional improvements.
-- figures/Figure_9_Resampling_robustness_statistical_comparison.png and .pdf: Fig. 9. Resampling robustness and statistical comparison. Bootstrap resampling and paired per-box differences show that the attention/TTA8 result is not explained by a small number of boxes; this is not independent seed retraining.
+- figures/Figure_9_Resampling_robustness_statistical_comparison.png and .pdf: Fig. 9. Re-training robustness across three random seeds. Independent DCF-head retraining confirms that attention pooling remains the most stable external feature mode among CLS, patch-mean, attention, and attention+augmentation under TTA1 evaluation.
 - figures/Figure_10_Height_bin_error_early_stage_failure.png and .pdf: Fig. 10. Height-bin error and early-stage failure concentration. Bootstrap intervals confirm that plants below 80 cm dominate relative error and remain the key target for future stage-aware adaptation.
 - figures/Figure_11_ROI_contamination_error_correlation.png and .pdf: Fig. 11. ROI contamination and error correlation. Foreground/background fractions from deterministic color-index masks are weakly correlated with absolute error, indicating that clutter contributes but does not fully explain the domain gap.
 - figures/Figure_12_STAGE_wise_DATA325_qualitative_gallery.png and .pdf: Fig. 12. Stage-wise DATA325 qualitative gallery. Low-, mid-, and tall-stage real images are shown with manual boxes, ROI crops, ground truth, prediction, and absolute error.
@@ -27,8 +27,9 @@
 
 ## Revision diagnostics
 - experiments/cea_revision/run_cea_revision_experiments.py generated bootstrap CI, paired tests, ROI quality metrics, morphometric baseline, uncertainty diagnostics, and error taxonomy.
+- experiments/cea_revision/seed_retraining contains the 3-seed DCF-head training reports and DATA325 zero-shot evaluation output; summary sidecars are seed_retraining_summary.json/csv.
 - Deterministic color-index masks quantify foreground/background only; they are not generated images, labels, or model training inputs.
-- Resampling robustness is bootstrap analysis of existing predictions and is not reported as independent random-seed retraining.
+- Multi-seed robustness is DCF-head retraining over frozen feature bundles; it does not fine-tune DINOv3.
 
 ## Open-source release
 - Repository: https://github.com/sanyueuy/dinov3-dcf-maize-height
@@ -51,6 +52,7 @@
 - reproducibility_json/data325_zero_shot_comparison_attn_aug_tta8.json
 - reproducibility_json/data325_zero_shot_comparison_corrected_camheight.json
 - reproducibility_json/data325_zero_shot_comparison_dann.json
+- reproducibility_json/data325_zero_shot_comparison_seed_retraining.json
 - reproducibility_json/diffcorn_fusion_hand_dann_history.json
 - reproducibility_json/error_taxonomy_summary.json
 - reproducibility_json/height_bin_bootstrap.json
@@ -58,5 +60,6 @@
 - reproducibility_json/paired_tests.json
 - reproducibility_json/resampling_robustness.json
 - reproducibility_json/roi_quality_summary.json
+- reproducibility_json/seed_retraining_summary.json
 - reproducibility_json/tsne_source_vs_data325.json
 - reproducibility_json/uncertainty_diagnostic.json
