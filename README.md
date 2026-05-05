@@ -4,7 +4,7 @@ This release supports the manuscript:
 
 **A reproducible cross-greenhouse maize height benchmark and attention-guided DINOv3-DCF evaluation pipeline**
 
-Author: Hong Wu
+Author: Hong Wu; Jian Chen
 Affiliation: China Agricultural University
 Correspondence: jchen@cau.edu.cn
 Repository: https://github.com/sanyueuy/dinov3-dcf-maize-height

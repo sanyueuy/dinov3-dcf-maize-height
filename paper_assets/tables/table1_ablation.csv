@@ -1,8 +1,9 @@
 Variant,Feature/intervention,Source MAE (cm),DATA325 MAE (cm),DATA325 RMSE (cm),DATA325 MAPE (%),Note
-Old baseline,CLS,0.99,41.75,51.87,53.98,
-CLS retrain,CLS,1.44,45.85,57.24,59.59,
-Patch mean,Patch mean,1.33,33.44,43.65,41.62,
-Attn-weighted,Attn-weighted,1.68,30.37,39.62,37.51,
+Old baseline,CLS,0.99,41.76,51.87,54.00,
+CLS retrain,CLS,1.44,45.86,57.24,59.61,
+Patch mean,Patch mean,1.33,33.53,43.72,41.72,
+Attn-weighted,Attn-weighted,1.68,30.41,39.66,37.55,
+Corrected cam height,Attn-weighted + camera-height correction,1.68,30.37,39.62,37.51,diagnostic
 Attn+aug,Attn-weighted + aug,1.42,29.89,39.13,36.59,
 Attn+aug+TTA8,Attn-weighted + aug + TTA8,1.42,29.57,38.98,36.14,best
 Feat. align,Attn-weighted + aug + feature alignment,1.42,45.98,59.48,56.79,failed

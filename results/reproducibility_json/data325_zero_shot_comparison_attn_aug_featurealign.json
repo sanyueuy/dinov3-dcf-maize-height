@@ -1,7 +1,7 @@
 {
   "annotations_file": "data/DATA325/annotations/data325_annotations.csv",
   "camera_height_mode": "per_image_csv",
-  "capture_height_mapping_csv": "D:/wechatfile/xwechat_files/wxid_9x0cacfdglz622_706c/msg/file/2026-04/largest_dataset_file_capture_height_mapping.csv",
+  "capture_height_mapping_csv": "data/DATA325/annotations/camera_height_mapping.csv",
   "output_suffix": "_attn_aug_featurealign",
   "feature_alignment": {
     "mode": "target_to_source_per_feature_standardization",

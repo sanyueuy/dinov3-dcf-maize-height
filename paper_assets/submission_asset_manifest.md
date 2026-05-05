@@ -7,6 +7,9 @@
 - cover_letter_cea.docx
 - supplementary_material.docx
 - graphical_abstract_non_ai.png/pdf
+- tables/roi_quality_metrics.csv
+- tables/error_taxonomy.csv
+- tables/seed_retraining_summary.csv
 
 ## Main figures
 - figures/Figure_1_DATA325_acquisition_annotation_protocol.png and .pdf: Fig. 1. DATA325 acquisition and annotation protocol. Source hand-box examples, independent target-greenhouse images, manual DATA325 boxes, ROI crops, height/camera metadata, and per-box prediction records are shown to make the benchmark auditable.

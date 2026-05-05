@@ -19,7 +19,7 @@ OUT = ROOT / "open_release"
 DIST = ROOT / "open_release_dist"
 VERSION = "v0.1.0"
 SLUG = "dinov3_dcf_maize_height_open_release_v0_1_0"
-AUTHOR = "Hong Wu"
+AUTHOR = "Hong Wu; Jian Chen"
 AFFILIATION = "China Agricultural University"
 CONTACT_EMAIL = "jchen@cau.edu.cn"
 TITLE = "A reproducible cross-greenhouse maize height benchmark and attention-guided DINOv3-DCF evaluation pipeline"
@@ -145,6 +145,8 @@ def sanitize_json_value(value: Any) -> Any:
                 out[key] = "checkpoints/" + Path(item).name
             elif key == "annotations_file" and isinstance(item, str):
                 out[key] = "data/DATA325/annotations/data325_annotations.csv"
+            elif key == "capture_height_mapping_csv" and isinstance(item, str):
+                out[key] = "data/DATA325/annotations/camera_height_mapping.csv"
             elif key == "output_image" and isinstance(item, str):
                 out[key] = "figures/" + Path(item).name
             else:
@@ -156,8 +158,11 @@ def sanitize_json_value(value: Any) -> Any:
         replacements = [
             (r"C:\Users\Wuhon\OneDrive\桌面\paper\data325", "data/DATA325/images"),
             (r"D:\OneDrive\桌面\paper\data325", "data/DATA325/images"),
+            (r"D:\wechatfile", "external_metadata"),
             (r"D:\cornTrain\DINOV3\checkpoints", "checkpoints"),
             (r"D:\cornTrain\DINOV3", "."),
+            (r"D:\cornTrain\dcf-bbox-eval-tool\data", "data/DATA325/annotations"),
+            (r"C:\Users\Wuhon", "."),
         ]
         out = value
         for old, new in replacements:
@@ -535,6 +540,10 @@ def write_release_docs(stats: dict[str, Any]) -> None:
           - family-names: "Wu"
             given-names: "Hong"
             affiliation: "{AFFILIATION}"
+          - family-names: "Chen"
+            given-names: "Jian"
+            affiliation: "{AFFILIATION}"
+            email: "{CONTACT_EMAIL}"
         version: "{VERSION}"
         date-released: "{date.today().isoformat()}"
         license: "CC-BY-4.0"
