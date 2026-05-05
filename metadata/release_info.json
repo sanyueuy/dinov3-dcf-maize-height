@@ -1,0 +1,13 @@
+{
+  "title": "Attention-guided DINOv3-DiffCorn-Fusion for zero-shot cross-greenhouse maize height estimation",
+  "version": "v0.1.0",
+  "date": "2026-05-05",
+  "author": "Hong Wu",
+  "affiliation": "China Agricultural University",
+  "contact_email": "jchen@cau.edu.cn",
+  "repository_url": "https://github.com/sanyueuy/dinov3-dcf-maize-height",
+  "raw_image_count": 75,
+  "annotated_image_count": 25,
+  "box_count": 82,
+  "final_model_label": "attn_aug_tta8"
+}

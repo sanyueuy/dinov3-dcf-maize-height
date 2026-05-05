@@ -1,0 +1,202 @@
+{
+  "metrics": {
+    "MAE": 2.4511085748672485,
+    "RMSE": 3.4614364509826565,
+    "median_abs_error": 1.4998092651367188,
+    "n_samples": 32
+  },
+  "samples": [
+    {
+      "filename": "140-113.7-DSC07718.jpg",
+      "true_height_cm": 113.69999694824219,
+      "pred_height_cm": 120.38298797607422,
+      "error_cm": 6.682991027832031
+    },
+    {
+      "filename": "140-270-DSC07781.jpg",
+      "true_height_cm": 270.0,
+      "pred_height_cm": 268.91278076171875,
+      "error_cm": -1.08721923828125
+    },
+    {
+      "filename": "140-82-DSC07796.jpg",
+      "true_height_cm": 82.0,
+      "pred_height_cm": 83.66703796386719,
+      "error_cm": 1.6670379638671875
+    },
+    {
+      "filename": "140-127.5-DSC07704.jpg",
+      "true_height_cm": 127.5,
+      "pred_height_cm": 130.71469116210938,
+      "error_cm": 3.214691162109375
+    },
+    {
+      "filename": "140-128-DSC07700.jpg",
+      "true_height_cm": 128.0,
+      "pred_height_cm": 136.24520874023438,
+      "error_cm": 8.245208740234375
+    },
+    {
+      "filename": "140-143-DSC07685.jpg",
+      "true_height_cm": 143.0,
+      "pred_height_cm": 142.87057495117188,
+      "error_cm": -0.129425048828125
+    },
+    {
+      "filename": "140-170-DSC07729.jpg",
+      "true_height_cm": 170.0,
+      "pred_height_cm": 168.47132873535156,
+      "error_cm": -1.5286712646484375
+    },
+    {
+      "filename": "140-82-DSC07805.jpg",
+      "true_height_cm": 82.0,
+      "pred_height_cm": 83.45219421386719,
+      "error_cm": 1.4521942138671875
+    },
+    {
+      "filename": "140-76-DSC07694.jpg",
+      "true_height_cm": 76.0,
+      "pred_height_cm": 87.230224609375,
+      "error_cm": 11.230224609375
+    },
+    {
+      "filename": "140-127.5-DSC07707.jpg",
+      "true_height_cm": 127.5,
+      "pred_height_cm": 131.35401916503906,
+      "error_cm": 3.8540191650390625
+    },
+    {
+      "filename": "106-270-DSC07769.jpg",
+      "true_height_cm": 270.0,
+      "pred_height_cm": 268.57672119140625,
+      "error_cm": -1.42327880859375
+    },
+    {
+      "filename": "140-82-DSC07791.jpg",
+      "true_height_cm": 82.0,
+      "pred_height_cm": 82.95933532714844,
+      "error_cm": 0.9593353271484375
+    },
+    {
+      "filename": "140-143-DSC07677.jpg",
+      "true_height_cm": 143.0,
+      "pred_height_cm": 145.50588989257812,
+      "error_cm": 2.505889892578125
+    },
+    {
+      "filename": "106-270-DSC07770.jpg",
+      "true_height_cm": 270.0,
+      "pred_height_cm": 269.86334228515625,
+      "error_cm": -0.13665771484375
+    },
+    {
+      "filename": "140-121-DSC07668.jpg",
+      "true_height_cm": 121.0,
+      "pred_height_cm": 125.19703674316406,
+      "error_cm": 4.1970367431640625
+    },
+    {
+      "filename": "140-128-DSC07699.jpg",
+      "true_height_cm": 128.0,
+      "pred_height_cm": 130.51852416992188,
+      "error_cm": 2.518524169921875
+    },
+    {
+      "filename": "140-170-DSC07726.jpg",
+      "true_height_cm": 170.0,
+      "pred_height_cm": 168.529052734375,
+      "error_cm": -1.470947265625
+    },
+    {
+      "filename": "140-270-DSC07780.jpg",
+      "true_height_cm": 270.0,
+      "pred_height_cm": 270.74688720703125,
+      "error_cm": 0.74688720703125
+    },
+    {
+      "filename": "106-64-DSC07752.jpg",
+      "true_height_cm": 64.0,
+      "pred_height_cm": 63.6609001159668,
+      "error_cm": -0.3390998840332031
+    },
+    {
+      "filename": "140-113.7-DSC07725.jpg",
+      "true_height_cm": 113.69999694824219,
+      "pred_height_cm": 119.35548400878906,
+      "error_cm": 5.655487060546875
+    },
+    {
+      "filename": "140-270-DSC07775.jpg",
+      "true_height_cm": 270.0,
+      "pred_height_cm": 270.68280029296875,
+      "error_cm": 0.68280029296875
+    },
+    {
+      "filename": "140-101-DSC07660.jpg",
+      "true_height_cm": 101.0,
+      "pred_height_cm": 101.73234558105469,
+      "error_cm": 0.7323455810546875
+    },
+    {
+      "filename": "140-82-DSC07802.jpg",
+      "true_height_cm": 82.0,
+      "pred_height_cm": 84.41520690917969,
+      "error_cm": 2.4152069091796875
+    },
+    {
+      "filename": "106-270-DSC07772.jpg",
+      "true_height_cm": 270.0,
+      "pred_height_cm": 269.81414794921875,
+      "error_cm": -0.18585205078125
+    },
+    {
+      "filename": "140-82-DSC07797.jpg",
+      "true_height_cm": 82.0,
+      "pred_height_cm": 83.5396957397461,
+      "error_cm": 1.5396957397460938
+    },
+    {
+      "filename": "140-270-DSC07777.jpg",
+      "true_height_cm": 270.0,
+      "pred_height_cm": 268.7328186035156,
+      "error_cm": -1.267181396484375
+    },
+    {
+      "filename": "106-64-DSC07760.jpg",
+      "true_height_cm": 64.0,
+      "pred_height_cm": 66.9621810913086,
+      "error_cm": 2.9621810913085938
+    },
+    {
+      "filename": "140-82-DSC07809.jpg",
+      "true_height_cm": 82.0,
+      "pred_height_cm": 83.42430114746094,
+      "error_cm": 1.4243011474609375
+    },
+    {
+      "filename": "140-237-DSC07649.jpg",
+      "true_height_cm": 237.0,
+      "pred_height_cm": 239.93414306640625,
+      "error_cm": 2.93414306640625
+    },
+    {
+      "filename": "140-82-DSC07806.jpg",
+      "true_height_cm": 82.0,
+      "pred_height_cm": 82.7991943359375,
+      "error_cm": 0.7991943359375
+    },
+    {
+      "filename": "140-113.7-DSC07723.jpg",
+      "true_height_cm": 113.69999694824219,
+      "pred_height_cm": 116.97791290283203,
+      "error_cm": 3.2779159545898438
+    },
+    {
+      "filename": "140-237-DSC07650.jpg",
+      "true_height_cm": 237.0,
+      "pred_height_cm": 238.16983032226562,
+      "error_cm": 1.169830322265625
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+DATA LICENSE
+
+DATA325 photographs, bounding boxes, plant-height labels, camera-height metadata,
+and non-code tabular outputs in this release are made available under the
+Creative Commons Attribution 4.0 International License (CC BY 4.0):
+
+https://creativecommons.org/licenses/by/4.0/
+
+Please cite the accompanying manuscript or the public archive DOI when using
+the dataset.

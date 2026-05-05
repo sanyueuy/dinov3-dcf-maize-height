@@ -1,0 +1,8 @@
+source_json,model_label,feature_mode,boxes,images,mae_cm,rmse_cm,median_abs_error_cm,mean_pred_std_cm
+data325_zero_shot_comparison_attn_aug_tta8.json,attn_aug_tta8,attn_weighted,82,25,29.573550898854325,38.97683219161265,23.64422082901001,1.9269173880214638
+data325_zero_shot_comparison_corrected_camheight.json,old,cls,82,25,41.75027102958865,51.86795908406365,37.212501525878906,
+data325_zero_shot_comparison_corrected_camheight.json,cls,cls,82,25,45.849944510110994,57.236776533592185,38.39344787597656,
+data325_zero_shot_comparison_corrected_camheight.json,patch_mean,patch_mean,82,25,33.441026641101374,43.64975039750873,26.684844970703125,
+data325_zero_shot_comparison_corrected_camheight.json,attn,attn_weighted,82,25,30.374317355272247,39.62204688393202,22.082660675048828,
+data325_zero_shot_comparison_attn_aug.json,attn_aug,attn_weighted,82,25,29.894323581602514,39.13340090334017,23.77184295654297,
+data325_zero_shot_comparison_attn_aug_featurealign.json,attn_aug_featurealign,attn_weighted,82,25,45.97980638829673,59.48285494381053,36.74492645263672,

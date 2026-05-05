@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+title: "DINOv3-DCF maize height open release"
+message: "If you use this dataset or code, please cite the accompanying manuscript and archive DOI."
+type: dataset
+authors:
+  - family-names: "Wu"
+    given-names: "Hong"
+    affiliation: "China Agricultural University"
+version: "v0.1.0"
+date-released: "2026-05-05"
+license: "CC-BY-4.0"
+repository-code: "https://github.com/sanyueuy/dinov3-dcf-maize-height"
+abstract: "Open data, code, checkpoints, and reproducibility assets for zero-shot cross-greenhouse maize height estimation with DINOv3-DCF."

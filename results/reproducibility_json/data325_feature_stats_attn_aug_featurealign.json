@@ -1,0 +1,128 @@
+{
+  "source_bundle": "./training_bundle_hand_attn.pt",
+  "target_image_root": "data/DATA325/images",
+  "target_valid_original_images": 75,
+  "camera_height_resolution": {
+    "matched_images": 25,
+    "missing_images": [],
+    "duplicate_mapping_conflicts": [],
+    "resolved_image_heights": [
+      {
+        "file_name": "1774430024570838644287054889188-02631b6e.jpg",
+        "capture_height_cm": 140.0
+      },
+      {
+        "file_name": "17744301502163781479087360760338-1fad2c6d.jpg",
+        "capture_height_cm": 140.0
+      },
+      {
+        "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+        "capture_height_cm": 85.0
+      },
+      {
+        "file_name": "17744301993284573787410288776325-7480244a.jpg",
+        "capture_height_cm": 130.0
+      },
+      {
+        "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+        "capture_height_cm": 160.0
+      },
+      {
+        "file_name": "1774430238852960689785442958145-464106e4.jpg",
+        "capture_height_cm": 160.0
+      },
+      {
+        "file_name": "17744303135233599081906654160060-ed92c39d.jpg",
+        "capture_height_cm": 80.0
+      },
+      {
+        "file_name": "17744303589887365481729323921052-f269cae6.jpg",
+        "capture_height_cm": 160.0
+      },
+      {
+        "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+        "capture_height_cm": 150.0
+      },
+      {
+        "file_name": "17744321793357439543515068175302-a13e2949.jpg",
+        "capture_height_cm": 150.0
+      },
+      {
+        "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+        "capture_height_cm": 130.0
+      },
+      {
+        "file_name": "17744322198111524063972955817959-f6c0d6b3.jpg",
+        "capture_height_cm": 130.0
+      },
+      {
+        "file_name": "17744322244413093210727838268043-bdc9c3a0.jpg",
+        "capture_height_cm": 130.0
+      },
+      {
+        "file_name": "17744322286635745009728053765240-1106569a.jpg",
+        "capture_height_cm": 130.0
+      },
+      {
+        "file_name": "17744322421967087302057130033382-ac0e1077.jpg",
+        "capture_height_cm": 130.0
+      },
+      {
+        "file_name": "17744322464787401147269120726982-84dbce12.jpg",
+        "capture_height_cm": 130.0
+      },
+      {
+        "file_name": "17744322671942308763368065297179-80109626.jpg",
+        "capture_height_cm": 130.0
+      },
+      {
+        "file_name": "17744323136636410293405002256876-62c27dec.jpg",
+        "capture_height_cm": 140.0
+      },
+      {
+        "file_name": "17744323375852104299749593532205-59c3805d.jpg",
+        "capture_height_cm": 150.0
+      },
+      {
+        "file_name": "17744323540247076606634106630807-51ce78b3.jpg",
+        "capture_height_cm": 150.0
+      },
+      {
+        "file_name": "17744323578303571483999047935077-a88f78e2.jpg",
+        "capture_height_cm": 150.0
+      },
+      {
+        "file_name": "17744323624581056279345005276368-21a8d29f.jpg",
+        "capture_height_cm": 150.0
+      },
+      {
+        "file_name": "17744323695882799430184163308300-9f5b8ffd.jpg",
+        "capture_height_cm": 150.0
+      },
+      {
+        "file_name": "17744323780963222880256680053099-84d8cd17.jpg",
+        "capture_height_cm": 150.0
+      },
+      {
+        "file_name": "17744323850524704765040002271893-8726e634.jpg",
+        "capture_height_cm": 150.0
+      }
+    ]
+  },
+  "source_feature_stats": {
+    "sample_count": 156,
+    "feature_dim": 1024,
+    "mean_norm_l2": 7.330036163330078,
+    "mean_feature_std": 0.06460471451282501
+  },
+  "target_feature_stats": {
+    "sample_count": 75,
+    "feature_dim": 1024,
+    "mean_norm_l2": 6.375800132751465,
+    "mean_feature_std": 0.05662102997303009
+  },
+  "mean_shift_relative_l2": 0.3672409951686859,
+  "mean_shift_relative_pct": 36.72409951686859,
+  "variance_shift_relative_mean": 0.2010294646024704,
+  "variance_shift_relative_pct": 20.10294646024704
+}
