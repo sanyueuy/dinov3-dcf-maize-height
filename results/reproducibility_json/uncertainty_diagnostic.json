@@ -1,0 +1,126 @@
+{
+  "overall": {
+    "pred_std_vs_abs_error": {
+      "pearson_r": 0.11174023202315639,
+      "spearman_r": 0.10710593049705598
+    },
+    "pred_std_vs_background_fraction": {
+      "pearson_r": 0.2435570683650726,
+      "spearman_r": 0.1948498601451878
+    }
+  },
+  "height_bins": {
+    "<80": {
+      "n": 32,
+      "mean_pred_std_cm": 1.3675484336257324,
+      "mean_abs_error_cm": 31.804688274860382
+    },
+    "80-120": {
+      "n": 17,
+      "mean_pred_std_cm": 2.4501040779440473,
+      "mean_abs_error_cm": 35.83630343044506
+    },
+    "120-160": {
+      "n": 27,
+      "mean_pred_std_cm": 2.292086466566901,
+      "mean_abs_error_cm": 22.646728974801523
+    },
+    ">=160": {
+      "n": 6,
+      "mean_pred_std_cm": 1.7845953365635794,
+      "mean_abs_error_cm": 31.10038471221924
+    }
+  },
+  "top_uncertainty_cases": [
+    {
+      "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 135.0,
+      "abs_error_cm": 31.87055015563965,
+      "pred_std_cm": 6.355664837605676,
+      "background_fraction": 0.6845036103968467,
+      "height_bin": "120-160"
+    },
+    {
+      "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+      "box_id": "box-005",
+      "true_height_cm": 93.0,
+      "abs_error_cm": 45.979928970336914,
+      "pred_std_cm": 4.495734543386523,
+      "background_fraction": 0.5904887030175183,
+      "height_bin": "80-120"
+    },
+    {
+      "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 159.0,
+      "abs_error_cm": 9.272897720336914,
+      "pred_std_cm": 4.478137174122296,
+      "background_fraction": 0.6312273912867201,
+      "height_bin": "120-160"
+    },
+    {
+      "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+      "box_id": "box-006",
+      "true_height_cm": 88.0,
+      "abs_error_cm": 34.48732566833496,
+      "pred_std_cm": 4.114535884377863,
+      "background_fraction": 0.6753098467697051,
+      "height_bin": "80-120"
+    },
+    {
+      "file_name": "17744322286635745009728053765240-1106569a.jpg",
+      "box_id": "box-004",
+      "true_height_cm": 88.0,
+      "abs_error_cm": 55.419593811035156,
+      "pred_std_cm": 4.0015571811674935,
+      "background_fraction": 0.6242803798174523,
+      "height_bin": "80-120"
+    },
+    {
+      "file_name": "17744323695882799430184163308300-9f5b8ffd.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 135.0,
+      "abs_error_cm": 19.060688018798828,
+      "pred_std_cm": 3.7541939827581645,
+      "background_fraction": 0.6121776986034799,
+      "height_bin": "120-160"
+    },
+    {
+      "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+      "box_id": "box-004",
+      "true_height_cm": 122.0,
+      "abs_error_cm": 29.501657485961914,
+      "pred_std_cm": 3.622238141036687,
+      "background_fraction": 0.6171156124141199,
+      "height_bin": "120-160"
+    },
+    {
+      "file_name": "17744323375852104299749593532205-59c3805d.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 68.0,
+      "abs_error_cm": 18.636420249938965,
+      "pred_std_cm": 3.469891173154042,
+      "background_fraction": 0.5779012298050916,
+      "height_bin": "<80"
+    },
+    {
+      "file_name": "17744323850524704765040002271893-8726e634.jpg",
+      "box_id": "box-004",
+      "true_height_cm": 132.0,
+      "abs_error_cm": 2.5777511596679688,
+      "pred_std_cm": 3.4466077770218613,
+      "background_fraction": 0.6878894367908408,
+      "height_bin": "120-160"
+    },
+    {
+      "file_name": "17744322421967087302057130033382-ac0e1077.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 159.0,
+      "abs_error_cm": 10.386615753173828,
+      "pred_std_cm": 3.396225746929806,
+      "background_fraction": 0.6078582662726484,
+      "height_bin": "120-160"
+    }
+  ]
+}

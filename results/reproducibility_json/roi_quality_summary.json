@@ -1,0 +1,32 @@
+{
+  "n": 82,
+  "correlations_with_abs_error": {
+    "foreground_fraction": {
+      "pearson_r": -0.07118975614904663,
+      "spearman_r": 0.027742405938115604
+    },
+    "background_fraction": {
+      "pearson_r": 0.07118975614904677,
+      "spearman_r": -0.027742405938115604
+    },
+    "bbox_area_fraction": {
+      "pearson_r": -0.20562388600575726,
+      "spearman_r": -0.20549406297275827
+    },
+    "bbox_aspect_ratio": {
+      "pearson_r": 0.03648506222799563,
+      "spearman_r": 0.024934426051087824
+    },
+    "pred_std_cm": {
+      "pearson_r": 0.11174023202315639,
+      "spearman_r": 0.10710593049705598
+    },
+    "mean_roi_brightness": {
+      "pearson_r": 0.21803511175986207,
+      "spearman_r": 0.032204699557035726
+    }
+  },
+  "foreground_fraction_mean": 0.38521387837612664,
+  "foreground_fraction_median": 0.3903122024809897,
+  "background_fraction_mean": 0.6147861216238734
+}

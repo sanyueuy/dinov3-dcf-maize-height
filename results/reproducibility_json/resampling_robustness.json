@@ -1,0 +1,47 @@
+{
+  "cls": {
+    "n": 82,
+    "point_mae_cm": 45.86054881026105,
+    "resampled_mae_mean_cm": 45.784702744925895,
+    "resampled_mae_sd_cm": 3.8314255038477425,
+    "resampled_mae_ci95_low": 38.531856888096506,
+    "resampled_mae_ci95_high": 53.3700158142462,
+    "note": "bootstrap resampling of existing checkpoint predictions; not independent random-seed retraining"
+  },
+  "patch_mean": {
+    "n": 82,
+    "point_mae_cm": 33.53448021121142,
+    "resampled_mae_mean_cm": 33.650291229155,
+    "resampled_mae_sd_cm": 3.099363097091796,
+    "resampled_mae_ci95_low": 27.704755566759808,
+    "resampled_mae_ci95_high": 40.05770880071128,
+    "note": "bootstrap resampling of existing checkpoint predictions; not independent random-seed retraining"
+  },
+  "attn": {
+    "n": 82,
+    "point_mae_cm": 30.407656506794254,
+    "resampled_mae_mean_cm": 30.40911964100163,
+    "resampled_mae_sd_cm": 2.8755445065139673,
+    "resampled_mae_ci95_low": 25.014254551399045,
+    "resampled_mae_ci95_high": 36.21009432164634,
+    "note": "bootstrap resampling of existing checkpoint predictions; not independent random-seed retraining"
+  },
+  "attn_aug": {
+    "n": 82,
+    "point_mae_cm": 29.894323581602514,
+    "resampled_mae_mean_cm": 29.837677073222835,
+    "resampled_mae_sd_cm": 2.7313606252595264,
+    "resampled_mae_ci95_low": 24.93113317024417,
+    "resampled_mae_ci95_high": 35.47232125677713,
+    "note": "bootstrap resampling of existing checkpoint predictions; not independent random-seed retraining"
+  },
+  "attn_aug_tta8": {
+    "n": 82,
+    "point_mae_cm": 29.573550898854325,
+    "resampled_mae_mean_cm": 29.581830962274132,
+    "resampled_mae_sd_cm": 2.845919820410626,
+    "resampled_mae_ci95_low": 24.146173555385776,
+    "resampled_mae_ci95_high": 35.280859328770056,
+    "note": "bootstrap resampling of existing checkpoint predictions; not independent random-seed retraining"
+  }
+}

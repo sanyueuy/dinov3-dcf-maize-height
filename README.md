@@ -2,7 +2,7 @@
 
 This release supports the manuscript:
 
-**Attention-guided DINOv3-DiffCorn-Fusion for zero-shot cross-greenhouse maize height estimation**
+**A reproducible cross-greenhouse maize height benchmark and attention-guided DINOv3-DCF evaluation pipeline**
 
 Author: Hong Wu
 Affiliation: China Agricultural University
@@ -14,6 +14,7 @@ Repository: https://github.com/sanyueuy/dinov3-dcf-maize-height
 - DATA325 greenhouse photographs in `data/DATA325/images/`.
 - Clean DATA325 image metadata, bounding boxes, plant-height labels, camera-height values, and final Attn+aug+TTA8 predictions in `data/DATA325/annotations/` and `data/DATA325/predictions/`.
 - Sanitized evaluation JSON files in `results/reproducibility_json/`.
+- CEA revision diagnostics in `results/cea_revision/`, including ROI quality metrics, error taxonomy, mask QA examples, bootstrap confidence intervals, and paired tests.
 - Selected DiffCorn-Fusion/DCF checkpoints in `checkpoints/`.
 - Source-domain feature bundles in `data/source_feature_bundles/`.
 - Paper figures and table sidecars in `paper_assets/`.
@@ -43,4 +44,4 @@ python scripts/summarize_data325.py
 
 ## Notes for public upload
 
-This release is prepared for GitHub at https://github.com/sanyueuy/dinov3-dcf-maize-height. Use Git LFS for `*.jpg`, `*.pt`, and `*.pth` files. If a Zenodo DOI is minted from a GitHub release, add that DOI to the manuscript before final submission.
+This release is prepared for GitHub at https://github.com/sanyueuy/dinov3-dcf-maize-height. Use Git LFS for `*.jpg`, `*.png`, `*.pt`, and `*.pth` files. If a Zenodo DOI is minted from a GitHub release, add that DOI to the manuscript before final submission.

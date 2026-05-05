@@ -1,0 +1,22 @@
+{
+  "early-stage sparse structure": {
+    "n": 32,
+    "mean_abs_error_cm": 31.804688274860382,
+    "median_abs_error_cm": 21.654460906982422
+  },
+  "residual cross-domain shift": {
+    "n": 25,
+    "mean_abs_error_cm": 24.506779747009276,
+    "median_abs_error_cm": 21.37407875061035
+  },
+  "unstable TTA prediction": {
+    "n": 15,
+    "mean_abs_error_cm": 35.06402765909831,
+    "median_abs_error_cm": 29.501657485961914
+  },
+  "bbox ambiguity": {
+    "n": 10,
+    "mean_abs_error_cm": 26.865124034881593,
+    "median_abs_error_cm": 21.451651573181152
+  }
+}

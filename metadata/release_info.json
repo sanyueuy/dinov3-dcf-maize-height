@@ -1,5 +1,5 @@
 {
-  "title": "Attention-guided DINOv3-DiffCorn-Fusion for zero-shot cross-greenhouse maize height estimation",
+  "title": "A reproducible cross-greenhouse maize height benchmark and attention-guided DINOv3-DCF evaluation pipeline",
   "version": "v0.1.0",
   "date": "2026-05-05",
   "author": "Hong Wu",

@@ -6,42 +6,45 @@
 - highlights.txt
 - cover_letter_cea.docx
 - supplementary_material.docx
-- graphical_abstract_non_ai.png
-- graphical_abstract_non_ai.pdf
+- graphical_abstract_non_ai.png/pdf
 
-## Figures
-- figures/Figure_1_Real_image_protocol.png and .pdf: Fig. 1. Real-image protocol for zero-shot cross-greenhouse maize height estimation. (a) Source-domain hand-box examples with measured heights. (b) Independent DATA325 target greenhouse images with manual bounding-box annotations. (c) Extracted ROI crops and per-box evaluation records including ground-truth height, DINOv3-DCF prediction, absolute error, camera height, and TTA standard deviation.
-- figures/Figure_2_Dataset_statistics.png and .pdf: Fig. 2. Source and DATA325 dataset statistics. The source-domain hand-box set spans taller plants, whereas DATA325 contains more early-stage plants and a different target greenhouse distribution.
-- figures/Figure_3_DINOv3_DCF_workflow.png and .pdf: Fig. 3. DINOv3-DiffCorn-Fusion (DINOv3-DCF) workflow for ROI-level maize height estimation. A frozen DINOv3 ViT-L backbone extracts plant-region features, the DCF head maps visual and camera-height inputs to phytomer parameters, and height is obtained from internode-related outputs.
-- figures/Figure_4_Attention_weighted_pooling.png and .pdf: Fig. 4. Attention-weighted patch aggregation. Final-layer CLS-to-patch attention weights are averaged across heads, normalized across patch positions, and used to pool patch tokens before DCF regression.
-- figures/Figure_5_Domain_shift_tsne.png and .pdf: Fig. 5. DINOv3 feature-space domain shift between source ROIs and DATA325 target ROIs. The t-SNE visualization uses 20 sampled source and 20 sampled target ROI features.
-- figures/Figure_6_Ablation_results.png and .pdf: Fig. 6. Zero-shot DATA325 ablation results. Replacing CLS pooling with attention-weighted patch aggregation produced the largest single reduction in external MAE.
-- figures/Figure_7_Height_bin_errors.png and .pdf: Fig. 7. DATA325 error distribution by ground-truth plant-height bin for the best Attn+aug+TTA8 model. Early-stage plants below 80 cm remain the dominant source of relative error.
-- figures/Figure_8_DATA325_stage_error_gallery.png and .pdf: Fig. 8. DATA325 real-image stage and error gallery. Full target-greenhouse images with manual boxes and ROI crops show that early plants and cluttered backgrounds are visually overrepresented among the high-error cases.
-- figures/Figure_9_Diagnostic_experiments.png and .pdf: Fig. 9. Diagnostic experiments for alternative explanations of the domain gap, including geometric priors, feature-statistic alignment, and domain-adversarial training.
-- figures/Figure_10_Qualitative_DATA325_examples.png and .pdf: Fig. 10. Real DATA325 ROI examples and DINOv3 attention overlays. Low-stage examples have less plant-structure evidence and show larger relative errors than taller plants.
+## Main figures
+- figures/Figure_1_DATA325_acquisition_annotation_protocol.png and .pdf: Fig. 1. DATA325 acquisition and annotation protocol. Source hand-box examples, independent target-greenhouse images, manual DATA325 boxes, ROI crops, height/camera metadata, and per-box prediction records are shown to make the benchmark auditable.
+- figures/Figure_2_Source_DATA325_benchmark_comparison.png and .pdf: Fig. 2. Source and DATA325 benchmark comparison. Real source hand-box examples and real DATA325 target images illustrate the external-domain shift in greenhouse appearance, height range, camera height, and evaluation role.
+- figures/Figure_3_DATA325_distribution_imbalance.png and .pdf: Fig. 3. DATA325 distribution and imbalance. The target benchmark contains many early-stage plants, varied camera heights, heterogeneous bbox areas, and different foreground fractions across manually cropped ROIs.
+- figures/Figure_4_Preprocessing_ROI_quality_examples.png and .pdf: Fig. 4. Preprocessing and ROI-quality examples. Raw DATA325 images are converted to manual boxes, ROI crops, resized model inputs, and deterministic plant-mask diagnostics used only to quantify foreground/background contamination.
+- figures/Figure_5_DINOv3_DCF_zero_shot_workflow.png and .pdf: Fig. 5. DINOv3-DCF zero-shot workflow. Frozen DINOv3 ROI tokens are aggregated by CLS, patch-mean, or attention-weighted pooling and passed with camera-height context to the DCF regression head before external DATA325 evaluation.
+- figures/Figure_6_Attention_pooling_real_ROIs.png and .pdf: Fig. 6. Attention pooling with real maize ROIs. Real DATA325 crops are paired with deterministic foreground diagnostics and the attention-weighted token-pooling mechanism; the mask overlay is a QA diagnostic, not generated experimental evidence.
+- figures/Figure_7_Feature_domain_shift_with_ROI_thumbnails.png and .pdf: Fig. 7. Feature-space domain shift with ROI thumbnails. DINOv3 feature embeddings separate source and DATA325 ROIs, and thumbnail panels show that the clusters correspond to visibly different greenhouse and growth-stage conditions.
+- figures/Figure_8_Main_ablation_results_with_CI.png and .pdf: Fig. 8. Main ablation results with bootstrap confidence intervals. Attention-weighted pooling provides the largest external DATA325 gain; augmentation and TTA8 provide smaller additional improvements.
+- figures/Figure_9_Resampling_robustness_statistical_comparison.png and .pdf: Fig. 9. Resampling robustness and statistical comparison. Bootstrap resampling and paired per-box differences show that the attention/TTA8 result is not explained by a small number of boxes; this is not independent seed retraining.
+- figures/Figure_10_Height_bin_error_early_stage_failure.png and .pdf: Fig. 10. Height-bin error and early-stage failure concentration. Bootstrap intervals confirm that plants below 80 cm dominate relative error and remain the key target for future stage-aware adaptation.
+- figures/Figure_11_ROI_contamination_error_correlation.png and .pdf: Fig. 11. ROI contamination and error correlation. Foreground/background fractions from deterministic color-index masks are weakly correlated with absolute error, indicating that clutter contributes but does not fully explain the domain gap.
+- figures/Figure_12_STAGE_wise_DATA325_qualitative_gallery.png and .pdf: Fig. 12. Stage-wise DATA325 qualitative gallery. Low-, mid-, and tall-stage real images are shown with manual boxes, ROI crops, ground truth, prediction, and absolute error.
+- figures/Figure_13_Attention_error_overlay_gallery.png and .pdf: Fig. 13. Error-overlay gallery for real DATA325 ROIs. Successful, over-estimated, under-estimated, sparse, and uncertain cases are shown with ROI crops, deterministic plant-focus overlays, ground truth, prediction, and error.
+- figures/Figure_14_Diagnostic_negative_controls.png and .pdf: Fig. 14. Diagnostic negative controls. Camera-height correction, bbox geometry, feature-statistic alignment, and DANN do not remove the cross-greenhouse gap, so the remaining error is not a single metadata or marginal-alignment artifact.
+- figures/Figure_15_Open_release_future_deployment_map.png and .pdf: Fig. 15. Open-release and future-deployment map. The release packages DATA325 images, annotations, predictions, diagnostics, scripts, and checkpoints, while future work connects automatic detection, segmentation-guided ROI normalization, and multi-greenhouse adaptation.
 
-## Real-image figure generation
-- figures/Figure_1_Real_image_protocol.* is generated from DATA325 captured greenhouse photographs, manual bounding boxes, ROI crops, and Attn+aug+TTA8 prediction records.
-- figures/Figure_8_DATA325_stage_error_gallery.* is generated from DATA325 photographs grouped by ground-truth height bin and absolute-error rank.
-- figures/Figure_9_Diagnostic_experiments.* is redrawn deterministically from bbox geometry, feature-alignment, and DANN-history JSON files.
+## Revision diagnostics
+- experiments/cea_revision/run_cea_revision_experiments.py generated bootstrap CI, paired tests, ROI quality metrics, morphometric baseline, uncertainty diagnostics, and error taxonomy.
+- Deterministic color-index masks quantify foreground/background only; they are not generated images, labels, or model training inputs.
+- Resampling robustness is bootstrap analysis of existing predictions and is not reported as independent random-seed retraining.
 
-## Open-source release package
-- dinov3_dcf_maize_height_open_release_v0_1_0.zip: local public-release archive containing DATA325 images, cleaned annotations, sanitized evaluation JSON, selected DCF checkpoints, reproducibility scripts, licenses, citation metadata, and checksums. Public repository: https://github.com/sanyueuy/dinov3-dcf-maize-height.
+## Open-source release
+- Repository: https://github.com/sanyueuy/dinov3-dcf-maize-height
+- Planned archive: dinov3_dcf_maize_height_open_release_v0_1_0.zip
 
-## Tables
-- tables/table1_ablation.csv
-- tables/table2_height_bins.csv
-
-## Newly added literature sources
-- CEA crop-height and protected-facility machine vision: Chang et al. 2017; Xie et al. 2021; Kim et al. 2021; Jayasuriya et al. 2024.
-- CEA agricultural computer vision and phenotyping reviews: Patricio and Rieder 2018; Kamilaris and Prenafeta-Boldu 2018; Li et al. 2020; Liu et al. 2020; Ariza-Sentis et al. 2024.
-- CEA crop-specific and multi-environment examples: Li et al. 2019; Xing et al. 2023; Che et al. 2024; Veramendi and Cruvinel 2024; Reena et al. 2025.
-- Domain-shift and foundation-model background: Sun and Saenko 2016; Koh et al. 2021; Gulrajani and Lopez-Paz 2021; Caron et al. 2021; Kirillov et al. 2023.
+## Added literature sources
+- CEA crop-height/protected crop: Chang 2017; Xie 2021; Kim 2021; Jayasuriya 2024.
+- CEA phenotyping/AI reviews and datasets: Patricio 2018; Kamilaris 2018; Li 2020; Liu 2020; Reena 2025.
+- CEA crop-specific examples: Li 2019; Xing 2023; Che 2024; Veramendi and Cruvinel 2024; Ariza-Sentis 2024.
+- Generalization/foundation models: Sun and Saenko 2016; Koh 2021; Gulrajani and Lopez-Paz 2021; Caron 2021; Kirillov 2023.
 
 ## Reproducibility JSON
 - reproducibility_json/attention_geometry_prior_phaseA.json
 - reproducibility_json/bbox_geometry_prior_phaseA.json
+- reproducibility_json/bootstrap_ci.json
+- reproducibility_json/cea_revision_summary.json
 - reproducibility_json/data325_feature_stats_attn_aug_featurealign.json
 - reproducibility_json/data325_zero_shot_comparison_attn_aug.json
 - reproducibility_json/data325_zero_shot_comparison_attn_aug_featurealign.json
@@ -49,4 +52,11 @@
 - reproducibility_json/data325_zero_shot_comparison_corrected_camheight.json
 - reproducibility_json/data325_zero_shot_comparison_dann.json
 - reproducibility_json/diffcorn_fusion_hand_dann_history.json
+- reproducibility_json/error_taxonomy_summary.json
+- reproducibility_json/height_bin_bootstrap.json
+- reproducibility_json/morphometric_baseline.json
+- reproducibility_json/paired_tests.json
+- reproducibility_json/resampling_robustness.json
+- reproducibility_json/roi_quality_summary.json
 - reproducibility_json/tsne_source_vs_data325.json
+- reproducibility_json/uncertainty_diagnostic.json

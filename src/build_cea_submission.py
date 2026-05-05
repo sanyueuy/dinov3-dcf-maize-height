@@ -1206,6 +1206,1141 @@ def zip_package() -> Path:
     return zip_path
 
 
+# ---------------------------------------------------------------------------
+# CEA revision override block.
+# This block updates the package to the Wheat3D-style DATA325 benchmark framing
+# without removing the earlier helper functions, tables, and figure builders.
+# ---------------------------------------------------------------------------
+
+CEA_EXP_DIR = ROOT / "experiments" / "cea_revision"
+MASK_EXAMPLE_DIR = CEA_EXP_DIR / "mask_examples"
+
+TITLE = (
+    "A reproducible cross-greenhouse maize height benchmark and "
+    "attention-guided DINOv3-DCF evaluation pipeline"
+)
+
+FIGURES = [
+    (
+        "fig_real_protocol",
+        "Figure_1_DATA325_acquisition_annotation_protocol",
+        "Fig. 1. DATA325 acquisition and annotation protocol. Source hand-box examples, independent target-greenhouse images, manual DATA325 boxes, ROI crops, height/camera metadata, and per-box prediction records are shown to make the benchmark auditable.",
+        6.15,
+    ),
+    (
+        "fig2_benchmark_comparison",
+        "Figure_2_Source_DATA325_benchmark_comparison",
+        "Fig. 2. Source and DATA325 benchmark comparison. Real source hand-box examples and real DATA325 target images illustrate the external-domain shift in greenhouse appearance, height range, camera height, and evaluation role.",
+        6.15,
+    ),
+    (
+        "fig3_distribution",
+        "Figure_3_DATA325_distribution_imbalance",
+        "Fig. 3. DATA325 distribution and imbalance. The target benchmark contains many early-stage plants, varied camera heights, heterogeneous bbox areas, and different foreground fractions across manually cropped ROIs.",
+        6.15,
+    ),
+    (
+        "fig4_preprocessing",
+        "Figure_4_Preprocessing_ROI_quality_examples",
+        "Fig. 4. Preprocessing and ROI-quality examples. Raw DATA325 images are converted to manual boxes, ROI crops, resized model inputs, and deterministic plant-mask diagnostics used only to quantify foreground/background contamination.",
+        6.15,
+    ),
+    (
+        "fig1",
+        "Figure_5_DINOv3_DCF_zero_shot_workflow",
+        "Fig. 5. DINOv3-DCF zero-shot workflow. Frozen DINOv3 ROI tokens are aggregated by CLS, patch-mean, or attention-weighted pooling and passed with camera-height context to the DCF regression head before external DATA325 evaluation.",
+        6.15,
+    ),
+    (
+        "fig6_attention_roi",
+        "Figure_6_Attention_pooling_real_ROIs",
+        "Fig. 6. Attention pooling with real maize ROIs. Real DATA325 crops are paired with deterministic foreground diagnostics and the attention-weighted token-pooling mechanism; the mask overlay is a QA diagnostic, not generated experimental evidence.",
+        6.15,
+    ),
+    (
+        "fig7_domain_shift_thumb",
+        "Figure_7_Feature_domain_shift_with_ROI_thumbnails",
+        "Fig. 7. Feature-space domain shift with ROI thumbnails. DINOv3 feature embeddings separate source and DATA325 ROIs, and thumbnail panels show that the clusters correspond to visibly different greenhouse and growth-stage conditions.",
+        6.15,
+    ),
+    (
+        "fig8_ablation_ci",
+        "Figure_8_Main_ablation_results_with_CI",
+        "Fig. 8. Main ablation results with bootstrap confidence intervals. Attention-weighted pooling provides the largest external DATA325 gain; augmentation and TTA8 provide smaller additional improvements.",
+        6.15,
+    ),
+    (
+        "fig9_resampling_stats",
+        "Figure_9_Resampling_robustness_statistical_comparison",
+        "Fig. 9. Resampling robustness and statistical comparison. Bootstrap resampling and paired per-box differences show that the attention/TTA8 result is not explained by a small number of boxes; this is not independent seed retraining.",
+        6.15,
+    ),
+    (
+        "fig10_height_bin_ci",
+        "Figure_10_Height_bin_error_early_stage_failure",
+        "Fig. 10. Height-bin error and early-stage failure concentration. Bootstrap intervals confirm that plants below 80 cm dominate relative error and remain the key target for future stage-aware adaptation.",
+        6.15,
+    ),
+    (
+        "fig11_roi_contamination",
+        "Figure_11_ROI_contamination_error_correlation",
+        "Fig. 11. ROI contamination and error correlation. Foreground/background fractions from deterministic color-index masks are weakly correlated with absolute error, indicating that clutter contributes but does not fully explain the domain gap.",
+        6.15,
+    ),
+    (
+        "fig_real_stage_error_gallery",
+        "Figure_12_STAGE_wise_DATA325_qualitative_gallery",
+        "Fig. 12. Stage-wise DATA325 qualitative gallery. Low-, mid-, and tall-stage real images are shown with manual boxes, ROI crops, ground truth, prediction, and absolute error.",
+        6.15,
+    ),
+    (
+        "fig8",
+        "Figure_13_Attention_error_overlay_gallery",
+        "Fig. 13. Error-overlay gallery for real DATA325 ROIs. Successful, over-estimated, under-estimated, sparse, and uncertain cases are shown with ROI crops, deterministic plant-focus overlays, ground truth, prediction, and error.",
+        6.15,
+    ),
+    (
+        "fig7",
+        "Figure_14_Diagnostic_negative_controls",
+        "Fig. 14. Diagnostic negative controls. Camera-height correction, bbox geometry, feature-statistic alignment, and DANN do not remove the cross-greenhouse gap, so the remaining error is not a single metadata or marginal-alignment artifact.",
+        6.15,
+    ),
+    (
+        "fig15_release_map",
+        "Figure_15_Open_release_future_deployment_map",
+        "Fig. 15. Open-release and future-deployment map. The release packages DATA325 images, annotations, predictions, diagnostics, scripts, and checkpoints, while future work connects automatic detection, segmentation-guided ROI normalization, and multi-greenhouse adaptation.",
+        6.15,
+    ),
+]
+FIG_NAME_BY_STEM = {source_stem: upload_stem for source_stem, upload_stem, _, _ in FIGURES}
+
+REPRO_FILES = [
+    ROOT / "data325_zero_shot_attn_aug_tta8" / "data325_zero_shot_comparison_attn_aug_tta8.json",
+    ROOT / "data325_zero_shot_corrected_camheight" / "data325_zero_shot_comparison_corrected_camheight.json",
+    ROOT / "data325_zero_shot_attn_aug" / "data325_zero_shot_comparison_attn_aug.json",
+    ROOT / "data325_zero_shot_attn_aug_featurealign" / "data325_zero_shot_comparison_attn_aug_featurealign.json",
+    ROOT / "data325_zero_shot_dann" / "data325_zero_shot_comparison_dann.json",
+    ROOT / "tsne_source_vs_data325.json",
+    ROOT / "data325_zero_shot_attn_aug_featurealign" / "data325_feature_stats_attn_aug_featurealign.json",
+    ROOT / "bbox_geometry_prior_phaseA.json",
+    ROOT / "attention_geometry_prior_phaseA.json",
+    ROOT / "checkpoints" / "diffcorn_fusion_hand_dann_history.json",
+    CEA_EXP_DIR / "bootstrap_ci.json",
+    CEA_EXP_DIR / "paired_tests.json",
+    CEA_EXP_DIR / "roi_quality_summary.json",
+    CEA_EXP_DIR / "morphometric_baseline.json",
+    CEA_EXP_DIR / "uncertainty_diagnostic.json",
+    CEA_EXP_DIR / "error_taxonomy_summary.json",
+    CEA_EXP_DIR / "height_bin_bootstrap.json",
+    CEA_EXP_DIR / "resampling_robustness.json",
+    CEA_EXP_DIR / "cea_revision_summary.json",
+]
+
+
+def add_figure(doc: Document, stem: str, caption: str, width_in: float) -> None:
+    # Start each main figure on a fresh page to avoid image or caption splits in DOCX rendering.
+    doc.add_page_break()
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.keep_with_next = True
+    p.add_run().add_picture(str(FIG_OUT / f"{FIG_NAME_BY_STEM.get(stem, stem)}.png"), width=Inches(width_in))
+    add_caption(doc, caption)
+
+
+def bbox_xyxy(bbox: list[float], image_size: tuple[int, int] | None = None) -> tuple[int, int, int, int]:
+    x1, y1, x2, y2 = [float(v) for v in bbox]
+    if x2 <= x1 or y2 <= y1:
+        x2 = x1 + max(1.0, x2)
+        y2 = y1 + max(1.0, y2)
+    if image_size is not None:
+        w, h = image_size
+        x1 = min(max(x1, 0.0), float(w - 1))
+        y1 = min(max(y1, 0.0), float(h - 1))
+        x2 = min(max(x2, x1 + 1.0), float(w))
+        y2 = min(max(y2, y1 + 1.0), float(h))
+    return int(round(x1)), int(round(y1)), int(round(x2)), int(round(y2))
+
+
+def draw_bbox_on_image(path: Path, bbox: list[float], color: tuple[int, int, int] = (0, 158, 115)) -> Image.Image:
+    image = Image.open(path).convert("RGB")
+    draw = ImageDraw.Draw(image)
+    x1, y1, x2, y2 = bbox_xyxy(bbox, image.size)
+    width = max(5, image.width // 260)
+    draw.rectangle((x1, y1, x2, y2), outline=color, width=width)
+    return image
+
+
+def crop_roi(path: Path, bbox: list[float], pad: int = 8) -> Image.Image:
+    image = Image.open(path).convert("RGB")
+    x1, y1, x2, y2 = bbox_xyxy(bbox, image.size)
+    return image.crop((max(0, x1 - pad), max(0, y1 - pad), min(image.width, x2 + pad), min(image.height, y2 + pad)))
+
+
+def load_json(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+
+
+def load_csv_rows(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def load_revision_results() -> dict:
+    return {
+        "summary": load_json(CEA_EXP_DIR / "cea_revision_summary.json"),
+        "bootstrap": load_json(CEA_EXP_DIR / "bootstrap_ci.json"),
+        "paired": load_json(CEA_EXP_DIR / "paired_tests.json"),
+        "roi_summary": load_json(CEA_EXP_DIR / "roi_quality_summary.json"),
+        "roi_metrics": load_csv_rows(CEA_EXP_DIR / "roi_quality_metrics.csv"),
+        "morphometric": load_json(CEA_EXP_DIR / "morphometric_baseline.json"),
+        "uncertainty": load_json(CEA_EXP_DIR / "uncertainty_diagnostic.json"),
+        "taxonomy": load_csv_rows(CEA_EXP_DIR / "error_taxonomy.csv"),
+        "taxonomy_summary": load_json(CEA_EXP_DIR / "error_taxonomy_summary.json"),
+        "height_bins": load_json(CEA_EXP_DIR / "height_bin_bootstrap.json"),
+        "resampling": load_json(CEA_EXP_DIR / "resampling_robustness.json"),
+    }
+
+
+def to_float(row: dict, key: str, default: float = float("nan")) -> float:
+    try:
+        return float(row.get(key, default))
+    except (TypeError, ValueError):
+        return default
+
+
+def choose_by_height(records: list[dict], lo: float, hi: float, rank: str = "low") -> dict:
+    subset = [r for r in records if lo <= float(r["true_height_cm"]) < hi]
+    if not subset:
+        subset = records
+    subset = sorted(subset, key=lambda r: float(r["abs_error_cm"]))
+    if rank == "high":
+        return subset[-1]
+    if rank == "mid":
+        return subset[len(subset) // 2]
+    return subset[0]
+
+
+def save_matplotlib(fig, upload_stem: str) -> None:
+    fig.savefig(FIG_OUT / f"{upload_stem}.png", bbox_inches="tight", pad_inches=0.08, dpi=300)
+    fig.savefig(FIG_OUT / f"{upload_stem}.pdf", bbox_inches="tight", pad_inches=0.08)
+    plt.close(fig)
+
+
+def green_mask_array(roi: Image.Image) -> np.ndarray:
+    arr = np.asarray(roi.convert("RGB"), dtype=np.float32)
+    r, g, b = arr[..., 0], arr[..., 1], arr[..., 2]
+    exg = 2.0 * g - r - b
+    chroma = (g > r * 1.04) & (g > b * 1.04)
+    dynamic = exg > np.quantile(exg, 0.60)
+    bright = arr.mean(axis=2) > 20
+    return (dynamic | chroma) & bright
+
+
+def mask_overlay(roi: Image.Image, alpha: int = 105) -> Image.Image:
+    small = roi.convert("RGB")
+    mask = Image.fromarray((green_mask_array(small).astype(np.uint8) * 255), mode="L")
+    overlay = small.convert("RGBA")
+    green = Image.new("RGBA", overlay.size, (35, 170, 105, alpha))
+    return Image.composite(green, overlay, mask).convert("RGB")
+
+
+def build_fig2_benchmark_comparison(records: list[dict], rev: dict) -> None:
+    upload = FIG_NAME_BY_STEM["fig2_benchmark_comparison"]
+    canvas = Image.new("RGB", (2400, 1600), "white")
+    draw = ImageDraw.Draw(canvas)
+    title_font = pil_font(52, True)
+    head_font = pil_font(34, True)
+    body_font = pil_font(25)
+    small_font = pil_font(21)
+    blue = (68, 114, 196)
+    green = (29, 158, 117)
+    orange = (216, 90, 48)
+    gray = (110, 114, 120)
+    black = (32, 33, 36)
+    draw.text((70, 45), "Source vs DATA325 benchmark comparison", font=title_font, fill=black)
+    draw.text((70, 112), "Real photographs show why DATA325 is an external domain-shift benchmark, not a random validation split.", font=body_font, fill=gray)
+
+    draw.rectangle((70, 190, 1130, 1325), fill=(247, 249, 251), outline=blue, width=4)
+    draw.rectangle((1270, 190, 2330, 1325), fill=(247, 249, 251), outline=green, width=4)
+    draw.text((105, 220), "Source hand-bbox set", font=head_font, fill=blue)
+    draw.text((1305, 220), "DATA325 target greenhouse", font=head_font, fill=green)
+
+    source_files = [
+        source_sample("106-64-*_bbox.jpg"),
+        source_sample("140-121-*_bbox.jpg"),
+        source_sample("140-170-*_bbox.jpg"),
+        source_sample("140-270-*_bbox.jpg"),
+    ]
+    target_records = [
+        choose_by_height(records, 0, 80, "low"),
+        choose_by_height(records, 80, 120, "mid"),
+        choose_by_height(records, 120, 160, "low"),
+        choose_by_height(records, 160, 260, "low"),
+    ]
+    grid_boxes = [(110, 285, 565, 590), (620, 285, 1075, 590), (110, 655, 565, 960), (620, 655, 1075, 960)]
+    for path, box in zip(source_files, grid_boxes):
+        img = Image.open(path).convert("RGB")
+        paste_fit(canvas, img, box, (250, 250, 250))
+        draw.text((box[0], box[3] + 12), path.stem.replace("_bbox", ""), font=small_font, fill=gray)
+    grid_boxes_r = [(1310, 285, 1765, 590), (1820, 285, 2275, 590), (1310, 655, 1765, 960), (1820, 655, 2275, 960)]
+    for rec, box in zip(target_records, grid_boxes_r):
+        img = draw_bbox_on_image(DATA325_IMAGE_DIR / rec["file_name"], rec["bbox"], green)
+        paste_fit(canvas, img, box, (250, 250, 250))
+        draw.text((box[0], box[3] + 12), f"{rec['true_height_cm']:.0f} cm, {rec['box_id']}", font=small_font, fill=gray)
+
+    table_y = 1040
+    rows = [
+        ("Role", "Training/calibration", "External zero-shot evaluation"),
+        ("Samples", "156 hand-box ROIs", "82 evaluated boxes from 25 images"),
+        ("Height range", "64-270 cm", "30-178 cm"),
+        ("Camera heights", "106 and 140 cm", "mapped per image, mainly 140 cm"),
+        ("Leakage control", "Source-domain only", "No target labels used for training"),
+    ]
+    col_x = [115, 475, 1360, 1910]
+    for i, (k, a, b) in enumerate(rows):
+        y = table_y + i * 52
+        draw.text((115, y), k, font=body_font, fill=black)
+        draw.text((470, y), a, font=body_font, fill=blue)
+        draw.text((1310, y), k, font=body_font, fill=black)
+        draw_wrapped(draw, (1665, y), b, body_font, green, 565, 2)
+
+    draw.rectangle((70, 1370, 2330, 1485), fill=(248, 238, 233), outline=orange, width=3)
+    draw.text((105, 1395), "Benchmark framing", font=head_font, fill=orange)
+    draw_wrapped(
+        draw,
+        (470, 1390),
+        "DATA325 is used as a diagnostic cross-greenhouse benchmark: the goal is to measure whether frozen foundation features and ROI-level aggregation transfer across real greenhouse conditions.",
+        body_font,
+        black,
+        1750,
+        2,
+    )
+    save_png_pdf(canvas, upload)
+
+
+def build_fig3_distribution(records: list[dict], rev: dict) -> None:
+    upload = FIG_NAME_BY_STEM["fig3_distribution"]
+    roi = rev["roi_metrics"]
+    heights = np.array([float(r["true_height_cm"]) for r in records])
+    cams = np.array([float(r["camera_height_cm"]) for r in records])
+    bbox_area = np.array([to_float(r, "bbox_area_fraction") for r in roi])
+    fg = np.array([to_float(r, "foreground_fraction") for r in roi])
+    bins = [0, 80, 120, 160, 220]
+    plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10})
+    fig, axs = plt.subplots(2, 2, figsize=(12.7, 7.6), dpi=220)
+    axs = axs.ravel()
+    axs[0].hist(heights, bins=bins, color=f"#{GREEN}", edgecolor="white")
+    axs[0].axvline(80, color=f"#{ORANGE}", linestyle="--", lw=2)
+    axs[0].set_title("(a) DATA325 height distribution")
+    axs[0].set_xlabel("Ground-truth height (cm)")
+    axs[0].set_ylabel("Boxes")
+    axs[1].hist(cams, bins=8, color=f"#{BLUE}", edgecolor="white")
+    axs[1].set_title("(b) Camera-height metadata")
+    axs[1].set_xlabel("Camera height (cm)")
+    axs[1].set_ylabel("Boxes")
+    axs[2].hist(bbox_area[np.isfinite(bbox_area)] * 100, bins=12, color="#7E57C2", edgecolor="white")
+    axs[2].set_title("(c) Manual bbox area")
+    axs[2].set_xlabel("BBox area (% of image)")
+    axs[2].set_ylabel("Boxes")
+    axs[3].hist(fg[np.isfinite(fg)] * 100, bins=12, color=f"#{ORANGE}", edgecolor="white")
+    axs[3].set_title("(d) Foreground fraction from color-index mask")
+    axs[3].set_xlabel("Foreground fraction (%)")
+    axs[3].set_ylabel("Boxes")
+    for ax in axs:
+        ax.grid(axis="y", color="#D8DEE6", lw=0.6)
+        ax.spines[["top", "right"]].set_visible(False)
+    fig.suptitle("DATA325 distribution and imbalance", fontsize=16, weight="bold")
+    save_matplotlib(fig, upload)
+
+
+def build_fig4_preprocessing(records: list[dict], rev: dict) -> None:
+    upload = FIG_NAME_BY_STEM["fig4_preprocessing"]
+    recs = [choose_by_height(records, 0, 80, "mid"), choose_by_height(records, 80, 120, "mid"), choose_by_height(records, 120, 220, "mid")]
+    canvas = Image.new("RGB", (2400, 1580), "white")
+    draw = ImageDraw.Draw(canvas)
+    title_font = pil_font(50, True)
+    head_font = pil_font(28, True)
+    body_font = pil_font(22)
+    green = (29, 158, 117)
+    orange = (216, 90, 48)
+    blue = (68, 114, 196)
+    gray = (112, 117, 125)
+    black = (32, 33, 36)
+    draw.text((70, 40), "Preprocessing and ROI-quality diagnostics", font=title_font, fill=black)
+    headers = ["Raw target image", "Manual bbox", "ROI crop", "224 x 224 input", "Plant-mask diagnostic"]
+    x_boxes = [(70, 190, 490, 520), (535, 190, 955, 520), (1000, 190, 1370, 520), (1415, 190, 1695, 520), (1740, 190, 2330, 520)]
+    for x0, _, x1, _ in x_boxes:
+        draw.rectangle((x0, 145, x1, 180), fill=(231, 243, 238), outline=green, width=1)
+    for i, h in enumerate(headers):
+        draw.text((x_boxes[i][0] + 8, 151), h, font=body_font, fill=green)
+    y_offsets = [190, 640, 1090]
+    for row_idx, rec in enumerate(recs):
+        y0 = y_offsets[row_idx]
+        boxes = [(70, y0, 490, y0 + 330), (535, y0, 955, y0 + 330), (1000, y0, 1370, y0 + 330), (1415, y0, 1695, y0 + 330), (1740, y0, 2330, y0 + 330)]
+        path = DATA325_IMAGE_DIR / rec["file_name"]
+        raw = Image.open(path).convert("RGB")
+        bb = draw_bbox_on_image(path, rec["bbox"], green if row_idx != 0 else orange)
+        roi = crop_roi(path, rec["bbox"])
+        resized = roi.resize((224, 224), Image.Resampling.LANCZOS)
+        overlay = mask_overlay(roi)
+        for img, box in zip([raw, bb, roi, resized, overlay], boxes):
+            paste_fit(canvas, img, box, (250, 250, 250))
+            draw.rectangle(box, outline=(218, 224, 230), width=2)
+        note = f"GT {rec['true_height_cm']:.0f} cm | pred {rec['pred_height_cm']:.1f} cm | AE {rec['abs_error_cm']:.1f} cm"
+        draw.text((70, y0 + 345), note, font=head_font, fill=blue if row_idx > 0 else orange)
+        draw.line((493, y0 + 165, 532, y0 + 165), fill=gray, width=3)
+        draw.line((958, y0 + 165, 997, y0 + 165), fill=gray, width=3)
+        draw.line((1373, y0 + 165, 1412, y0 + 165), fill=gray, width=3)
+        draw.line((1698, y0 + 165, 1737, y0 + 165), fill=gray, width=3)
+    draw_wrapped(
+        draw,
+        (1745, 1445),
+        "Mask panels are deterministic color-index diagnostics for foreground/background quantification. They are not generated images and are not used as training labels.",
+        body_font,
+        gray,
+        570,
+        2,
+    )
+    save_png_pdf(canvas, upload)
+
+
+def build_fig6_attention_roi(records: list[dict], rev: dict) -> None:
+    upload = FIG_NAME_BY_STEM["fig6_attention_roi"]
+    recs = [choose_by_height(records, 0, 80, "high"), choose_by_height(records, 80, 120, "mid"), choose_by_height(records, 120, 220, "low")]
+    canvas = Image.new("RGB", (2400, 1550), "white")
+    draw = ImageDraw.Draw(canvas)
+    title_font = pil_font(50, True)
+    head_font = pil_font(30, True)
+    body_font = pil_font(24)
+    small_font = pil_font(20)
+    blue = (68, 114, 196)
+    green = (29, 158, 117)
+    orange = (216, 90, 48)
+    gray = (110, 114, 120)
+    black = (32, 33, 36)
+    draw.text((70, 40), "Attention-guided pooling on real maize ROIs", font=title_font, fill=black)
+    draw.text((70, 108), "Real crops supply the evidence; the token-pooling diagram explains the feature aggregation step.", font=body_font, fill=gray)
+
+    y = 210
+    for rec in recs:
+        path = DATA325_IMAGE_DIR / rec["file_name"]
+        roi = crop_roi(path, rec["bbox"])
+        overlay = mask_overlay(roi)
+        paste_fit(canvas, roi, (90, y, 500, y + 280), (250, 250, 250))
+        paste_fit(canvas, overlay, (535, y, 945, y + 280), (250, 250, 250))
+        draw.rectangle((90, y, 500, y + 280), outline=green, width=3)
+        draw.rectangle((535, y, 945, y + 280), outline=orange, width=3)
+        draw.text((90, y - 34), f"GT {rec['true_height_cm']:.0f} cm, AE {rec['abs_error_cm']:.1f} cm", font=head_font, fill=black)
+        draw.text((95, y + 292), "ROI crop", font=small_font, fill=gray)
+        draw.text((540, y + 292), "Foreground QA overlay", font=small_font, fill=gray)
+        y += 400
+
+    x0, y0 = 1130, 245
+    draw.rectangle((x0, y0, 2315, 1305), fill=(247, 249, 251), outline=blue, width=4)
+    draw.text((x0 + 35, y0 + 35), "Token aggregation control", font=head_font, fill=blue)
+    stages = [
+        ("224 x 224 ROI", "Patch tokens + CLS"),
+        ("Frozen DINOv3 ViT-L", "No target-domain training"),
+        ("CLS-to-patch attention", "Average heads, normalize patches"),
+        ("Weighted patch descriptor", "1024D plant-focused feature"),
+        ("DCF regression head", "feature + camera height -> plant height"),
+    ]
+    sy = y0 + 120
+    for i, (a, b) in enumerate(stages):
+        color = [green, blue, orange, green, blue][i]
+        draw.rectangle((x0 + 65, sy, x0 + 1035, sy + 115), fill="white", outline=color, width=3)
+        draw.text((x0 + 90, sy + 20), a, font=head_font, fill=color)
+        draw.text((x0 + 90, sy + 64), b, font=body_font, fill=black)
+        if i < len(stages) - 1:
+            draw.line((x0 + 550, sy + 118, x0 + 550, sy + 155), fill=gray, width=3)
+            draw.polygon([(x0 + 540, sy + 150), (x0 + 560, sy + 150), (x0 + 550, sy + 168)], fill=gray)
+        sy += 175
+    draw_wrapped(
+        draw,
+        (x0 + 65, 1350),
+        "The overlay at left is not a DINO attention map; it is a deterministic color-index diagnostic used to quantify ROI contamination. Real DINO attention examples are shown in Fig. 13.",
+        body_font,
+        gray,
+        1050,
+        2,
+    )
+    save_png_pdf(canvas, upload)
+
+
+def build_fig7_domain_shift_thumbnails(records: list[dict], rev: dict) -> None:
+    upload = FIG_NAME_BY_STEM["fig7_domain_shift_thumb"]
+    canvas = Image.new("RGB", (2400, 1520), "white")
+    draw = ImageDraw.Draw(canvas)
+    title_font = pil_font(50, True)
+    head_font = pil_font(30, True)
+    body_font = pil_font(23)
+    blue = (68, 114, 196)
+    green = (29, 158, 117)
+    orange = (216, 90, 48)
+    gray = (110, 114, 120)
+    black = (32, 33, 36)
+    draw.text((70, 40), "Feature-space domain shift with ROI thumbnails", font=title_font, fill=black)
+    tsne = ROOT / "tsne_source_vs_data325.png"
+    if tsne.exists():
+        img = Image.open(tsne).convert("RGB")
+        paste_fit(canvas, img, (70, 155, 1290, 1205), (255, 255, 255))
+    draw.rectangle((70, 155, 1290, 1205), outline=(218, 224, 230), width=2)
+    draw.text((1325, 155), "Source ROI examples", font=head_font, fill=blue)
+    source_files = sorted(SOURCE_SAMPLE_DIR.glob("*_bbox.jpg"))[:12]
+    for i, path in enumerate(source_files[:8]):
+        col, row = i % 4, i // 4
+        box = (1325 + col * 245, 210 + row * 310, 1545 + col * 245, 465 + row * 310)
+        paste_fit(canvas, Image.open(path).convert("RGB"), box, (250, 250, 250))
+        draw.rectangle(box, outline=blue, width=2)
+    draw.text((1325, 850), "DATA325 target ROI examples", font=head_font, fill=green)
+    target_recs = [choose_by_height(records, 0, 80, "mid"), choose_by_height(records, 80, 120, "mid"), choose_by_height(records, 120, 160, "mid"), choose_by_height(records, 160, 220, "low")]
+    target_recs += sorted(records, key=lambda r: r["abs_error_cm"], reverse=True)[:4]
+    for i, rec in enumerate(target_recs[:8]):
+        col, row = i % 4, i // 4
+        box = (1325 + col * 245, 905 + row * 235, 1545 + col * 245, 1110 + row * 235)
+        paste_fit(canvas, crop_roi(DATA325_IMAGE_DIR / rec["file_name"], rec["bbox"]), box, (250, 250, 250))
+        draw.rectangle(box, outline=green if rec["abs_error_cm"] < 35 else orange, width=2)
+    draw.rectangle((70, 1360, 2330, 1480), fill=(247, 249, 251), outline=orange, width=3)
+    draw_wrapped(
+        draw,
+        (105, 1382),
+        "The existing feature map contains 20 source and 20 DATA325 ROI features. The thumbnail panels extend the visual context by showing real source and target crops from the benchmark, but no additional feature points are fabricated.",
+        body_font,
+        black,
+        2140,
+        3,
+    )
+    save_png_pdf(canvas, upload)
+
+
+def build_fig8_ablation_ci(m: dict, rev: dict) -> None:
+    upload = FIG_NAME_BY_STEM["fig8_ablation_ci"]
+    model_summary = rev["summary"].get("model_summary", {})
+    bootstrap = rev["bootstrap"]
+    order = ["old", "cls", "patch_mean", "attn", "corrected_camheight", "attn_aug", "attn_aug_tta8", "attn_aug_featurealign", "dann"]
+    labels = {
+        "old": "Old CLS",
+        "cls": "CLS retrain",
+        "patch_mean": "Patch mean",
+        "attn": "Attention",
+        "corrected_camheight": "Camera fixed",
+        "attn_aug": "Attn+aug",
+        "attn_aug_tta8": "Attn+aug+TTA8",
+        "attn_aug_featurealign": "Feature align",
+        "dann": "DANN",
+    }
+    xs, maes, lows, highs, colors = [], [], [], [], []
+    for key in order:
+        if key not in model_summary or key not in bootstrap:
+            continue
+        point = float(model_summary[key]["mae_cm"])
+        ci = bootstrap[key]["mae_cm"]
+        xs.append(labels[key])
+        maes.append(point)
+        lows.append(point - float(ci["ci95_low"]))
+        highs.append(float(ci["ci95_high"]) - point)
+        colors.append(f"#{GREEN}" if "attn" in key and "feature" not in key else f"#{BLUE}" if key in ("old", "cls", "patch_mean") else f"#{ORANGE}")
+    fig, ax = plt.subplots(figsize=(13, 6.6), dpi=220)
+    ax.bar(range(len(xs)), maes, yerr=[lows, highs], capsize=4, color=colors, edgecolor="#2F3A45", linewidth=0.8)
+    ax.set_ylabel("DATA325 MAE (cm)")
+    ax.set_title("Zero-shot DATA325 ablations with bootstrap 95% CI", fontsize=15, weight="bold")
+    ax.set_xticks(range(len(xs)))
+    ax.set_xticklabels(xs, rotation=25, ha="right")
+    ax.grid(axis="y", color="#D8DEE6", lw=0.6)
+    ax.spines[["top", "right"]].set_visible(False)
+    best_idx = xs.index("Attn+aug+TTA8") if "Attn+aug+TTA8" in xs else len(xs) - 1
+    ax.annotate("Best external MAE", xy=(best_idx, maes[best_idx]), xytext=(best_idx - 1.9, maes[best_idx] - 9), arrowprops=dict(arrowstyle="->", color=f"#{ORANGE}", lw=1.5), color=f"#{ORANGE}", weight="bold")
+    save_matplotlib(fig, upload)
+
+
+def build_fig9_resampling_stats(rev: dict) -> None:
+    upload = FIG_NAME_BY_STEM["fig9_resampling_stats"]
+    resampling = rev["resampling"]
+    paired = rev["paired"]
+    left_order = [k for k in ["old", "cls", "patch_mean", "attn", "attn_aug", "attn_aug_tta8"] if k in resampling]
+    fig, axs = plt.subplots(1, 2, figsize=(13.2, 6.2), dpi=220)
+    labels = [k.replace("_", "\n") for k in left_order]
+    means = [resampling[k]["point_mae_cm"] for k in left_order]
+    lows = [means[i] - resampling[k]["resampled_mae_ci95_low"] for i, k in enumerate(left_order)]
+    highs = [resampling[k]["resampled_mae_ci95_high"] - means[i] for i, k in enumerate(left_order)]
+    axs[0].bar(range(len(left_order)), means, yerr=[lows, highs], color=f"#{GREEN}", edgecolor="#2F3A45", capsize=4)
+    axs[0].set_xticks(range(len(left_order)))
+    axs[0].set_xticklabels(labels)
+    axs[0].set_ylabel("MAE (cm)")
+    axs[0].set_title("(a) Bootstrap resampling of existing predictions")
+    keys = [k for k in ["old", "cls", "patch_mean", "attn", "attn_aug_featurealign", "dann"] if k in paired]
+    deltas = [paired[k]["mean_abs_error_delta_cm"] for k in keys]
+    lo = [deltas[i] - paired[k]["ci95_low"] for i, k in enumerate(keys)]
+    hi = [paired[k]["ci95_high"] - deltas[i] for i, k in enumerate(keys)]
+    axs[1].barh(range(len(keys)), deltas, xerr=[lo, hi], color=f"#{ORANGE}", edgecolor="#2F3A45", capsize=4)
+    axs[1].axvline(0, color="#555", lw=1)
+    axs[1].set_yticks(range(len(keys)))
+    axs[1].set_yticklabels([k.replace("_", " ") for k in keys])
+    axs[1].set_xlabel("Mean AE delta vs Attn+aug+TTA8 (cm)")
+    axs[1].set_title("(b) Paired per-box improvement")
+    for ax in axs:
+        ax.grid(axis="x" if ax is axs[1] else "y", color="#D8DEE6", lw=0.6)
+        ax.spines[["top", "right"]].set_visible(False)
+    fig.suptitle("Robustness diagnostics without overclaiming independent seed retraining", fontsize=15, weight="bold")
+    save_matplotlib(fig, upload)
+
+
+def build_fig10_height_bin_ci(rev: dict) -> None:
+    upload = FIG_NAME_BY_STEM["fig10_height_bin_ci"]
+    bins = rev["height_bins"]
+    order = [k for k in ["<80", "80-120", "120-160", ">=160"] if k in bins]
+    mae = [bins[k]["point"]["mae_cm"] for k in order]
+    mape = [bins[k]["point"]["mape_percent"] for k in order]
+    n = [bins[k]["point"]["n"] for k in order]
+    lo = [mae[i] - bins[k]["mae_cm"]["ci95_low"] for i, k in enumerate(order)]
+    hi = [bins[k]["mae_cm"]["ci95_high"] - mae[i] for i, k in enumerate(order)]
+    fig, ax1 = plt.subplots(figsize=(12.8, 6.2), dpi=220)
+    bars = ax1.bar(range(len(order)), mae, yerr=[lo, hi], color=[f"#{ORANGE}" if k == "<80" else f"#{GREEN}" for k in order], edgecolor="#2F3A45", capsize=4)
+    ax1.set_ylabel("MAE (cm)")
+    ax1.set_xticks(range(len(order)))
+    ax1.set_xticklabels([f"{k}\n(n={n[i]})" for i, k in enumerate(order)])
+    ax1.grid(axis="y", color="#D8DEE6", lw=0.6)
+    ax2 = ax1.twinx()
+    ax2.plot(range(len(order)), mape, marker="o", color=f"#{BLUE}", lw=2.5)
+    ax2.set_ylabel("MAPE (%)")
+    ax1.set_title("Height-bin error concentrates in early-stage DATA325 plants", fontsize=15, weight="bold")
+    for ax in (ax1, ax2):
+        ax.spines["top"].set_visible(False)
+    save_matplotlib(fig, upload)
+
+
+def build_fig11_roi_contamination(rev: dict) -> None:
+    upload = FIG_NAME_BY_STEM["fig11_roi_contamination"]
+    rows = rev["roi_metrics"]
+    fg = np.array([to_float(r, "foreground_fraction") for r in rows])
+    bg = np.array([to_float(r, "background_fraction") for r in rows])
+    err = np.array([to_float(r, "abs_error_cm") for r in rows])
+    std = np.array([to_float(r, "pred_std_cm") for r in rows])
+    fig = plt.figure(figsize=(13.2, 8.0), dpi=220, constrained_layout=True)
+    gs = fig.add_gridspec(2, 2, width_ratios=[1, 1], height_ratios=[1, 1])
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax3 = fig.add_subplot(gs[1, 0])
+    ax4 = fig.add_subplot(gs[1, 1])
+    ax1.scatter(fg * 100, err, c=f"#{GREEN}", edgecolors="white", s=46, alpha=0.9)
+    ax1.set_xlabel("Foreground fraction (%)")
+    ax1.set_ylabel("Absolute error (cm)")
+    ax1.set_title("(a) Foreground vs error")
+    ax2.scatter(bg * 100, err, c=f"#{ORANGE}", edgecolors="white", s=46, alpha=0.9)
+    ax2.set_xlabel("Background fraction (%)")
+    ax2.set_ylabel("Absolute error (cm)")
+    ax2.set_title("(b) Background vs error")
+    ax3.scatter(std, err, c=f"#{BLUE}", edgecolors="white", s=46, alpha=0.9)
+    ax3.set_xlabel("TTA prediction std. (cm)")
+    ax3.set_ylabel("Absolute error (cm)")
+    ax3.set_title("(c) TTA uncertainty vs error")
+    for ax in (ax1, ax2, ax3):
+        ax.grid(color="#D8DEE6", lw=0.6)
+        ax.spines[["top", "right"]].set_visible(False)
+    ax4.set_axis_off()
+    examples = sorted(MASK_EXAMPLE_DIR.glob("high_error_mask_*.jpg"))[:1]
+    ax4.text(0.0, 1.0, "(d) High-error mask QA example", transform=ax4.transAxes, fontsize=11, weight="bold", color=f"#{ORANGE}", va="top")
+    for path in examples:
+        img = Image.open(path).convert("RGB")
+        ax4.imshow(img)
+        ax4.set_axis_off()
+    fig.suptitle("ROI contamination diagnostics from deterministic masks", fontsize=15, weight="bold")
+    save_matplotlib(fig, upload)
+
+
+def build_fig13_attention_error_clean(records: list[dict], rev: dict) -> None:
+    upload = FIG_NAME_BY_STEM["fig8"]
+    over = max(records, key=lambda r: float(r["pred_height_cm"]) - float(r["true_height_cm"]))
+    under = max(records, key=lambda r: float(r["true_height_cm"]) - float(r["pred_height_cm"]))
+    success = min(records, key=lambda r: float(r["abs_error_cm"]))
+    sparse = max([r for r in records if float(r["true_height_cm"]) < 80], key=lambda r: float(r["abs_error_cm"]))
+    uncertain = max(records, key=lambda r: float(r.get("pred_std_cm", 0.0)))
+    cases = [
+        ("Successful", success, (29, 158, 117)),
+        ("Over-estimated", over, (216, 90, 48)),
+        ("Under-estimated", under, (68, 114, 196)),
+        ("Sparse early plant", sparse, (216, 90, 48)),
+        ("High TTA uncertainty", uncertain, (120, 86, 170)),
+    ]
+    canvas = Image.new("RGB", (2400, 1550), "white")
+    draw = ImageDraw.Draw(canvas)
+    title_font = pil_font(50, True)
+    head_font = pil_font(29, True)
+    body_font = pil_font(22)
+    small_font = pil_font(19)
+    black = (32, 33, 36)
+    gray = (110, 114, 120)
+    draw.text((70, 42), "Error-overlay gallery for real DATA325 ROIs", font=title_font, fill=black)
+    draw.text((70, 108), "Each panel uses the real ROI crop, deterministic plant-focus overlay, and the recorded Attn+aug+TTA8 prediction.", font=body_font, fill=gray)
+    card_boxes = [
+        (90, 210, 825, 610),
+        (875, 210, 1610, 610),
+        (1660, 210, 2310, 610),
+        (275, 745, 1010, 1145),
+        (1180, 745, 1915, 1145),
+    ]
+    for (label, rec, color), box in zip(cases, card_boxes):
+        x0, y0, x1, y1 = box
+        draw.rectangle((x0, y0, x1, y1), fill=(247, 249, 251), outline=color, width=4)
+        draw.text((x0 + 20, y0 + 18), label, font=head_font, fill=color)
+        roi = crop_roi(DATA325_IMAGE_DIR / rec["file_name"], rec["bbox"])
+        overlay = mask_overlay(roi)
+        paste_fit(canvas, roi, (x0 + 24, y0 + 70, x0 + 325, y0 + 315), (250, 250, 250))
+        paste_fit(canvas, overlay, (x0 + 355, y0 + 70, x0 + 656, y0 + 315), (250, 250, 250))
+        draw.text((x0 + 35, y0 + 324), "ROI crop", font=small_font, fill=gray)
+        draw.text((x0 + 365, y0 + 324), "Plant-focus overlay", font=small_font, fill=gray)
+        metric_line = (
+            f"GT {rec['true_height_cm']:.1f} cm | Pred {rec['pred_height_cm']:.1f} cm | "
+            f"AE {rec['abs_error_cm']:.1f} cm | TTA std. {float(rec.get('pred_std_cm', 0.0)):.2f}"
+        )
+        draw_wrapped(draw, (x0 + 24, y0 + 350), metric_line, body_font, black, x1 - x0 - 48, 1)
+    draw.rectangle((90, 1245, 2310, 1390), fill=(248, 238, 233), outline=(216, 90, 48), width=3)
+    draw_wrapped(
+        draw,
+        (125, 1275),
+        "The green overlays are deterministic color-index plant-focus diagnostics used for visual QA and ROI contamination analysis. They are not generated images and are not used as ground-truth segmentation labels.",
+        body_font,
+        black,
+        2130,
+        2,
+    )
+    save_png_pdf(canvas, upload)
+
+
+def build_fig15_release_map(rev: dict) -> None:
+    upload = FIG_NAME_BY_STEM["fig15_release_map"]
+    canvas = Image.new("RGB", (2400, 1500), "white")
+    draw = ImageDraw.Draw(canvas)
+    title_font = pil_font(52, True)
+    head_font = pil_font(31, True)
+    body_font = pil_font(23)
+    small_font = pil_font(20)
+    blue = (68, 114, 196)
+    green = (29, 158, 117)
+    orange = (216, 90, 48)
+    gray = (110, 114, 120)
+    black = (32, 33, 36)
+    draw.text((70, 45), "Open release and future deployment map", font=title_font, fill=black)
+    draw_wrapped(draw, (70, 115), REPOSITORY_URL, body_font, blue, 1600, 2)
+
+    release_items = [
+        ("DATA325 images", "75 raw greenhouse images"),
+        ("Annotations", "82 boxes, heights, camera metadata"),
+        ("Predictions", "model JSON, bootstrap CI, paired tests"),
+        ("Diagnostics", "ROI masks, taxonomy, uncertainty"),
+        ("Code", "training, evaluation, figure generation"),
+        ("Checkpoints", "DCF heads, no upstream DINOv3 weights"),
+    ]
+    x0, y0 = 80, 240
+    for i, (title, body) in enumerate(release_items):
+        col, row = i % 3, i // 3
+        x = x0 + col * 760
+        y = y0 + row * 245
+        color = [green, blue, orange, green, blue, orange][i]
+        draw.rectangle((x, y, x + 660, y + 160), fill=(247, 249, 251), outline=color, width=4)
+        draw.text((x + 30, y + 25), title, font=head_font, fill=color)
+        draw_wrapped(draw, (x + 30, y + 75), body, body_font, black, 590, 2)
+
+    draw.rectangle((120, 825, 2280, 1275), fill=(248, 238, 233), outline=orange, width=4)
+    draw.text((155, 855), "Future deployment path", font=head_font, fill=orange)
+    stages = [
+        ("Automatic ROI detector", "replace manual boxes"),
+        ("Segmentation-guided normalization", "SAM-style or crop-specific masks"),
+        ("Plant-mask pooling", "reduce background leakage"),
+        ("Multi-greenhouse adaptation", "validate across sites/seasons"),
+        ("Decision support", "height trend and growth-stage outputs"),
+    ]
+    sx = 165
+    sy = 945
+    for i, (a, b) in enumerate(stages):
+        color = [blue, green, orange, green, blue][i]
+        draw.rectangle((sx, sy, sx + 360, sy + 165), fill="white", outline=color, width=3)
+        draw_wrapped(draw, (sx + 22, sy + 24), a, body_font, color, 315, 2)
+        draw_wrapped(draw, (sx + 22, sy + 82), b, small_font, black, 315, 2)
+        if i < len(stages) - 1:
+            draw.line((sx + 365, sy + 82, sx + 425, sy + 82), fill=gray, width=3)
+            draw.polygon([(sx + 420, sy + 72), (sx + 440, sy + 82), (sx + 420, sy + 92)], fill=gray)
+        sx += 425
+    draw_wrapped(
+        draw,
+        (155, 1335),
+        "All evidence panels in the manuscript are traceable to released real images, annotations, prediction JSON, CSV diagnostics, or deterministic figure-generation scripts. Conceptual deployment graphics are code-drawn and not used as experimental evidence.",
+        body_font,
+        gray,
+        2070,
+        2,
+    )
+    save_png_pdf(canvas, upload)
+
+
+def build_real_image_figures() -> None:
+    records = load_data325_records()
+    rev = load_revision_results()
+    build_real_image_protocol_figure(records)
+    build_fig2_benchmark_comparison(records, rev)
+    build_fig3_distribution(records, rev)
+    build_fig4_preprocessing(records, rev)
+    build_fig6_attention_roi(records, rev)
+    build_fig7_domain_shift_thumbnails(records, rev)
+    build_fig8_ablation_ci(metrics(), rev)
+    build_fig9_resampling_stats(rev)
+    build_fig10_height_bin_ci(rev)
+    build_fig11_roi_contamination(rev)
+    build_real_stage_error_gallery(records)
+    build_fig13_attention_error_clean(records, rev)
+    build_fig15_release_map(rev)
+
+
+def add_title_page(doc: Document) -> None:
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run(TITLE)
+    run.bold = True
+    run.font.size = Pt(17)
+    run.font.color.rgb = RGBColor.from_string(BLUE)
+    add_p(doc, "Article type: Original research paper", "Subtitle")
+    add_p(doc, "Target journal: Computers and Electronics in Agriculture")
+    add_p(doc, f"Author: {AUTHOR_NAME}")
+    add_p(doc, f"Affiliation: {AFFILIATION}")
+    add_p(doc, f"Corresponding author: {AUTHOR_NAME} ({CORRESPONDING_EMAIL})")
+    add_p(doc, "Highlights file: included separately. Graphical abstract: optional code-generated file included.")
+    add_p(doc, "Figure files: 15. Editable tables: 2. Supplementary material: 1.")
+    add_p(doc, f"Code and data repository: {REPOSITORY_URL}")
+    doc.add_page_break()
+
+
+def revision_refs() -> list[str]:
+    return [
+        "Ariza-Sentis, M., et al., 2024. Object detection and tracking in precision farming: a systematic review. Computers and Electronics in Agriculture 219, 108757. doi:10.1016/j.compag.2024.108757.",
+        "Caron, M., Touvron, H., Misra, I., et al., 2021. Emerging properties in self-supervised vision transformers. Proceedings of the IEEE/CVF International Conference on Computer Vision, 9650-9660.",
+        "Chang, A., Jung, J., Maeda, M.M., Landivar, J., 2017. Crop height monitoring with digital imagery from Unmanned Aerial System (UAS). Computers and Electronics in Agriculture 141, 232-237. doi:10.1016/j.compag.2017.07.008.",
+        "Che, Y., Gu, Y., Bai, D., Li, D., Li, J., Zhao, C., et al., 2024. Accurately estimate soybean growth stages from UAV imagery by accounting for spatial heterogeneity and climate factors across multiple environments. Computers and Electronics in Agriculture 225, 109313. doi:10.1016/j.compag.2024.109313.",
+        "Dosovitskiy, A., Beyer, L., Kolesnikov, A., et al., 2021. An image is worth 16x16 words: transformers for image recognition at scale. International Conference on Learning Representations.",
+        "Fahlgren, N., Gehan, M.A., Baxter, I., 2015. Lights, camera, action: high-throughput plant phenotyping is ready for a close-up. Current Opinion in Plant Biology 24, 93-99.",
+        "Fiorani, F., Schurr, U., 2013. Future scenarios for plant phenotyping. Annual Review of Plant Biology 64, 267-291.",
+        "Ganin, Y., Ustinova, E., Ajakan, H., et al., 2016. Domain-adversarial training of neural networks. Journal of Machine Learning Research 17, 1-35.",
+        "Gulrajani, I., Lopez-Paz, D., 2021. In search of lost domain generalization. International Conference on Learning Representations.",
+        "Jayasuriya, N., Guo, Y., Hu, W., Ghannoum, O., 2024. Machine vision based plant height estimation for protected crop facilities. Computers and Electronics in Agriculture 218, 108669. doi:10.1016/j.compag.2024.108669.",
+        "Kamilaris, A., Prenafeta-Boldu, F.X., 2018. Deep learning in agriculture: a survey. Computers and Electronics in Agriculture 147, 70-90. doi:10.1016/j.compag.2018.02.016.",
+        "Kim, W., Lee, D., Kim, Y., Kim, T., Lee, W., Choi, C., 2021. Stereo-vision-based crop height estimation for agricultural robots. Computers and Electronics in Agriculture 181, 105937. doi:10.1016/j.compag.2020.105937.",
+        "Kirillov, A., Mintun, E., Ravi, N., Mao, H., Rolland, C., Gustafson, L., et al., 2023. Segment anything. IEEE/CVF International Conference on Computer Vision, 4015-4026.",
+        "Koh, P.W., Sagawa, S., Marklund, H., Xie, S.M., Zhang, M., Balsubramani, A., et al., 2021. WILDS: a benchmark of in-the-wild distribution shifts. Proceedings of Machine Learning Research 139, 5637-5664.",
+        "Li, L., Zhang, Q., Huang, D., 2014. A review of imaging techniques for plant phenotyping. Sensors 14, 20078-20111.",
+        "Li, M., Sui, R., Meng, Y., Yan, H., 2019. A real-time fuzzy decision support system for alfalfa irrigation. Computers and Electronics in Agriculture 163, 104870. doi:10.1016/j.compag.2019.104870.",
+        "Li, Z., Guo, R., Li, M., Chen, Y., Li, G., 2020. A review of computer vision technologies for plant phenotyping. Computers and Electronics in Agriculture 176, 105672. doi:10.1016/j.compag.2020.105672.",
+        "Liu, H., Bruning, B., Garnett, T., Berger, B., 2020. Hyperspectral imaging and 3D technologies for plant phenotyping: from satellite to close-range sensing. Computers and Electronics in Agriculture 175, 105621. doi:10.1016/j.compag.2020.105621.",
+        "Oquab, M., Darcet, T., Moutakanni, T., et al., 2024. DINOv2: learning robust visual features without supervision. Transactions on Machine Learning Research.",
+        "Patricio, D.I., Rieder, R., 2018. Computer vision and artificial intelligence in precision agriculture for grain crops: a systematic review. Computers and Electronics in Agriculture 153, 69-81. doi:10.1016/j.compag.2018.08.001.",
+        "Reena, Doonan, J.H., Williams, K., Corke, F.M.K., Zhang, H., Batke, S., Liu, Y., 2025. Wheat3D PartNet: annotated dataset for 3D wheat part segmentation. Computers and Electronics in Agriculture 238, 110697. doi:10.1016/j.compag.2025.110697.",
+        "Shorten, C., Khoshgoftaar, T.M., 2019. A survey on image data augmentation for deep learning. Journal of Big Data 6, 60.",
+        "Simeoni, O., Vo, H.V., Seitzer, M., et al., 2025. DINOv3. arXiv:2508.10104. doi:10.48550/arXiv.2508.10104.",
+        "Sun, B., Saenko, K., 2016. Deep CORAL: correlation alignment for deep domain adaptation. European Conference on Computer Vision Workshops, 443-450. doi:10.1007/978-3-319-49409-8_35.",
+        "Ubbens, J.R., Stavness, I., 2017. Deep Plant Phenomics: a deep learning platform for complex plant phenotyping tasks. Frontiers in Plant Science 8, 1190.",
+        "Veramendi, W., Cruvinel, P., 2024. Method for maize plants counting and crop evaluation based on multispectral images analysis. Computers and Electronics in Agriculture 216, 108470. doi:10.1016/j.compag.2023.108470.",
+        "Wang, D., Shelhamer, E., Liu, S., Olshausen, B., Darrell, T., 2021. Tent: fully test-time adaptation by entropy minimization. International Conference on Learning Representations.",
+        "Xie, T., Li, J., Yang, C., Jiang, Z., Chen, Y., Guo, L., Zhang, J., 2021. Crop height estimation based on UAV images: methods, errors, and strategies. Computers and Electronics in Agriculture 185, 106155. doi:10.1016/j.compag.2021.106155.",
+        "Xing, Z., Zhang, Z., Shi, R., Guo, Q., Zeng, C., 2023. Filament-necking localization method via combining improved PSO with rotated rectangle algorithm for safflower-picking robots. Computers and Electronics in Agriculture 215, 108464. doi:10.1016/j.compag.2023.108464.",
+    ]
+
+
+def build_manuscript(m: dict) -> Path:
+    rev = load_revision_results()
+    model_summary = rev["summary"].get("model_summary", {})
+    best = rev["summary"].get("best_model_metrics", {})
+    roi_summary = rev["roi_summary"]
+    morph = rev["morphometric"].get("summary", {})
+    tax = rev["taxonomy_summary"]
+    unc = rev["uncertainty"].get("overall", {})
+
+    doc = setup_doc()
+    add_title_page(doc)
+    doc.add_heading("Abstract", level=1)
+    abstract = (
+        "Cross-greenhouse crop-height estimation is difficult because model training images and deployment images differ in plant stage, background, imaging geometry, and ROI quality. "
+        "We present DATA325 as a reproducible diagnostic benchmark for external maize height evaluation and test DINOv3-DiffCorn-Fusion (DINOv3-DCF), an ROI-level pipeline that connects frozen DINOv3 features to a DCF regression head. "
+        "The source hand-box set contains 156 maize ROIs, and DATA325 contains 82 evaluated boxes from 25 independent greenhouse images. "
+        "Compared with the original CLS baseline (41.75 cm MAE), attention-weighted patch pooling reduced zero-shot DATA325 MAE to 30.37 cm, and the best attention plus augmentation plus TTA8 variant reached 29.57 cm MAE, 38.98 cm RMSE, and 36.14% MAPE. "
+        "Bootstrap confidence intervals, paired per-box comparisons, ROI foreground diagnostics, morphometric baselines, uncertainty analysis, and error taxonomy show that the remaining gap concentrates in early-stage plants below 80 cm and is not explained by camera-height correction, bbox geometry, feature-statistic alignment, or the tested DANN setup. "
+        "The open release provides images, annotations, predictions, diagnostics, scripts, and selected DCF checkpoints for future cross-greenhouse phenotyping research."
+    )
+    add_p(doc, abstract)
+    add_p(doc, "Keywords: maize phenotyping; plant height; greenhouse imaging; foundation model; DINOv3; domain shift; attention pooling; benchmark")
+
+    doc.add_heading("1. Introduction", level=1)
+    for para in [
+        "Plant height is a common phenotyping trait because it reflects growth stage, biomass accumulation, lodging risk, and crop-management status. Automated image-based height estimation has been studied through UAS crop-height models, UAV error analysis, stereo vision for agricultural robots, and protected-crop machine vision (Chang et al., 2017; Xie et al., 2021; Kim et al., 2021; Jayasuriya et al., 2024). These systems show that computer and electronic imaging can reduce manual measurement burden, but they also show that camera geometry, environment, and data-processing assumptions strongly affect the final trait estimate.",
+        "Agricultural computer vision has moved from hand-engineered features to deep learning, object detection, and phenotyping-specific pipelines (Patricio and Rieder, 2018; Kamilaris and Prenafeta-Boldu, 2018; Li et al., 2020; Ariza-Sentis et al., 2024). CEA studies on alfalfa decision support, maize plant counting, safflower localization, and soybean growth-stage estimation illustrate that agricultural vision systems must deal with crop-specific structure, complex backgrounds, and multi-environment variation (Li et al., 2019; Veramendi and Cruvinel, 2024; Xing et al., 2023; Che et al., 2024).",
+        "A central risk is data leakage and weak external validation. Random image splits can put visually near-identical plants, dates, benches, or backgrounds in both training and testing. Broader distribution-shift work shows that source-domain accuracy is not a reliable substitute for deployment evaluation (Koh et al., 2021; Gulrajani and Lopez-Paz, 2021). Greenhouse maize height estimation is especially sensitive because early plants occupy small portions of the ROI and share the crop with pots, labels, substrate, benches, and shadows.",
+        "Foundation-model features are attractive because self-supervised ViTs learn reusable visual representations and attention maps with emergent localization behavior (Dosovitskiy et al., 2021; Caron et al., 2021; Oquab et al., 2024; Simeoni et al., 2025). However, a global CLS token can summarize background context together with plant tissue. For ROI-level phenotyping, attention-weighted patch pooling may better match the biological object than a single global token, while keeping the visual backbone frozen and reproducible.",
+        "This manuscript is therefore reframed as a DATA325 benchmark and DINOv3-DCF evaluation pipeline. Following the logic of Wheat3D PartNet, which first establishes data resource quality before presenting model results (Reena et al., 2025), we first document DATA325 acquisition, annotation, distributions, and preprocessing. We then evaluate feature aggregation, statistical robustness, ROI contamination, uncertainty, and failure categories. The goal is not to claim a complete deployed height system, but to identify what frozen foundation features can and cannot solve under zero-shot cross-greenhouse transfer.",
+    ]:
+        add_p(doc, para)
+
+    doc.add_heading("2. Materials and methods", level=1)
+    doc.add_heading("2.1. Benchmark acquisition, annotation, and open release", level=2)
+    for para in [
+        "Model development used a source-domain hand-bounding-box maize dataset; external testing used the independent DATA325 target greenhouse. DATA325 target labels were used only for final evaluation, statistical diagnostics, and visualization, not for training, hyperparameter selection, or early stopping. This defines the reported results as zero-shot cross-greenhouse evaluation.",
+        "DATA325 currently contains 75 raw greenhouse photographs. The evaluated subset contains 25 completed images and 82 manually annotated plant boxes with measured plant heights and camera-height metadata. The source hand-box set contains 156 ROIs and spans 64-270 cm, while DATA325 spans 30-178 cm and contains more early-stage plants. Manual ROIs were used as an experimental control because automatic detection, tracking, and segmentation errors can confound trait-regression evaluation under agricultural clutter (Ariza-Sentis et al., 2024; Xing et al., 2023; Kirillov et al., 2023).",
+        f"The release repository ({REPOSITORY_URL}) is organized to expose raw DATA325 images, cleaned annotations, prediction JSON files, statistical diagnostics, figure scripts, and selected DCF checkpoints. Upstream DINOv3 weights are not redistributed and must be obtained from the upstream source under its license.",
+    ]:
+        add_p(doc, para)
+    add_named_figure(doc, "fig_real_protocol")
+    add_named_figure(doc, "fig2_benchmark_comparison")
+    add_named_figure(doc, "fig3_distribution")
+    add_named_figure(doc, "fig4_preprocessing")
+
+    doc.add_heading("2.2. DINOv3-DCF model and feature aggregation", level=2)
+    for para in [
+        "DINOv3-DCF receives an ROI crop and camera-height context. Each crop is resized to 224 x 224 pixels and processed by a frozen DINOv3 ViT-L backbone. The DCF head receives a 1024-dimensional visual descriptor plus one camera-height scalar and predicts a 64-dimensional phytomer representation, from which plant height is computed through internode-related outputs.",
+        "Three frozen-backbone aggregation modes were compared. CLS pooling uses the final CLS token. Patch-mean pooling averages all patch tokens. Attention-weighted pooling averages final-layer CLS-to-patch attention over heads, normalizes weights over patch positions, and computes a weighted patch-token descriptor. The descriptor dimension is unchanged, so the experiment isolates the aggregation choice rather than redesigning the regressor.",
+        "Visual augmentation and TTA8 were applied as limited robustness interventions. Training-time augmentation perturbed color and peripheral ROI appearance. TTA8 averaged one original prediction and seven color-perturbed predictions at inference. Prediction standard deviation from TTA8 was retained for uncertainty diagnostics.",
+    ]:
+        add_p(doc, para)
+    add_named_figure(doc, "fig1")
+    add_named_figure(doc, "fig6_attention_roi")
+
+    doc.add_heading("2.3. Diagnostics and statistics", level=2)
+    for para in [
+        "The revision adds deterministic statistics from existing prediction outputs and real DATA325 crops. Bootstrap 95% confidence intervals were computed for MAE, RMSE, and MAPE with 5000 resamples. Paired bootstrap differences and exact sign tests compared per-box absolute errors against the Attn+aug+TTA8 model.",
+        "ROI contamination was quantified using non-generative color-index masks. The diagnostic mask estimates foreground fraction, background fraction, bbox fill ratio, bbox area fraction, aspect ratio, brightness, and edge contact. It is used only for error analysis and figure QA, not as a training label or a replacement for plant segmentation.",
+        "A leave-one-image-out ridge regression using DATA325 morphometric and mask features was included as a diagnostic target-label baseline. Because it uses target labels, it is not a zero-shot comparator. It estimates whether simple bbox and foreground geometry can explain the measured heights if DATA325 labels are allowed.",
+        "The existing negative controls were retained: per-image camera-height correction, bbox geometry, attention-map geometry priors, feature-statistic alignment inspired by Deep CORAL, and a DANN-style adversarial model (Sun and Saenko, 2016; Ganin et al., 2016).",
+    ]:
+        add_p(doc, para)
+
+    doc.add_heading("3. Results", level=1)
+    doc.add_heading("3.1. DATA325 exposes feature-space domain shift", level=2)
+    add_p(doc, f"DINOv3 feature analysis showed a source-target centroid distance of {fmt(m['centroid_distance'])}, relative mean shift of {fmt(m['mean_shift'])}%, and relative standard-deviation shift of {fmt(m['std_shift'])}%. The thumbnails in Fig. 7 show that the embedding separation corresponds to visible greenhouse and growth-stage differences rather than an abstract numerical artifact.")
+    add_named_figure(doc, "fig7_domain_shift_thumb")
+
+    doc.add_heading("3.2. Attention pooling gives the largest zero-shot gain", level=2)
+    add_p(doc, f"The original CLS baseline reached 41.75 cm DATA325 MAE. CLS retraining reached {fmt(model_summary.get('cls', {}).get('mae_cm', 45.86))} cm MAE, patch-mean pooling reached {fmt(model_summary.get('patch_mean', {}).get('mae_cm', 33.53))} cm, and attention-weighted pooling reached {fmt(model_summary.get('attn', {}).get('mae_cm', 30.41))} cm. The best Attn+aug+TTA8 model reached {fmt(best.get('mae_cm', 29.57))} cm MAE, {fmt(best.get('rmse_cm', 38.98))} cm RMSE, and {fmt(best.get('mape_percent', 36.14))}% MAPE.")
+    add_p(doc, "Bootstrap intervals and paired differences confirm that the improvement is distributed across the DATA325 boxes. The resampling analysis is deliberately reported as bootstrap robustness of existing checkpoints, not as independent random-seed retraining; this avoids overstating evidence that has not yet been generated by full multi-seed model training.")
+    add_named_figure(doc, "fig8_ablation_ci")
+    add_named_figure(doc, "fig9_resampling_stats")
+    add_ablation_table(doc, m)
+
+    doc.add_heading("3.3. Early-stage plants remain the main failure mode", level=2)
+    early = rev["height_bins"].get("<80", {}).get("point", {})
+    add_p(doc, f"Height-bin analysis identifies early-stage plants as the main bottleneck. For DATA325 boxes below 80 cm, MAE was {fmt(early.get('mae_cm', 31.80))} cm and MAPE was {fmt(early.get('mape_percent', 55.11))}%. Taller bins had lower relative error, consistent with stronger plant-structure evidence and less background-dominated ROI content.")
+    add_named_figure(doc, "fig10_height_bin_ci")
+    add_height_bin_table(doc, m)
+
+    doc.add_heading("3.4. ROI contamination and uncertainty contribute but do not explain the gap", level=2)
+    fg_corr = roi_summary.get("correlations_with_abs_error", {}).get("foreground_fraction", {})
+    bg_corr = roi_summary.get("correlations_with_abs_error", {}).get("background_fraction", {})
+    std_corr = unc.get("pred_std_vs_abs_error", {})
+    add_p(doc, f"The deterministic foreground mask estimated mean foreground fraction at {fmt(roi_summary.get('foreground_fraction_mean', 0) * 100)}%. Correlation with absolute error was weak for foreground fraction (Pearson r={fmt(fg_corr.get('pearson_r', 0), 3)}) and background fraction (r={fmt(bg_corr.get('pearson_r', 0), 3)}). TTA prediction standard deviation was also weakly correlated with absolute error (r={fmt(std_corr.get('pearson_r', 0), 3)}).")
+    add_p(doc, f"The target-label morphometric baseline reached {fmt(morph.get('mae_cm', 0))} cm MAE under leave-one-image-out evaluation. Because this baseline uses DATA325 labels, it is a diagnostic upper-bound check, not a deployable zero-shot result. It shows that bbox geometry and foreground proportion alone do not provide a clean physical solution.")
+    add_named_figure(doc, "fig11_roi_contamination")
+
+    doc.add_heading("3.5. Real-image galleries and negative controls localize the residual problem", level=2)
+    add_p(doc, "The qualitative galleries show that high-error examples are often early, sparse, background-heavy, or TTA-unstable. The rule-based error taxonomy assigned 32 boxes to early-stage sparse structure, 15 to unstable TTA prediction, 10 to bbox ambiguity, and 25 to residual cross-domain shift. These categories are intended as diagnostic labels for future benchmark development rather than as ground-truth biological classes.")
+    add_named_figure(doc, "fig_real_stage_error_gallery")
+    add_named_figure(doc, "fig8")
+    add_p(doc, f"Negative controls further narrow the interpretation. Camera-height correction changed MAE by only about 0.03 cm. Bbox geometry reached Pearson r={fmt(m['bbox_r'], 3)} and MAE {fmt(m['bbox_mae'])} cm. Feature-statistic alignment worsened MAE to 45.98 cm, and the tested DANN model reached 34.20 cm MAE while the domain classifier remained near {fmt(m['dann_final_acc'] * 100, 0)}% accuracy.")
+    add_named_figure(doc, "fig7")
+
+    doc.add_heading("4. Discussion", level=1)
+    for para in [
+        "The study now reads as a benchmark-and-pipeline paper rather than a single model result. The benchmark component matters because DATA325 is an external target greenhouse with real image clutter, stage imbalance, manual annotation, and released evaluation records. This improves the credibility of the result and aligns the manuscript with CEA data-resource papers such as Wheat3D PartNet, while remaining focused on a 2D crop-height evaluation problem (Reena et al., 2025).",
+        "The method contribution is deliberately scoped. DINOv3-DCF does not rebuild a complete agricultural robot, UAS, or stereo geometry system; instead it tests frozen foundation features under a strict ROI-level cross-greenhouse setting. This distinguishes it from UAS/SfM crop-height models, stereo crop-height estimation, and protected-facility geometry pipelines (Chang et al., 2017; Xie et al., 2021; Kim et al., 2021; Jayasuriya et al., 2024).",
+        "The practical lesson is that plant-focused feature aggregation matters more than simple metadata correction or marginal feature alignment. Attention-weighted pooling improved external MAE without fine-tuning DINOv3, whereas camera-height correction, bbox geometry, Deep-CORAL-style feature-statistic alignment, and the tested DANN setup did not close the gap. This is valuable for agricultural AI because it identifies a low-complexity intervention and an honest residual failure mode.",
+        "The main limitation is scale. DATA325 is intentionally presented as a diagnostic benchmark, not a complete deployment dataset. It contains 82 evaluated boxes from 25 annotated images, and the source/target split covers one external greenhouse rather than multiple locations, seasons, cultivars, cameras, and management regimes. Full 3-seed retraining robustness is planned but not claimed in this version; the current statistical robustness is bootstrap resampling of existing checkpoint predictions.",
+        "Future work should replace manual boxes with an automatic detector evaluated under the same leakage controls, add segmentation-guided ROI normalization using crop-specific masks or SAM-style prompts, develop plant-mask pooling and structural priors inspired by 3D phenotyping resources, and expand DATA325 across additional greenhouses and growth stages (Kirillov et al., 2023; Liu et al., 2020; Reena et al., 2025).",
+    ]:
+        add_p(doc, para)
+    add_named_figure(doc, "fig15_release_map")
+
+    doc.add_heading("5. Conclusions", level=1)
+    add_p(doc, "DATA325 provides a reproducible cross-greenhouse maize height benchmark for diagnosing foundation-feature transfer. Attention-weighted DINOv3 patch pooling reduced zero-shot external MAE from 41.75 to 30.37 cm, and Attn+aug+TTA8 reached 29.57 cm MAE. The residual error is concentrated in early-stage plants and is not solved by simple camera-height correction, bbox geometry, feature-statistic alignment, or the tested DANN configuration. The release package makes the current benchmark, predictions, diagnostics, and figure-generation workflow available for future agricultural computer vision work.")
+
+    doc.add_heading("Data availability", level=1)
+    add_p(doc, f"DATA325 images, annotations, prediction outputs, revision diagnostics, selected DCF checkpoints, and scripts are organized for public release at {REPOSITORY_URL}. Upstream DINOv3 weights are not redistributed.")
+
+    doc.add_heading("Declaration of generative AI and AI-assisted technologies", level=1)
+    add_p(doc, "AI-assisted writing and coding tools were used to help draft and organize text and scripts. The authors reviewed and edited all content and are responsible for the final manuscript. Generative AI was not used to create or modify DATA325/source experimental images, attention heatmaps, statistical plots, or evidence figures in this submission package. Conceptual and workflow graphics were generated by deterministic Python drawing scripts.")
+
+    doc.add_heading("References", level=1)
+    for ref in revision_refs():
+        add_p(doc, ref)
+
+    out = OUT / "manuscript_cea.docx"
+    doc.save(out)
+    return out
+
+
+def build_highlights() -> Path:
+    highlights = [
+        "DATA325 benchmarks zero-shot cross-greenhouse maize height transfer.",
+        "Attention pooling reduced DATA325 MAE from 41.75 to 30.37 cm.",
+        "Attn+aug+TTA8 reached 29.57 cm MAE on 82 DATA325 boxes.",
+        "Bootstrap diagnostics localize errors in plants below 80 cm.",
+        "Open assets include images, boxes, predictions, diagnostics, and code.",
+    ]
+    for item in highlights:
+        if len(item) > 85:
+            raise ValueError(f"Highlight exceeds Elsevier guidance: {item}")
+    doc = setup_doc()
+    doc.add_heading("Highlights", level=1)
+    for item in highlights:
+        p = doc.add_paragraph()
+        p.paragraph_format.space_after = Pt(6)
+        p.add_run(f"- {item}")
+    out = OUT / "highlights.docx"
+    doc.save(out)
+    (OUT / "highlights.txt").write_text("\n".join(f"- {item}" for item in highlights) + "\n", encoding="utf-8")
+    return out
+
+
+def build_cover_letter() -> Path:
+    doc = setup_doc()
+    doc.add_heading("Cover letter", level=1)
+    paragraphs = [
+        "Dear Editors,",
+        f"I submit the manuscript entitled \"{TITLE}\" for consideration as an Original research paper in Computers and Electronics in Agriculture.",
+        "The revision reframes the work as a reproducible cross-greenhouse maize height benchmark plus an attention-guided DINOv3-DCF evaluation pipeline. This better matches the journal's emphasis on computational innovation in agricultural imaging rather than a simple application of an existing AI model.",
+        "The manuscript now follows a Wheat3D-style logic: it first documents DATA325 acquisition, manual ROI annotation, data distributions, preprocessing, and open-release assets; it then reports zero-shot model results, bootstrap confidence intervals, paired tests, ROI contamination diagnostics, a morphometric baseline, uncertainty analysis, error taxonomy, and negative controls.",
+        "The main result is that attention-weighted pooling reduced DATA325 MAE from 41.75 to 30.37 cm, and the best attention plus augmentation plus TTA8 variant reached 29.57 cm MAE on 82 boxes. The remaining errors concentrate in plants below 80 cm and are not removed by camera-height correction, bbox geometry, feature-statistic alignment, or the tested DANN setup.",
+        "The figure set has been expanded to 15 main figures using real DATA325/source images, true annotations, true prediction outputs, deterministic statistical plots, and code-drawn conceptual diagrams. Generative AI was not used to create or modify scientific evidence figures.",
+        f"Data, code, predictions, diagnostics, and selected DCF checkpoints are organized for public release at {REPOSITORY_URL}.",
+        "This manuscript is original and is not under consideration elsewhere.",
+        "Sincerely,",
+        f"{AUTHOR_NAME}",
+        f"{AFFILIATION}",
+        CORRESPONDING_EMAIL,
+    ]
+    for para in paragraphs:
+        add_p(doc, para)
+    out = OUT / "cover_letter_cea.docx"
+    doc.save(out)
+    return out
+
+
+def build_supplement(m: dict) -> Path:
+    rev = load_revision_results()
+    doc = setup_doc()
+    doc.add_heading("Supplementary material", level=1)
+    add_p(doc, f"Supplementary material for: {TITLE}")
+    doc.add_heading("S1. Revision experiment outputs", level=2)
+    for item in [
+        "bootstrap_ci.json: 5000-resample MAE, RMSE, and MAPE intervals for each available model output.",
+        "paired_tests.json: paired per-box absolute-error differences against Attn+aug+TTA8.",
+        "roi_quality_metrics.csv: foreground fraction, background fraction, bbox geometry, brightness, and TTA std for each DATA325 box.",
+        "morphometric_baseline.json: leave-one-image-out target-label diagnostic baseline using bbox and mask features.",
+        "uncertainty_diagnostic.json: TTA prediction-std analysis by error and height bin.",
+        "error_taxonomy.csv: rule-based failure categories for all DATA325 boxes.",
+    ]:
+        p = doc.add_paragraph()
+        p.add_run(f"- {item}")
+    doc.add_heading("S2. Diagnostic summaries", level=2)
+    add_p(doc, f"Foreground fraction mean: {fmt(rev['roi_summary'].get('foreground_fraction_mean', 0) * 100)}%. Background fraction mean: {fmt(rev['roi_summary'].get('background_fraction_mean', 0) * 100)}%.")
+    morph = rev["morphometric"].get("summary", {})
+    add_p(doc, f"Leave-one-image-out morphometric diagnostic baseline: MAE {fmt(morph.get('mae_cm', 0))} cm, RMSE {fmt(morph.get('rmse_cm', 0))} cm, median AE {fmt(morph.get('median_abs_error_cm', 0))} cm. This uses target labels and is not a zero-shot deployment result.")
+    doc.add_heading("S3. Mask QA examples", level=2)
+    for path in sorted(MASK_EXAMPLE_DIR.glob("*.jpg"))[:6]:
+        p = doc.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.add_run().add_picture(str(path), width=Inches(5.7))
+        add_caption(doc, f"Supplementary mask QA example: {path.name}.")
+    doc.add_heading("S4. Main figure list", level=2)
+    for _, upload, caption, _ in FIGURES:
+        add_p(doc, f"{upload}: {caption}")
+    out = OUT / "supplementary_material.docx"
+    doc.save(out)
+    return out
+
+
+def write_sidecars(m: dict) -> None:
+    (OUT / "data_availability_statement.md").write_text(
+        textwrap.dedent(
+            f"""\
+            # Data availability statement
+
+            DATA325 raw images, manual bounding boxes, plant-height labels, camera-height
+            metadata, model-prediction JSON files, revision diagnostics, selected DCF
+            checkpoints, and reproducibility scripts are organized for public release at:
+
+            {REPOSITORY_URL}
+
+            The archive file prepared for release is {OPEN_RELEASE_ARCHIVE}. Upstream
+            DINOv3 foundation-model weights are not redistributed and must be obtained
+            from their upstream source under the applicable license.
+            """
+        ),
+        encoding="utf-8",
+    )
+    (OUT / "submission_checklist_cea.md").write_text(
+        textwrap.dedent(
+            """\
+            # Computers and Electronics in Agriculture submission checklist
+
+            ## Included
+            - manuscript_cea.docx
+            - highlights.docx and highlights.txt
+            - cover_letter_cea.docx
+            - supplementary_material.docx
+            - graphical_abstract_non_ai.png/pdf
+            - figures/Figure_1...Figure_15 as PNG/PDF
+            - tables/table1_ablation.csv and table2_height_bins.csv
+            - reproducibility_json/*.json
+            - data_availability_statement.md
+            - submission_asset_manifest.md
+
+            ## Notes
+            - Article type: Original research paper.
+            - Abstract is below 250 words.
+            - Each highlight is below 85 characters.
+            - Evidence figures use real images, real annotations, model outputs, or deterministic plotting.
+            - No generated DATA325/source experimental image is included.
+            - Full independent multi-seed retraining is not claimed; current robustness is bootstrap resampling.
+            """
+        ),
+        encoding="utf-8",
+    )
+    manifest = [
+        "# CEA submission asset manifest",
+        "",
+        "## Main files",
+        "- manuscript_cea.docx",
+        "- highlights.docx",
+        "- highlights.txt",
+        "- cover_letter_cea.docx",
+        "- supplementary_material.docx",
+        "- graphical_abstract_non_ai.png/pdf",
+        "",
+        "## Main figures",
+    ]
+    for _, upload_stem, caption, _ in FIGURES:
+        manifest.append(f"- figures/{upload_stem}.png and .pdf: {caption}")
+    manifest.extend(
+        [
+            "",
+            "## Revision diagnostics",
+            "- experiments/cea_revision/run_cea_revision_experiments.py generated bootstrap CI, paired tests, ROI quality metrics, morphometric baseline, uncertainty diagnostics, and error taxonomy.",
+            "- Deterministic color-index masks quantify foreground/background only; they are not generated images, labels, or model training inputs.",
+            "- Resampling robustness is bootstrap analysis of existing predictions and is not reported as independent random-seed retraining.",
+            "",
+            "## Open-source release",
+            f"- Repository: {REPOSITORY_URL}",
+            f"- Planned archive: {OPEN_RELEASE_ARCHIVE}",
+            "",
+            "## Added literature sources",
+            "- CEA crop-height/protected crop: Chang 2017; Xie 2021; Kim 2021; Jayasuriya 2024.",
+            "- CEA phenotyping/AI reviews and datasets: Patricio 2018; Kamilaris 2018; Li 2020; Liu 2020; Reena 2025.",
+            "- CEA crop-specific examples: Li 2019; Xing 2023; Che 2024; Veramendi and Cruvinel 2024; Ariza-Sentis 2024.",
+            "- Generalization/foundation models: Sun and Saenko 2016; Koh 2021; Gulrajani and Lopez-Paz 2021; Caron 2021; Kirillov 2023.",
+            "",
+            "## Reproducibility JSON",
+        ]
+    )
+    for p in sorted(REPRO_OUT.glob("*.json")):
+        manifest.append(f"- reproducibility_json/{p.name}")
+    (OUT / "submission_asset_manifest.md").write_text("\n".join(manifest) + "\n", encoding="utf-8")
+
+
 def main() -> None:
     copy_assets()
     build_real_image_figures()

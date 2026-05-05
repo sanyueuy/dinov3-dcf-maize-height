@@ -22,11 +22,12 @@ SLUG = "dinov3_dcf_maize_height_open_release_v0_1_0"
 AUTHOR = "Hong Wu"
 AFFILIATION = "China Agricultural University"
 CONTACT_EMAIL = "jchen@cau.edu.cn"
-TITLE = "Attention-guided DINOv3-DiffCorn-Fusion for zero-shot cross-greenhouse maize height estimation"
+TITLE = "A reproducible cross-greenhouse maize height benchmark and attention-guided DINOv3-DCF evaluation pipeline"
 REPOSITORY_URL = "https://github.com/sanyueuy/dinov3-dcf-maize-height"
 
 DATA325_IMAGE_DIR = ROOT / "images"
 FINAL_JSON = ROOT / "data325_zero_shot_attn_aug_tta8" / "data325_zero_shot_comparison_attn_aug_tta8.json"
+CEA_EXP_DIR = ROOT / "experiments" / "cea_revision"
 
 REPRO_JSONS = [
     ROOT / "data325_zero_shot_attn_aug_tta8" / "data325_zero_shot_comparison_attn_aug_tta8.json",
@@ -39,6 +40,15 @@ REPRO_JSONS = [
     ROOT / "bbox_geometry_prior_phaseA.json",
     ROOT / "attention_geometry_prior_phaseA.json",
     ROOT / "tsne_source_vs_data325.json",
+    CEA_EXP_DIR / "bootstrap_ci.json",
+    CEA_EXP_DIR / "paired_tests.json",
+    CEA_EXP_DIR / "roi_quality_summary.json",
+    CEA_EXP_DIR / "morphometric_baseline.json",
+    CEA_EXP_DIR / "uncertainty_diagnostic.json",
+    CEA_EXP_DIR / "error_taxonomy_summary.json",
+    CEA_EXP_DIR / "height_bin_bootstrap.json",
+    CEA_EXP_DIR / "resampling_robustness.json",
+    CEA_EXP_DIR / "cea_revision_summary.json",
 ]
 
 SOURCE_FEATURE_BUNDLES = [
@@ -73,6 +83,7 @@ CODE_FILES = [
     "run_hand_bbox_benchmark.py",
     "evaluate_on_hand_bbox_proper.py",
     "build_hand_bbox_augmented_bundle.py",
+    "experiments/cea_revision/run_cea_revision_experiments.py",
     "build_cea_submission.py",
     "build_open_release.py",
 ]
@@ -89,7 +100,16 @@ def must_be_inside_root(path: Path) -> Path:
 def reset_dir(path: Path) -> None:
     resolved = must_be_inside_root(path)
     if resolved.exists():
-        shutil.rmtree(resolved)
+        if resolved == OUT.resolve() and (resolved / ".git").exists():
+            for child in resolved.iterdir():
+                if child.name == ".git":
+                    continue
+                if child.is_dir():
+                    shutil.rmtree(child)
+                else:
+                    child.unlink()
+        else:
+            shutil.rmtree(resolved)
     resolved.mkdir(parents=True, exist_ok=True)
 
 
@@ -329,6 +349,13 @@ def copy_assets() -> None:
         copy_file(src, OUT / "paper_assets" / "figures" / src.name)
     for src in [ROOT / "cea_submission" / "graphical_abstract_non_ai.png", ROOT / "cea_submission" / "submission_asset_manifest.md"]:
         copy_file(src, OUT / "paper_assets" / src.name)
+    for src in sorted(CEA_EXP_DIR.glob("*.csv")):
+        copy_file(src, OUT / "results" / "cea_revision" / src.name)
+    for src in sorted(CEA_EXP_DIR.glob("*.json")):
+        if src not in REPRO_JSONS:
+            copy_file(src, OUT / "results" / "cea_revision" / src.name)
+    for src in sorted((CEA_EXP_DIR / "mask_examples").glob("*.jpg")):
+        copy_file(src, OUT / "results" / "cea_revision" / "mask_examples" / src.name)
 
 
 def write_release_docs(stats: dict[str, Any]) -> None:
@@ -351,6 +378,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
         - DATA325 greenhouse photographs in `data/DATA325/images/`.
         - Clean DATA325 image metadata, bounding boxes, plant-height labels, camera-height values, and final Attn+aug+TTA8 predictions in `data/DATA325/annotations/` and `data/DATA325/predictions/`.
         - Sanitized evaluation JSON files in `results/reproducibility_json/`.
+        - CEA revision diagnostics in `results/cea_revision/`, including ROI quality metrics, error taxonomy, mask QA examples, bootstrap confidence intervals, and paired tests.
         - Selected DiffCorn-Fusion/DCF checkpoints in `checkpoints/`.
         - Source-domain feature bundles in `data/source_feature_bundles/`.
         - Paper figures and table sidecars in `paper_assets/`.
@@ -380,7 +408,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
 
         ## Notes for public upload
 
-        This release is prepared for GitHub at {REPOSITORY_URL}. Use Git LFS for `*.jpg`, `*.pt`, and `*.pth` files. If a Zenodo DOI is minted from a GitHub release, add that DOI to the manuscript before final submission.
+        This release is prepared for GitHub at {REPOSITORY_URL}. Use Git LFS for `*.jpg`, `*.png`, `*.pt`, and `*.pth` files. If a Zenodo DOI is minted from a GitHub release, add that DOI to the manuscript before final submission.
         """,
     )
     write_text(
@@ -429,10 +457,11 @@ def write_release_docs(stats: dict[str, Any]) -> None:
         2. Inspect final predictions in `data/DATA325/predictions/data325_predictions_attn_aug_tta8.csv`.
         3. Run `python scripts/summarize_data325.py` to recompute MAE/RMSE/median absolute error from the CSV.
         4. Compare detailed method outputs in `results/reproducibility_json/`.
+        5. Inspect `results/cea_revision/` for bootstrap CI, paired tests, ROI contamination diagnostics, morphometric baseline output, uncertainty diagnostics, and rule-based error taxonomy.
 
         ## Full model path
 
-        Full feature extraction requires the upstream DINOv3 model and its license-compliant weights. The archival scripts in `src/` preserve the exact code used during preparation; some of them retain project-specific path constants and may need path edits when run outside `D:\\cornTrain\\DINOV3`.
+        Full feature extraction requires the upstream DINOv3 model and its license-compliant weights. The archival scripts in `src/` preserve the exact code used during preparation; some of them retain project-specific path constants and may need path edits when run outside `D:\\cornTrain\\DINOV3`. Revision diagnostics are reproducible from released prediction CSV/JSON files and real DATA325 images without redistributing DINOv3 weights.
 
         ## Excluded large/upstream files
 
@@ -610,6 +639,8 @@ def write_helper_scripts() -> None:
         assert len(pred) == info["box_count"], (len(pred), info["box_count"])
         missing = [row["file_name"] for row in ann if not (root / "data" / "DATA325" / "images" / row["file_name"]).exists()]
         assert not missing, missing[:5]
+        assert (root / "results" / "cea_revision" / "roi_quality_metrics.csv").exists()
+        assert (root / "results" / "reproducibility_json" / "cea_revision_summary.json").exists()
         print("OK")
         print(f"images={len(images)} boxes={len(ann)} predictions={len(pred)}")
         """,

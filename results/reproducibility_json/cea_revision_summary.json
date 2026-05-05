@@ -1,0 +1,272 @@
+{
+  "generated_by": "experiments/cea_revision/run_cea_revision_experiments.py",
+  "bootstrap_seed": 20260505,
+  "bootstrap_n": 5000,
+  "model_summary": {
+    "old": {
+      "feature_mode": "cls",
+      "path": "./data325_zero_shot/data325_zero_shot_comparison.json",
+      "n": 82,
+      "mae_cm": 41.757666425007145,
+      "rmse_cm": 51.871575698605945,
+      "median_abs_error_cm": 37.2761344909668,
+      "mape_percent": 53.99633620014306
+    },
+    "cls": {
+      "feature_mode": "cls",
+      "path": "./data325_zero_shot/data325_zero_shot_comparison.json",
+      "n": 82,
+      "mae_cm": 45.86054881026105,
+      "rmse_cm": 57.243936149588215,
+      "median_abs_error_cm": 38.476837158203125,
+      "mape_percent": 59.60922918164561
+    },
+    "patch_mean": {
+      "feature_mode": "patch_mean",
+      "path": "./data325_zero_shot/data325_zero_shot_comparison.json",
+      "n": 82,
+      "mae_cm": 33.53448021121142,
+      "rmse_cm": 43.71926913925454,
+      "median_abs_error_cm": 26.870895385742188,
+      "mape_percent": 41.71875483679212
+    },
+    "attn": {
+      "feature_mode": "attn_weighted",
+      "path": "./data325_zero_shot/data325_zero_shot_comparison.json",
+      "n": 82,
+      "mae_cm": 30.407656506794254,
+      "rmse_cm": 39.661642322493584,
+      "median_abs_error_cm": 22.771324157714844,
+      "mape_percent": 37.54911109499277
+    },
+    "corrected_camheight": {
+      "feature_mode": "attn_weighted",
+      "path": "./data325_zero_shot_corrected_camheight/data325_zero_shot_comparison_corrected_camheight.json",
+      "n": 82,
+      "mae_cm": 30.374317355272247,
+      "rmse_cm": 39.62204688393202,
+      "median_abs_error_cm": 22.082660675048828,
+      "mape_percent": 37.51131164135716
+    },
+    "attn_aug": {
+      "feature_mode": "attn_weighted",
+      "path": "./data325_zero_shot_attn_aug/data325_zero_shot_comparison_attn_aug.json",
+      "n": 82,
+      "mae_cm": 29.894323581602514,
+      "rmse_cm": 39.13340090334017,
+      "median_abs_error_cm": 23.77184295654297,
+      "mape_percent": 36.59213690089864
+    },
+    "attn_aug_featurealign": {
+      "feature_mode": "attn_weighted",
+      "path": "./data325_zero_shot_attn_aug_featurealign/data325_zero_shot_comparison_attn_aug_featurealign.json",
+      "n": 82,
+      "mae_cm": 45.97980638829673,
+      "rmse_cm": 59.48285494381053,
+      "median_abs_error_cm": 36.74492645263672,
+      "mape_percent": 56.78748255490139
+    },
+    "attn_aug_tta8": {
+      "feature_mode": "attn_weighted",
+      "path": "./data325_zero_shot_attn_aug_tta8/data325_zero_shot_comparison_attn_aug_tta8.json",
+      "n": 82,
+      "mae_cm": 29.573550898854325,
+      "rmse_cm": 38.97683219161265,
+      "median_abs_error_cm": 23.64422082901001,
+      "mape_percent": 36.13797231033507
+    }
+  },
+  "best_model_label": "attn_aug_tta8",
+  "best_model_metrics": {
+    "n": 82,
+    "mae_cm": 29.573550898854325,
+    "rmse_cm": 38.97683219161265,
+    "median_abs_error_cm": 23.64422082901001,
+    "mape_percent": 36.13797231033507
+  },
+  "roi_quality_summary": {
+    "n": 82,
+    "correlations_with_abs_error": {
+      "foreground_fraction": {
+        "pearson_r": -0.07118975614904663,
+        "spearman_r": 0.027742405938115604
+      },
+      "background_fraction": {
+        "pearson_r": 0.07118975614904677,
+        "spearman_r": -0.027742405938115604
+      },
+      "bbox_area_fraction": {
+        "pearson_r": -0.20562388600575726,
+        "spearman_r": -0.20549406297275827
+      },
+      "bbox_aspect_ratio": {
+        "pearson_r": 0.03648506222799563,
+        "spearman_r": 0.024934426051087824
+      },
+      "pred_std_cm": {
+        "pearson_r": 0.11174023202315639,
+        "spearman_r": 0.10710593049705598
+      },
+      "mean_roi_brightness": {
+        "pearson_r": 0.21803511175986207,
+        "spearman_r": 0.032204699557035726
+      }
+    },
+    "foreground_fraction_mean": 0.38521387837612664,
+    "foreground_fraction_median": 0.3903122024809897,
+    "background_fraction_mean": 0.6147861216238734
+  },
+  "morphometric_baseline_summary": {
+    "n": 82,
+    "mae_cm": 19.890178470599263,
+    "rmse_cm": 25.123087538366555,
+    "median_abs_error_cm": 18.555981573932037,
+    "mape_percent": 21.914234903978347,
+    "baseline_type": "leave-one-image-out ridge regression on DATA325 morphometric and mask features",
+    "interpretation": "diagnostic target-label baseline; not a zero-shot external comparator",
+    "features": [
+      "bbox_width_px",
+      "bbox_height_px",
+      "bbox_area_fraction",
+      "bbox_aspect_ratio",
+      "camera_height_cm",
+      "foreground_fraction",
+      "background_fraction"
+    ]
+  },
+  "uncertainty_summary": {
+    "pred_std_vs_abs_error": {
+      "pearson_r": 0.11174023202315639,
+      "spearman_r": 0.10710593049705598
+    },
+    "pred_std_vs_background_fraction": {
+      "pearson_r": 0.2435570683650726,
+      "spearman_r": 0.1948498601451878
+    }
+  },
+  "error_taxonomy_summary": {
+    "early-stage sparse structure": {
+      "n": 32,
+      "mean_abs_error_cm": 31.804688274860382,
+      "median_abs_error_cm": 21.654460906982422
+    },
+    "residual cross-domain shift": {
+      "n": 25,
+      "mean_abs_error_cm": 24.506779747009276,
+      "median_abs_error_cm": 21.37407875061035
+    },
+    "unstable TTA prediction": {
+      "n": 15,
+      "mean_abs_error_cm": 35.06402765909831,
+      "median_abs_error_cm": 29.501657485961914
+    },
+    "bbox ambiguity": {
+      "n": 10,
+      "mean_abs_error_cm": 26.865124034881593,
+      "median_abs_error_cm": 21.451651573181152
+    }
+  },
+  "height_bin_bootstrap": {
+    "<80": {
+      "n_bootstrap": 5000,
+      "point": {
+        "n": 32,
+        "mae_cm": 31.804688274860382,
+        "rmse_cm": 43.83257234710048,
+        "median_abs_error_cm": 21.654460906982422,
+        "mape_percent": 55.1059865051307
+      },
+      "mae_cm": {
+        "mean": 31.827256966656446,
+        "ci95_low": 22.411109997332098,
+        "ci95_high": 43.08527931943534
+      },
+      "rmse_cm": {
+        "mean": 43.1408485103079,
+        "ci95_low": 28.820277812892872,
+        "ci95_high": 59.04937232563145
+      },
+      "mape_percent": {
+        "mean": 55.06428733143778,
+        "ci95_low": 36.026768890707636,
+        "ci95_high": 78.34585309043337
+      }
+    },
+    "80-120": {
+      "n_bootstrap": 5000,
+      "point": {
+        "n": 17,
+        "mae_cm": 35.83630343044506,
+        "rmse_cm": 45.36813872961333,
+        "median_abs_error_cm": 27.250351905822754,
+        "mape_percent": 37.73789771921812
+      },
+      "mae_cm": {
+        "mean": 35.90813068612043,
+        "ci95_low": 23.37676513054792,
+        "ci95_high": 49.47424702223607
+      },
+      "rmse_cm": {
+        "mean": 44.77762426509201,
+        "ci95_low": 28.87463886605401,
+        "ci95_high": 60.05991115593653
+      },
+      "mape_percent": {
+        "mean": 37.81218846748833,
+        "ci95_low": 24.815201082373402,
+        "ci95_high": 51.69502288665022
+      }
+    },
+    "120-160": {
+      "n_bootstrap": 5000,
+      "point": {
+        "n": 27,
+        "mae_cm": 22.646728974801523,
+        "rmse_cm": 26.869662076169043,
+        "median_abs_error_cm": 19.789600372314453,
+        "mape_percent": 16.788289566220314
+      },
+      "mae_cm": {
+        "mean": 22.669966930297566,
+        "ci95_low": 17.374284152631407,
+        "ci95_high": 28.209745000909873
+      },
+      "rmse_cm": {
+        "mean": 26.725498756433414,
+        "ci95_low": 21.01601675414782,
+        "ci95_high": 32.32742647100392
+      },
+      "mape_percent": {
+        "mean": 16.80198088761529,
+        "ci95_low": 12.953323465310733,
+        "ci95_high": 20.831535595929292
+      }
+    },
+    ">=160": {
+      "n_bootstrap": 5000,
+      "point": {
+        "n": 6,
+        "mae_cm": 31.10038471221924,
+        "rmse_cm": 37.87800543413879,
+        "median_abs_error_cm": 33.294538497924805,
+        "mape_percent": 17.515680294772846
+      },
+      "mae_cm": {
+        "mean": 31.279805491447448,
+        "ci95_low": 13.63278579711914,
+        "ci95_high": 48.046186129252085
+      },
+      "rmse_cm": {
+        "mean": 37.31033540651592,
+        "ci95_low": 20.514834783398005,
+        "ci95_high": 49.87150762748678
+      },
+      "mape_percent": {
+        "mean": 17.616274991822063,
+        "ci95_low": 7.74597652925393,
+        "ci95_high": 27.006630443481374
+      }
+    }
+  },
+  "note_on_seed_robustness": "Independent random-seed retraining is not inferred from this script. The provided robustness file summarizes bootstrap resampling of the available checkpoints."
+}

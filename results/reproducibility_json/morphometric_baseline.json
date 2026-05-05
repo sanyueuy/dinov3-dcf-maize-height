@@ -1,0 +1,678 @@
+{
+  "summary": {
+    "n": 82,
+    "mae_cm": 19.890178470599263,
+    "rmse_cm": 25.123087538366555,
+    "median_abs_error_cm": 18.555981573932037,
+    "mape_percent": 21.914234903978347,
+    "baseline_type": "leave-one-image-out ridge regression on DATA325 morphometric and mask features",
+    "interpretation": "diagnostic target-label baseline; not a zero-shot external comparator",
+    "features": [
+      "bbox_width_px",
+      "bbox_height_px",
+      "bbox_area_fraction",
+      "bbox_aspect_ratio",
+      "camera_height_cm",
+      "foreground_fraction",
+      "background_fraction"
+    ]
+  },
+  "predictions": [
+    {
+      "image_id": "img-00001",
+      "file_name": "1774430024570838644287054889188-02631b6e.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 92.25528016487921,
+      "abs_error_cm": 22.25528016487921
+    },
+    {
+      "image_id": "img-00002",
+      "file_name": "17744301502163781479087360760338-1fad2c6d.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 93.0,
+      "pred_height_cm": 97.73680610479597,
+      "abs_error_cm": 4.736806104795974
+    },
+    {
+      "image_id": "img-00002",
+      "file_name": "17744301502163781479087360760338-1fad2c6d.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 120.0,
+      "pred_height_cm": 108.9562543081601,
+      "abs_error_cm": 11.043745691839902
+    },
+    {
+      "image_id": "img-00002",
+      "file_name": "17744301502163781479087360760338-1fad2c6d.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 132.0,
+      "pred_height_cm": 124.73968618444717,
+      "abs_error_cm": 7.260313815552834
+    },
+    {
+      "image_id": "img-00003",
+      "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 66.88525144082007,
+      "abs_error_cm": 3.1147485591799295
+    },
+    {
+      "image_id": "img-00003",
+      "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 132.0,
+      "pred_height_cm": 76.67203458037986,
+      "abs_error_cm": 55.32796541962014
+    },
+    {
+      "image_id": "img-00003",
+      "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 50.0,
+      "pred_height_cm": 79.87970209915369,
+      "abs_error_cm": 29.87970209915369
+    },
+    {
+      "image_id": "img-00003",
+      "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+      "box_id": "box-004",
+      "true_height_cm": 67.0,
+      "pred_height_cm": 65.0992630428843,
+      "abs_error_cm": 1.9007369571156971
+    },
+    {
+      "image_id": "img-00003",
+      "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+      "box_id": "box-005",
+      "true_height_cm": 93.0,
+      "pred_height_cm": 79.96034017887857,
+      "abs_error_cm": 13.039659821121433
+    },
+    {
+      "image_id": "img-00004",
+      "file_name": "17744301993284573787410288776325-7480244a.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 54.0,
+      "pred_height_cm": 50.348988577607564,
+      "abs_error_cm": 3.651011422392436
+    },
+    {
+      "image_id": "img-00004",
+      "file_name": "17744301993284573787410288776325-7480244a.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 68.0,
+      "pred_height_cm": 88.5402855852275,
+      "abs_error_cm": 20.540285585227494
+    },
+    {
+      "image_id": "img-00004",
+      "file_name": "17744301993284573787410288776325-7480244a.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 94.37996336005338,
+      "abs_error_cm": 24.37996336005338
+    },
+    {
+      "image_id": "img-00004",
+      "file_name": "17744301993284573787410288776325-7480244a.jpg",
+      "box_id": "box-004",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 106.37848008231806,
+      "abs_error_cm": 36.37848008231806
+    },
+    {
+      "image_id": "img-00005",
+      "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 98.10616553302422,
+      "abs_error_cm": 28.106165533024225
+    },
+    {
+      "image_id": "img-00005",
+      "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 54.0,
+      "pred_height_cm": 34.73405242300959,
+      "abs_error_cm": 19.265947576990413
+    },
+    {
+      "image_id": "img-00005",
+      "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 50.0,
+      "pred_height_cm": 88.8948772850391,
+      "abs_error_cm": 38.8948772850391
+    },
+    {
+      "image_id": "img-00005",
+      "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+      "box_id": "box-004",
+      "true_height_cm": 120.0,
+      "pred_height_cm": 104.75184902091527,
+      "abs_error_cm": 15.248150979084727
+    },
+    {
+      "image_id": "img-00005",
+      "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+      "box_id": "box-005",
+      "true_height_cm": 152.0,
+      "pred_height_cm": 101.9824517092284,
+      "abs_error_cm": 50.0175482907716
+    },
+    {
+      "image_id": "img-00006",
+      "file_name": "1774430238852960689785442958145-464106e4.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 85.23726311291418,
+      "abs_error_cm": 15.237263112914178
+    },
+    {
+      "image_id": "img-00006",
+      "file_name": "1774430238852960689785442958145-464106e4.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 138.0,
+      "pred_height_cm": 115.20956029858853,
+      "abs_error_cm": 22.790439701411472
+    },
+    {
+      "image_id": "img-00006",
+      "file_name": "1774430238852960689785442958145-464106e4.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 152.0,
+      "pred_height_cm": 125.92556869100648,
+      "abs_error_cm": 26.074431308993525
+    },
+    {
+      "image_id": "img-00009",
+      "file_name": "17744303135233599081906654160060-ed92c39d.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 104.0206043398515,
+      "abs_error_cm": 34.0206043398515
+    },
+    {
+      "image_id": "img-00009",
+      "file_name": "17744303135233599081906654160060-ed92c39d.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 152.0,
+      "pred_height_cm": 114.71848500671001,
+      "abs_error_cm": 37.28151499328999
+    },
+    {
+      "image_id": "img-00015",
+      "file_name": "17744303589887365481729323921052-f269cae6.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 97.0,
+      "pred_height_cm": 72.47094431398854,
+      "abs_error_cm": 24.52905568601146
+    },
+    {
+      "image_id": "img-00046",
+      "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 135.0,
+      "pred_height_cm": 132.47401412530695,
+      "abs_error_cm": 2.525985874693049
+    },
+    {
+      "image_id": "img-00046",
+      "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 90.03432874542578,
+      "abs_error_cm": 20.034328745425782
+    },
+    {
+      "image_id": "img-00046",
+      "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 159.0,
+      "pred_height_cm": 160.24137151696948,
+      "abs_error_cm": 1.2413715169694797
+    },
+    {
+      "image_id": "img-00046",
+      "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+      "box_id": "box-004",
+      "true_height_cm": 122.0,
+      "pred_height_cm": 156.19591247979855,
+      "abs_error_cm": 34.19591247979855
+    },
+    {
+      "image_id": "img-00046",
+      "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+      "box_id": "box-005",
+      "true_height_cm": 135.0,
+      "pred_height_cm": 165.79353211714925,
+      "abs_error_cm": 30.793532117149255
+    },
+    {
+      "image_id": "img-00046",
+      "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+      "box_id": "box-006",
+      "true_height_cm": 88.0,
+      "pred_height_cm": 72.62987639935943,
+      "abs_error_cm": 15.370123600640568
+    },
+    {
+      "image_id": "img-00047",
+      "file_name": "17744321793357439543515068175302-a13e2949.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 50.23588612925551,
+      "abs_error_cm": 19.764113870744488
+    },
+    {
+      "image_id": "img-00047",
+      "file_name": "17744321793357439543515068175302-a13e2949.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 30.0,
+      "pred_height_cm": 64.57420008114431,
+      "abs_error_cm": 34.57420008114431
+    },
+    {
+      "image_id": "img-00047",
+      "file_name": "17744321793357439543515068175302-a13e2949.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 90.0,
+      "pred_height_cm": 73.94496653100563,
+      "abs_error_cm": 16.055033468994367
+    },
+    {
+      "image_id": "img-00054",
+      "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 74.54776661253867,
+      "abs_error_cm": 4.547766612538666
+    },
+    {
+      "image_id": "img-00054",
+      "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 97.0,
+      "pred_height_cm": 100.77707592087741,
+      "abs_error_cm": 3.777075920877408
+    },
+    {
+      "image_id": "img-00054",
+      "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 73.0,
+      "pred_height_cm": 71.16376788592585,
+      "abs_error_cm": 1.83623211407415
+    },
+    {
+      "image_id": "img-00054",
+      "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+      "box_id": "box-004",
+      "true_height_cm": 134.0,
+      "pred_height_cm": 134.54220886925904,
+      "abs_error_cm": 0.5422088692590421
+    },
+    {
+      "image_id": "img-00054",
+      "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+      "box_id": "box-005",
+      "true_height_cm": 43.0,
+      "pred_height_cm": 60.89036390276375,
+      "abs_error_cm": 17.890363902763752
+    },
+    {
+      "image_id": "img-00055",
+      "file_name": "17744322198111524063972955817959-f6c0d6b3.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 178.0,
+      "pred_height_cm": 153.05286019430605,
+      "abs_error_cm": 24.94713980569395
+    },
+    {
+      "image_id": "img-00055",
+      "file_name": "17744322198111524063972955817959-f6c0d6b3.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 88.0,
+      "pred_height_cm": 88.19135973051031,
+      "abs_error_cm": 0.19135973051031385
+    },
+    {
+      "image_id": "img-00056",
+      "file_name": "17744322244413093210727838268043-bdc9c3a0.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 103.0,
+      "pred_height_cm": 88.52623671387691,
+      "abs_error_cm": 14.473763286123088
+    },
+    {
+      "image_id": "img-00056",
+      "file_name": "17744322244413093210727838268043-bdc9c3a0.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 88.0,
+      "pred_height_cm": 96.90837564393162,
+      "abs_error_cm": 8.90837564393162
+    },
+    {
+      "image_id": "img-00057",
+      "file_name": "17744322286635745009728053765240-1106569a.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 103.0,
+      "pred_height_cm": 100.0826803424028,
+      "abs_error_cm": 2.9173196575972042
+    },
+    {
+      "image_id": "img-00057",
+      "file_name": "17744322286635745009728053765240-1106569a.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 72.0,
+      "pred_height_cm": 107.50178952761279,
+      "abs_error_cm": 35.501789527612786
+    },
+    {
+      "image_id": "img-00057",
+      "file_name": "17744322286635745009728053765240-1106569a.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 73.0,
+      "pred_height_cm": 77.8611313673245,
+      "abs_error_cm": 4.861131367324504
+    },
+    {
+      "image_id": "img-00057",
+      "file_name": "17744322286635745009728053765240-1106569a.jpg",
+      "box_id": "box-004",
+      "true_height_cm": 88.0,
+      "pred_height_cm": 117.09650966847498,
+      "abs_error_cm": 29.09650966847498
+    },
+    {
+      "image_id": "img-00059",
+      "file_name": "17744322421967087302057130033382-ac0e1077.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 159.0,
+      "pred_height_cm": 127.97008801548596,
+      "abs_error_cm": 31.029911984514044
+    },
+    {
+      "image_id": "img-00059",
+      "file_name": "17744322421967087302057130033382-ac0e1077.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 103.0,
+      "pred_height_cm": 83.76877163755589,
+      "abs_error_cm": 19.231228362444114
+    },
+    {
+      "image_id": "img-00060",
+      "file_name": "17744322464787401147269120726982-84dbce12.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 134.0,
+      "pred_height_cm": 134.0503736655738,
+      "abs_error_cm": 0.05037366557380096
+    },
+    {
+      "image_id": "img-00060",
+      "file_name": "17744322464787401147269120726982-84dbce12.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 65.0,
+      "pred_height_cm": 68.21042744689723,
+      "abs_error_cm": 3.210427446897228
+    },
+    {
+      "image_id": "img-00060",
+      "file_name": "17744322464787401147269120726982-84dbce12.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 78.0,
+      "pred_height_cm": 96.24667716078282,
+      "abs_error_cm": 18.246677160782824
+    },
+    {
+      "image_id": "img-00063",
+      "file_name": "17744322671942308763368065297179-80109626.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 85.0,
+      "pred_height_cm": 82.69646518893859,
+      "abs_error_cm": 2.303534811061411
+    },
+    {
+      "image_id": "img-00063",
+      "file_name": "17744322671942308763368065297179-80109626.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 78.0,
+      "pred_height_cm": 96.86528598708125,
+      "abs_error_cm": 18.86528598708125
+    },
+    {
+      "image_id": "img-00063",
+      "file_name": "17744322671942308763368065297179-80109626.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 159.0,
+      "pred_height_cm": 150.32302762827058,
+      "abs_error_cm": 8.67697237172942
+    },
+    {
+      "image_id": "img-00063",
+      "file_name": "17744322671942308763368065297179-80109626.jpg",
+      "box_id": "box-004",
+      "true_height_cm": 135.0,
+      "pred_height_cm": 135.89887396956382,
+      "abs_error_cm": 0.898873969563823
+    },
+    {
+      "image_id": "img-00063",
+      "file_name": "17744322671942308763368065297179-80109626.jpg",
+      "box_id": "box-005",
+      "true_height_cm": 122.0,
+      "pred_height_cm": 122.05545463086278,
+      "abs_error_cm": 0.05545463086278346
+    },
+    {
+      "image_id": "img-00063",
+      "file_name": "17744322671942308763368065297179-80109626.jpg",
+      "box_id": "box-006",
+      "true_height_cm": 178.0,
+      "pred_height_cm": 115.77546245187592,
+      "abs_error_cm": 62.224537548124076
+    },
+    {
+      "image_id": "img-00064",
+      "file_name": "17744323136636410293405002256876-62c27dec.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 105.70724937182966,
+      "abs_error_cm": 35.70724937182966
+    },
+    {
+      "image_id": "img-00064",
+      "file_name": "17744323136636410293405002256876-62c27dec.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 138.0,
+      "pred_height_cm": 131.26981183584823,
+      "abs_error_cm": 6.73018816415177
+    },
+    {
+      "image_id": "img-00068",
+      "file_name": "17744323375852104299749593532205-59c3805d.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 54.0,
+      "pred_height_cm": 52.7561598508381,
+      "abs_error_cm": 1.2438401491618976
+    },
+    {
+      "image_id": "img-00068",
+      "file_name": "17744323375852104299749593532205-59c3805d.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 84.58025225754362,
+      "abs_error_cm": 14.58025225754362
+    },
+    {
+      "image_id": "img-00068",
+      "file_name": "17744323375852104299749593532205-59c3805d.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 68.0,
+      "pred_height_cm": 94.84368174692536,
+      "abs_error_cm": 26.843681746925355
+    },
+    {
+      "image_id": "img-00070",
+      "file_name": "17744323540247076606634106630807-51ce78b3.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 84.74077071663447,
+      "abs_error_cm": 14.740770716634472
+    },
+    {
+      "image_id": "img-00070",
+      "file_name": "17744323540247076606634106630807-51ce78b3.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 120.0,
+      "pred_height_cm": 100.34167966873804,
+      "abs_error_cm": 19.65832033126196
+    },
+    {
+      "image_id": "img-00070",
+      "file_name": "17744323540247076606634106630807-51ce78b3.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 68.0,
+      "pred_height_cm": 58.88529126304005,
+      "abs_error_cm": 9.114708736959948
+    },
+    {
+      "image_id": "img-00071",
+      "file_name": "17744323578303571483999047935077-a88f78e2.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 70.0,
+      "pred_height_cm": 51.98291533167483,
+      "abs_error_cm": 18.017084668325168
+    },
+    {
+      "image_id": "img-00071",
+      "file_name": "17744323578303571483999047935077-a88f78e2.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 120.0,
+      "pred_height_cm": 148.45491898149612,
+      "abs_error_cm": 28.45491898149612
+    },
+    {
+      "image_id": "img-00071",
+      "file_name": "17744323578303571483999047935077-a88f78e2.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 132.0,
+      "pred_height_cm": 127.18452383832043,
+      "abs_error_cm": 4.81547616167957
+    },
+    {
+      "image_id": "img-00072",
+      "file_name": "17744323624581056279345005276368-21a8d29f.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 73.0,
+      "pred_height_cm": 126.39131323650452,
+      "abs_error_cm": 53.391313236504516
+    },
+    {
+      "image_id": "img-00072",
+      "file_name": "17744323624581056279345005276368-21a8d29f.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 98.0,
+      "pred_height_cm": 128.39284819394686,
+      "abs_error_cm": 30.39284819394686
+    },
+    {
+      "image_id": "img-00072",
+      "file_name": "17744323624581056279345005276368-21a8d29f.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 97.0,
+      "pred_height_cm": 130.3860619269797,
+      "abs_error_cm": 33.38606192697969
+    },
+    {
+      "image_id": "img-00073",
+      "file_name": "17744323695882799430184163308300-9f5b8ffd.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 142.0,
+      "pred_height_cm": 159.24167145542563,
+      "abs_error_cm": 17.24167145542563
+    },
+    {
+      "image_id": "img-00073",
+      "file_name": "17744323695882799430184163308300-9f5b8ffd.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 122.0,
+      "pred_height_cm": 144.96699824336164,
+      "abs_error_cm": 22.966998243361644
+    },
+    {
+      "image_id": "img-00073",
+      "file_name": "17744323695882799430184163308300-9f5b8ffd.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 135.0,
+      "pred_height_cm": 128.99761278975126,
+      "abs_error_cm": 6.002387210248742
+    },
+    {
+      "image_id": "img-00074",
+      "file_name": "17744323780963222880256680053099-84d8cd17.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 97.0,
+      "pred_height_cm": 68.25616957950827,
+      "abs_error_cm": 28.743830420491733
+    },
+    {
+      "image_id": "img-00074",
+      "file_name": "17744323780963222880256680053099-84d8cd17.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 166.0,
+      "pred_height_cm": 107.35620521844831,
+      "abs_error_cm": 58.64379478155169
+    },
+    {
+      "image_id": "img-00074",
+      "file_name": "17744323780963222880256680053099-84d8cd17.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 178.0,
+      "pred_height_cm": 115.9099171286419,
+      "abs_error_cm": 62.090082871358106
+    },
+    {
+      "image_id": "img-00074",
+      "file_name": "17744323780963222880256680053099-84d8cd17.jpg",
+      "box_id": "box-004",
+      "true_height_cm": 100.0,
+      "pred_height_cm": 94.19273541423514,
+      "abs_error_cm": 5.807264585764855
+    },
+    {
+      "image_id": "img-00075",
+      "file_name": "17744323850524704765040002271893-8726e634.jpg",
+      "box_id": "box-001",
+      "true_height_cm": 170.0,
+      "pred_height_cm": 136.6265694772792,
+      "abs_error_cm": 33.37343052272081
+    },
+    {
+      "image_id": "img-00075",
+      "file_name": "17744323850524704765040002271893-8726e634.jpg",
+      "box_id": "box-002",
+      "true_height_cm": 178.0,
+      "pred_height_cm": 150.8850732291385,
+      "abs_error_cm": 27.1149267708615
+    },
+    {
+      "image_id": "img-00075",
+      "file_name": "17744323850524704765040002271893-8726e634.jpg",
+      "box_id": "box-003",
+      "true_height_cm": 142.0,
+      "pred_height_cm": 124.44696928826156,
+      "abs_error_cm": 17.553030711738444
+    },
+    {
+      "image_id": "img-00075",
+      "file_name": "17744323850524704765040002271893-8726e634.jpg",
+      "box_id": "box-004",
+      "true_height_cm": 132.0,
+      "pred_height_cm": 111.4331113193926,
+      "abs_error_cm": 20.566888680607406
+    }
+  ]
+}
