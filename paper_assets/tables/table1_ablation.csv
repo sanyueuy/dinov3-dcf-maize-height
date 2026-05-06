@@ -8,3 +8,5 @@ Attn+aug,Attn-weighted + aug,1.42,29.89,39.13,36.59,
 Attn+aug+TTA8,Attn-weighted + aug + TTA8,1.42,29.57,38.98,36.14,best
 Feat. align,Attn-weighted + aug + feature alignment,1.42,45.98,59.48,56.79,failed
 DANN,Attn-weighted + DANN,2.45,34.20,45.08,42.51,failed
+Source morph. RidgeCV,source-trained bbox + camera + ExG mask geometry,NA,56.70,78.81,77.50,source-trained geometry baseline
+Source morph. RF,source-trained bbox + camera + ExG mask geometry,NA,27.10,33.56,34.55,source-trained geometry baseline

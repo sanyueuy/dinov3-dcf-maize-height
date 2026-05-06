@@ -2,7 +2,7 @@
 
 This release supports the manuscript:
 
-**A reproducible cross-greenhouse maize height benchmark and attention-guided DINOv3-DCF evaluation pipeline**
+**A reproducible external-greenhouse benchmark for diagnosing DINOv3 feature transfer in maize height estimation**
 
 Author: Hong Wu; Jian Chen
 Affiliation: China Agricultural University
@@ -14,7 +14,7 @@ Repository: https://github.com/sanyueuy/dinov3-dcf-maize-height
 - DATA325 greenhouse photographs in `data/DATA325/images/`.
 - Clean DATA325 image metadata, bounding boxes, plant-height labels, camera-height values, and final Attn+aug+TTA8 predictions in `data/DATA325/annotations/` and `data/DATA325/predictions/`.
 - Sanitized evaluation JSON files in `results/reproducibility_json/`.
-- CEA revision diagnostics in `results/cea_revision/`, including ROI quality metrics, error taxonomy, mask QA examples, bootstrap confidence intervals, paired tests, and 3-seed DCF-head retraining summaries.
+- CEA diagnostic outputs in `results/cea_revision/`, including ROI quality metrics, source-trained morphometric baselines, error taxonomy, mask QA examples, bootstrap confidence intervals, paired tests, and 3-seed DCF-head retraining summaries.
 - Selected DiffCorn-Fusion/DCF checkpoints in `checkpoints/`.
 - Source-domain feature bundles in `data/source_feature_bundles/`.
 - Paper figures and table sidecars in `paper_assets/`.
@@ -44,4 +44,4 @@ python scripts/summarize_data325.py
 
 ## Notes for public upload
 
-This release is prepared for GitHub at https://github.com/sanyueuy/dinov3-dcf-maize-height. Use Git LFS for `*.jpg`, `*.png`, `*.pt`, and `*.pth` files. If a Zenodo DOI is minted from a GitHub release, add that DOI to the manuscript before final submission.
+This release is prepared for GitHub at https://github.com/sanyueuy/dinov3-dcf-maize-height. Use Git LFS for `*.jpg`, `*.png`, `*.pt`, and `*.pth` files. No Zenodo DOI is assigned in this release.

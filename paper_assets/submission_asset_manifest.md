@@ -6,31 +6,36 @@
 - highlights.txt
 - cover_letter_cea.docx
 - supplementary_material.docx
-- graphical_abstract_non_ai.png/pdf
+- graphical_abstract_non_ai.png/tif/pdf
 - tables/roi_quality_metrics.csv
 - tables/error_taxonomy.csv
 - tables/seed_retraining_summary.csv
+- tables/source_morphometric_baseline.csv
 
 ## Main figures
-- figures/Figure_1_DATA325_acquisition_annotation_protocol.png and .pdf: Fig. 1. DATA325 acquisition and annotation protocol. Source hand-box examples, independent target-greenhouse images, manual DATA325 boxes, ROI crops, height/camera metadata, and per-box prediction records are shown to make the benchmark auditable.
+- figures/Figure_1_DATA325_acquisition_annotation_ROI_extraction.png and .pdf: Fig. 1. DATA325 acquisition, annotation, and ROI extraction. Source hand-box examples, independent target-greenhouse images, manual DATA325 boxes, ROI crops, height/camera metadata, and per-box prediction records are shown to make the benchmark auditable.
 - figures/Figure_2_Source_DATA325_benchmark_comparison.png and .pdf: Fig. 2. Source and DATA325 benchmark comparison. Real source hand-box examples and real DATA325 target images illustrate the external-domain shift in greenhouse appearance, height range, camera height, and evaluation role.
 - figures/Figure_3_DATA325_distribution_imbalance.png and .pdf: Fig. 3. DATA325 distribution and imbalance. The target benchmark contains many early-stage plants, varied camera heights, heterogeneous bbox areas, and different foreground fractions across manually cropped ROIs.
-- figures/Figure_4_Preprocessing_ROI_quality_examples.png and .pdf: Fig. 4. Preprocessing and ROI-quality examples. Raw DATA325 images are converted to manual boxes, ROI crops, resized model inputs, and deterministic plant-mask diagnostics used only to quantify foreground/background contamination.
-- figures/Figure_5_DINOv3_DCF_zero_shot_workflow.png and .pdf: Fig. 5. DINOv3-DCF zero-shot workflow. Frozen DINOv3 ROI tokens are aggregated by CLS, patch-mean, or attention-weighted pooling and passed with camera-height context to the DCF regression head before external DATA325 evaluation.
-- figures/Figure_6_Attention_pooling_real_ROIs.png and .pdf: Fig. 6. Attention pooling with real maize ROIs. Real DATA325 crops are paired with deterministic foreground diagnostics and the attention-weighted token-pooling mechanism; the mask overlay is a QA diagnostic, not generated experimental evidence.
-- figures/Figure_7_Feature_domain_shift_with_ROI_thumbnails.png and .pdf: Fig. 7. Feature-space domain shift with ROI thumbnails. DINOv3 feature embeddings separate source and DATA325 ROIs, and thumbnail panels show that the clusters correspond to visibly different greenhouse and growth-stage conditions.
-- figures/Figure_8_Main_ablation_results_with_CI.png and .pdf: Fig. 8. Main ablation results with bootstrap confidence intervals. Attention-weighted pooling provides the largest external DATA325 gain; augmentation and TTA8 provide smaller additional improvements.
-- figures/Figure_9_Resampling_robustness_statistical_comparison.png and .pdf: Fig. 9. Re-training robustness across three random seeds. Independent DCF-head retraining confirms that attention pooling remains the most stable external feature mode among CLS, patch-mean, attention, and attention+augmentation under TTA1 evaluation.
-- figures/Figure_10_Height_bin_error_early_stage_failure.png and .pdf: Fig. 10. Height-bin error and early-stage failure concentration. Bootstrap intervals confirm that plants below 80 cm dominate relative error and remain the key target for future stage-aware adaptation.
-- figures/Figure_11_ROI_contamination_error_correlation.png and .pdf: Fig. 11. ROI contamination and error correlation. Foreground/background fractions from deterministic color-index masks are weakly correlated with absolute error, indicating that clutter contributes but does not fully explain the domain gap.
-- figures/Figure_12_STAGE_wise_DATA325_qualitative_gallery.png and .pdf: Fig. 12. Stage-wise DATA325 qualitative gallery. Low-, mid-, and tall-stage real images are shown with manual boxes, ROI crops, ground truth, prediction, and absolute error.
-- figures/Figure_13_Attention_error_overlay_gallery.png and .pdf: Fig. 13. Error-overlay gallery for real DATA325 ROIs. Successful, over-estimated, under-estimated, sparse, and uncertain cases are shown with ROI crops, deterministic plant-focus overlays, ground truth, prediction, and error.
-- figures/Figure_14_Diagnostic_negative_controls.png and .pdf: Fig. 14. Diagnostic negative controls. Camera-height correction, bbox geometry, feature-statistic alignment, and DANN do not remove the cross-greenhouse gap, so the remaining error is not a single metadata or marginal-alignment artifact.
-- figures/Figure_15_Open_release_future_deployment_map.png and .pdf: Fig. 15. Open-release and future-deployment map. The release packages DATA325 images, annotations, predictions, diagnostics, scripts, and checkpoints, while future work connects automatic detection, segmentation-guided ROI normalization, and multi-greenhouse adaptation.
+- figures/Figure_4_DINOv3_DCF_zero_shot_workflow.png and .pdf: Fig. 4. DINOv3-DiffCorn-Fusion (DINOv3-DCF) zero-shot workflow. Frozen DINOv3 ROI tokens are aggregated by CLS, patch-mean, or attention-weighted pooling and passed with camera-height context to a phytomer-inspired structured latent DCF head before external DATA325 evaluation.
+- figures/Figure_5_Attention_pooling_real_ROIs.png and .pdf: Fig. 5. Attention pooling behavior on real maize ROIs. Real DATA325 crops are paired with deterministic foreground diagnostics and the attention-weighted token-pooling mechanism; the mask overlay is a QA diagnostic, not generated experimental evidence.
+- figures/Figure_6_Feature_domain_shift_with_ROI_thumbnails.png and .pdf: Fig. 6. Feature-space domain shift with ROI thumbnails. DINOv3 feature embeddings separate source and DATA325 ROIs, and thumbnail panels show that the clusters correspond to visibly different greenhouse and growth-stage conditions.
+- figures/Figure_7_Main_ablation_results_with_CI.png and .pdf: Fig. 7. Main model and baseline ablation with bootstrap confidence intervals. Attention-weighted pooling provides the main DINOv3-DCF gain, while source-trained morphometric baselines show how much manual bbox geometry contributes under the same external target set.
+- figures/Figure_8_Seed_robustness_paired_comparison.png and .pdf: Fig. 8. Seed robustness and paired comparison. Independent DCF-head retraining confirms that attention pooling remains the most stable external feature mode among CLS, patch-mean, attention, and attention+augmentation under TTA1 evaluation.
+- figures/Figure_9_Height_bin_error_early_stage_failure.png and .pdf: Fig. 9. Height-bin error and early-stage failure concentration. Bootstrap intervals confirm that plants below 80 cm dominate relative error and remain the key target for future stage-aware adaptation.
+- figures/Figure_10_ROI_contamination_morphometric_diagnostics.png and .pdf: Fig. 10. ROI contamination and morphometric diagnostics. Foreground/background fractions from deterministic color-index masks are weakly correlated with absolute error, while source-trained bbox/mask baselines quantify the strength and limits of simple agricultural geometry.
+- figures/Figure_11_Qualitative_stage_attention_error_gallery.png and .pdf: Fig. 11. Qualitative stage-wise and attention/error gallery. Real DATA325 examples combine low-, mid-, and tall-stage cases with success, over-estimation, under-estimation, sparse-plant, and high-uncertainty ROIs.
+- figures/Figure_12_Diagnostic_negative_controls.png and .pdf: Fig. 12. Diagnostic negative controls. Camera-height correction, bbox geometry, feature-statistic alignment, and DANN do not remove the external-greenhouse gap, so the remaining error is not a single metadata or marginal-alignment artifact.
 
-## Revision diagnostics
-- experiments/cea_revision/run_cea_revision_experiments.py generated bootstrap CI, paired tests, ROI quality metrics, morphometric baseline, uncertainty diagnostics, and error taxonomy.
+## Supplementary figures
+- supplementary_figures/Supplementary_Figure_1_Preprocessing_ROI_quality_examples.png and .pdf: Supplementary Fig. 1. Preprocessing and ROI-quality examples. Raw DATA325 images are converted to manual boxes, ROI crops, resized model inputs, and deterministic plant-mask diagnostics used only to quantify foreground/background contamination.
+- supplementary_figures/Supplementary_Figure_2_STAGE_wise_DATA325_qualitative_gallery.png and .pdf: Supplementary Fig. 2. Stage-wise DATA325 qualitative gallery. Low-, mid-, and tall-stage real images are shown with manual boxes, ROI crops, ground truth, prediction, and absolute error.
+- supplementary_figures/Supplementary_Figure_3_Attention_error_overlay_gallery.png and .pdf: Supplementary Fig. 3. Error-overlay gallery for real DATA325 ROIs. Successful, over-estimated, under-estimated, sparse, and uncertain cases are shown with ROI crops, deterministic plant-focus overlays, ground truth, prediction, and error.
+- supplementary_figures/Supplementary_Figure_4_Open_release_future_deployment_map.png and .pdf: Supplementary Fig. 4. Open-release and future-deployment map. The release packages DATA325 images, annotations, predictions, diagnostics, scripts, and checkpoints, while future work connects automatic detection, segmentation-guided ROI normalization, and multi-greenhouse adaptation.
+
+## Diagnostic outputs
+- experiments/cea_revision/run_cea_revision_experiments.py generated bootstrap CI, paired tests, ROI quality metrics, morphometric baselines, uncertainty diagnostics, and error taxonomy.
 - experiments/cea_revision/seed_retraining contains the 3-seed DCF-head training reports and DATA325 zero-shot evaluation output; summary sidecars are seed_retraining_summary.json/csv.
+- source_morphometric_baseline.json/csv reports source-trained RidgeCV and RandomForestRegressor bbox/mask baselines evaluated zero-shot on DATA325.
 - Deterministic color-index masks quantify foreground/background only; they are not generated images, labels, or model training inputs.
 - Multi-seed robustness is DCF-head retraining over frozen feature bundles; it does not fine-tune DINOv3.
 
@@ -64,5 +69,6 @@
 - reproducibility_json/resampling_robustness.json
 - reproducibility_json/roi_quality_summary.json
 - reproducibility_json/seed_retraining_summary.json
+- reproducibility_json/source_morphometric_baseline.json
 - reproducibility_json/tsne_source_vs_data325.json
 - reproducibility_json/uncertainty_diagnostic.json

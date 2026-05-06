@@ -134,6 +134,1576 @@
       "background_fraction"
     ]
   },
+  "source_morphometric_baseline_summary": {
+    "available": true,
+    "baseline_type": "source-trained morphometric baseline",
+    "training_policy": "Models are fitted on the 156 source hand-bbox ROIs only; DATA325 labels are used only for final metric calculation.",
+    "source_training_n": 156,
+    "data325_evaluation_n": 82,
+    "source_bundle": "training_bundle_hand.pt",
+    "feature_names": [
+      "bbox_width_ratio",
+      "bbox_height_ratio",
+      "bbox_area_fraction",
+      "bbox_aspect_ratio",
+      "camera_height_cm",
+      "camera_normalized_bbox_extent",
+      "foreground_fraction",
+      "green_vertical_extent_ratio",
+      "green_centroid_y_ratio"
+    ],
+    "models": {
+      "ridge_cv": {
+        "summary": {
+          "n": 82,
+          "mae_cm": 56.70228911388985,
+          "rmse_cm": 78.80690209368537,
+          "median_abs_error_cm": 42.19559932668226,
+          "mape_percent": 77.50179271505478
+        },
+        "bootstrap_ci": {
+          "n_bootstrap": 5000,
+          "point": {
+            "n": 82,
+            "mae_cm": 56.70228911388985,
+            "rmse_cm": 78.80690209368537,
+            "median_abs_error_cm": 42.19559932668226,
+            "mape_percent": 77.50179271505478
+          },
+          "mae_cm": {
+            "mean": 56.80767310543894,
+            "ci95_low": 45.90617087824002,
+            "ci95_high": 69.54404918580013
+          },
+          "rmse_cm": {
+            "mean": 78.25197345137654,
+            "ci95_low": 59.78779334340616,
+            "ci95_high": 100.45854862007747
+          },
+          "mape_percent": {
+            "mean": 77.64925302681776,
+            "ci95_low": 55.63453874136816,
+            "ci95_high": 104.8674818558751
+          }
+        },
+        "predictions": [
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00001",
+            "file_name": "1774430024570838644287054889188-02631b6e.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 43.743448846707466,
+            "abs_error_cm": 26.256551153292534
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00002",
+            "file_name": "17744301502163781479087360760338-1fad2c6d.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 93.0,
+            "pred_height_cm": 94.0765732241261,
+            "abs_error_cm": 1.0765732241260935
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00002",
+            "file_name": "17744301502163781479087360760338-1fad2c6d.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 120.0,
+            "pred_height_cm": 102.96711876559496,
+            "abs_error_cm": 17.03288123440504
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00002",
+            "file_name": "17744301502163781479087360760338-1fad2c6d.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 132.0,
+            "pred_height_cm": 136.68572298960925,
+            "abs_error_cm": 4.685722989609246
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00003",
+            "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": -9.93720648600825,
+            "abs_error_cm": 79.93720648600825
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00003",
+            "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 132.0,
+            "pred_height_cm": 166.46511202906908,
+            "abs_error_cm": 34.465112029069076
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00003",
+            "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 50.0,
+            "pred_height_cm": -60.43188083262257,
+            "abs_error_cm": 110.43188083262257
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00003",
+            "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 67.0,
+            "pred_height_cm": 9.016938583364293,
+            "abs_error_cm": 57.98306141663571
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00003",
+            "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+            "box_id": "box-005",
+            "true_height_cm": 93.0,
+            "pred_height_cm": 48.91372827303671,
+            "abs_error_cm": 44.08627172696329
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00004",
+            "file_name": "17744301993284573787410288776325-7480244a.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 54.0,
+            "pred_height_cm": 159.89378122028663,
+            "abs_error_cm": 105.89378122028663
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00004",
+            "file_name": "17744301993284573787410288776325-7480244a.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 68.0,
+            "pred_height_cm": 65.25250208998429,
+            "abs_error_cm": 2.74749791001571
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00004",
+            "file_name": "17744301993284573787410288776325-7480244a.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 35.32409126773459,
+            "abs_error_cm": 34.67590873226541
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00004",
+            "file_name": "17744301993284573787410288776325-7480244a.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 40.666698544599285,
+            "abs_error_cm": 29.333301455400715
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00005",
+            "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 98.73877461387072,
+            "abs_error_cm": 28.738774613870717
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00005",
+            "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 54.0,
+            "pred_height_cm": 407.7910256229211,
+            "abs_error_cm": 353.7910256229211
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00005",
+            "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 50.0,
+            "pred_height_cm": 155.90847860802663,
+            "abs_error_cm": 105.90847860802663
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00005",
+            "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 120.0,
+            "pred_height_cm": 122.73566720243757,
+            "abs_error_cm": 2.7356672024375683
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00005",
+            "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+            "box_id": "box-005",
+            "true_height_cm": 152.0,
+            "pred_height_cm": 194.18198031521774,
+            "abs_error_cm": 42.18198031521774
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00006",
+            "file_name": "1774430238852960689785442958145-464106e4.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 153.65772923177292,
+            "abs_error_cm": 83.65772923177292
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00006",
+            "file_name": "1774430238852960689785442958145-464106e4.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 138.0,
+            "pred_height_cm": 133.77833191948505,
+            "abs_error_cm": 4.221668080514945
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00006",
+            "file_name": "1774430238852960689785442958145-464106e4.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 152.0,
+            "pred_height_cm": 149.29698620467843,
+            "abs_error_cm": 2.703013795321567
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00009",
+            "file_name": "17744303135233599081906654160060-ed92c39d.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 221.23542009988068,
+            "abs_error_cm": 151.23542009988068
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00009",
+            "file_name": "17744303135233599081906654160060-ed92c39d.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 152.0,
+            "pred_height_cm": 257.09943308449544,
+            "abs_error_cm": 105.09943308449544
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00015",
+            "file_name": "17744303589887365481729323921052-f269cae6.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 97.0,
+            "pred_height_cm": 168.78468466322852,
+            "abs_error_cm": 71.78468466322852
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00046",
+            "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 135.0,
+            "pred_height_cm": 202.9440204909694,
+            "abs_error_cm": 67.9440204909694
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00046",
+            "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 160.06305135253598,
+            "abs_error_cm": 90.06305135253598
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00046",
+            "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 159.0,
+            "pred_height_cm": 215.86132315913304,
+            "abs_error_cm": 56.861323159133036
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00046",
+            "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 122.0,
+            "pred_height_cm": 138.5683327732992,
+            "abs_error_cm": 16.568332773299204
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00046",
+            "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+            "box_id": "box-005",
+            "true_height_cm": 135.0,
+            "pred_height_cm": 167.0563471656808,
+            "abs_error_cm": 32.05634716568079
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00046",
+            "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+            "box_id": "box-006",
+            "true_height_cm": 88.0,
+            "pred_height_cm": 150.05215973866527,
+            "abs_error_cm": 62.05215973866527
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00047",
+            "file_name": "17744321793357439543515068175302-a13e2949.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 251.79216550098113,
+            "abs_error_cm": 181.79216550098113
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00047",
+            "file_name": "17744321793357439543515068175302-a13e2949.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 30.0,
+            "pred_height_cm": 224.41869515528444,
+            "abs_error_cm": 194.41869515528444
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00047",
+            "file_name": "17744321793357439543515068175302-a13e2949.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 90.0,
+            "pred_height_cm": 212.84129224898118,
+            "abs_error_cm": 122.84129224898118
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00054",
+            "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 142.09755612337813,
+            "abs_error_cm": 72.09755612337813
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00054",
+            "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 97.0,
+            "pred_height_cm": 75.38504694407428,
+            "abs_error_cm": 21.614953055925724
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00054",
+            "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 73.0,
+            "pred_height_cm": 38.78053725389937,
+            "abs_error_cm": 34.21946274610063
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00054",
+            "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 134.0,
+            "pred_height_cm": 179.7583215742773,
+            "abs_error_cm": 45.75832157427729
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00054",
+            "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+            "box_id": "box-005",
+            "true_height_cm": 43.0,
+            "pred_height_cm": 77.9501559340888,
+            "abs_error_cm": 34.9501559340888
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00055",
+            "file_name": "17744322198111524063972955817959-f6c0d6b3.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 178.0,
+            "pred_height_cm": 245.76459619417238,
+            "abs_error_cm": 67.76459619417238
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00055",
+            "file_name": "17744322198111524063972955817959-f6c0d6b3.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 88.0,
+            "pred_height_cm": 45.79078166185322,
+            "abs_error_cm": 42.20921833814678
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00056",
+            "file_name": "17744322244413093210727838268043-bdc9c3a0.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 103.0,
+            "pred_height_cm": 77.40067678941591,
+            "abs_error_cm": 25.59932321058409
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00056",
+            "file_name": "17744322244413093210727838268043-bdc9c3a0.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 88.0,
+            "pred_height_cm": 27.373993169909483,
+            "abs_error_cm": 60.62600683009052
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00057",
+            "file_name": "17744322286635745009728053765240-1106569a.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 103.0,
+            "pred_height_cm": 60.64619881649482,
+            "abs_error_cm": 42.35380118350518
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00057",
+            "file_name": "17744322286635745009728053765240-1106569a.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 72.0,
+            "pred_height_cm": 38.06030889668045,
+            "abs_error_cm": 33.93969110331955
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00057",
+            "file_name": "17744322286635745009728053765240-1106569a.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 73.0,
+            "pred_height_cm": 103.19984562985148,
+            "abs_error_cm": 30.19984562985148
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00057",
+            "file_name": "17744322286635745009728053765240-1106569a.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 88.0,
+            "pred_height_cm": 11.050296058726047,
+            "abs_error_cm": 76.94970394127395
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00059",
+            "file_name": "17744322421967087302057130033382-ac0e1077.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 159.0,
+            "pred_height_cm": 149.67971905489506,
+            "abs_error_cm": 9.32028094510494
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00059",
+            "file_name": "17744322421967087302057130033382-ac0e1077.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 103.0,
+            "pred_height_cm": 116.36240190391416,
+            "abs_error_cm": 13.362401903914161
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00060",
+            "file_name": "17744322464787401147269120726982-84dbce12.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 134.0,
+            "pred_height_cm": 123.01311387807364,
+            "abs_error_cm": 10.98688612192636
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00060",
+            "file_name": "17744322464787401147269120726982-84dbce12.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 65.0,
+            "pred_height_cm": 93.05603816197092,
+            "abs_error_cm": 28.056038161970918
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00060",
+            "file_name": "17744322464787401147269120726982-84dbce12.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 78.0,
+            "pred_height_cm": 145.2860771904668,
+            "abs_error_cm": 67.28607719046681
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00063",
+            "file_name": "17744322671942308763368065297179-80109626.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 85.0,
+            "pred_height_cm": 115.30353978774382,
+            "abs_error_cm": 30.303539787743816
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00063",
+            "file_name": "17744322671942308763368065297179-80109626.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 78.0,
+            "pred_height_cm": 50.396977022442215,
+            "abs_error_cm": 27.603022977557785
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00063",
+            "file_name": "17744322671942308763368065297179-80109626.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 159.0,
+            "pred_height_cm": 150.27067492834252,
+            "abs_error_cm": 8.729325071657485
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00063",
+            "file_name": "17744322671942308763368065297179-80109626.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 135.0,
+            "pred_height_cm": 142.12710335740462,
+            "abs_error_cm": 7.127103357404621
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00063",
+            "file_name": "17744322671942308763368065297179-80109626.jpg",
+            "box_id": "box-005",
+            "true_height_cm": 122.0,
+            "pred_height_cm": 109.37539378567766,
+            "abs_error_cm": 12.624606214322341
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00063",
+            "file_name": "17744322671942308763368065297179-80109626.jpg",
+            "box_id": "box-006",
+            "true_height_cm": 178.0,
+            "pred_height_cm": 137.2864169927193,
+            "abs_error_cm": 40.713583007280704
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00064",
+            "file_name": "17744323136636410293405002256876-62c27dec.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 118.48618864989538,
+            "abs_error_cm": 48.48618864989538
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00064",
+            "file_name": "17744323136636410293405002256876-62c27dec.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 138.0,
+            "pred_height_cm": 126.31326490630295,
+            "abs_error_cm": 11.686735093697052
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00068",
+            "file_name": "17744323375852104299749593532205-59c3805d.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 54.0,
+            "pred_height_cm": 258.2037874565272,
+            "abs_error_cm": 204.2037874565272
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00068",
+            "file_name": "17744323375852104299749593532205-59c3805d.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 122.44488406166259,
+            "abs_error_cm": 52.44488406166259
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00068",
+            "file_name": "17744323375852104299749593532205-59c3805d.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 68.0,
+            "pred_height_cm": 118.1522369155967,
+            "abs_error_cm": 50.1522369155967
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00070",
+            "file_name": "17744323540247076606634106630807-51ce78b3.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 146.66791110615506,
+            "abs_error_cm": 76.66791110615506
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00070",
+            "file_name": "17744323540247076606634106630807-51ce78b3.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 120.0,
+            "pred_height_cm": 172.07448590713258,
+            "abs_error_cm": 52.07448590713258
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00070",
+            "file_name": "17744323540247076606634106630807-51ce78b3.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 68.0,
+            "pred_height_cm": 200.5270009421668,
+            "abs_error_cm": 132.5270009421668
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00071",
+            "file_name": "17744323578303571483999047935077-a88f78e2.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 191.97604931775317,
+            "abs_error_cm": 121.97604931775317
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00071",
+            "file_name": "17744323578303571483999047935077-a88f78e2.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 120.0,
+            "pred_height_cm": 220.31005250499007,
+            "abs_error_cm": 100.31005250499007
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00071",
+            "file_name": "17744323578303571483999047935077-a88f78e2.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 132.0,
+            "pred_height_cm": 200.34709187333172,
+            "abs_error_cm": 68.34709187333172
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00072",
+            "file_name": "17744323624581056279345005276368-21a8d29f.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 73.0,
+            "pred_height_cm": 151.0586548135069,
+            "abs_error_cm": 78.0586548135069
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00072",
+            "file_name": "17744323624581056279345005276368-21a8d29f.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 98.0,
+            "pred_height_cm": 179.64105422109543,
+            "abs_error_cm": 81.64105422109543
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00072",
+            "file_name": "17744323624581056279345005276368-21a8d29f.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 97.0,
+            "pred_height_cm": 194.68993407979548,
+            "abs_error_cm": 97.68993407979548
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00073",
+            "file_name": "17744323695882799430184163308300-9f5b8ffd.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 142.0,
+            "pred_height_cm": 118.9623636887325,
+            "abs_error_cm": 23.037636311267505
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00073",
+            "file_name": "17744323695882799430184163308300-9f5b8ffd.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 122.0,
+            "pred_height_cm": 105.36484101669309,
+            "abs_error_cm": 16.63515898330691
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00073",
+            "file_name": "17744323695882799430184163308300-9f5b8ffd.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 135.0,
+            "pred_height_cm": 113.0234137354132,
+            "abs_error_cm": 21.9765862645868
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00074",
+            "file_name": "17744323780963222880256680053099-84d8cd17.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 97.0,
+            "pred_height_cm": 143.22067507507148,
+            "abs_error_cm": 46.22067507507148
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00074",
+            "file_name": "17744323780963222880256680053099-84d8cd17.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 166.0,
+            "pred_height_cm": 125.39531880306845,
+            "abs_error_cm": 40.60468119693155
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00074",
+            "file_name": "17744323780963222880256680053099-84d8cd17.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 178.0,
+            "pred_height_cm": 138.73560325173645,
+            "abs_error_cm": 39.26439674826355
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00074",
+            "file_name": "17744323780963222880256680053099-84d8cd17.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 100.0,
+            "pred_height_cm": 106.33231666270265,
+            "abs_error_cm": 6.332316662702652
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00075",
+            "file_name": "17744323850524704765040002271893-8726e634.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 170.0,
+            "pred_height_cm": 197.9986028582327,
+            "abs_error_cm": 27.998602858232687
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00075",
+            "file_name": "17744323850524704765040002271893-8726e634.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 178.0,
+            "pred_height_cm": 222.94990543976343,
+            "abs_error_cm": 44.94990543976343
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00075",
+            "file_name": "17744323850524704765040002271893-8726e634.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 142.0,
+            "pred_height_cm": 115.2126488883091,
+            "abs_error_cm": 26.787351111690896
+          },
+          {
+            "baseline_label": "ridge_cv",
+            "image_id": "img-00075",
+            "file_name": "17744323850524704765040002271893-8726e634.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 132.0,
+            "pred_height_cm": 141.85781582586054,
+            "abs_error_cm": 9.857815825860541
+          }
+        ],
+        "selected_alpha": 0.01
+      },
+      "random_forest": {
+        "summary": {
+          "n": 82,
+          "mae_cm": 27.10317886989101,
+          "rmse_cm": 33.55884857223348,
+          "median_abs_error_cm": 22.400738213220983,
+          "mape_percent": 34.54890577292392
+        },
+        "bootstrap_ci": {
+          "n_bootstrap": 5000,
+          "point": {
+            "n": 82,
+            "mae_cm": 27.10317886989101,
+            "rmse_cm": 33.55884857223348,
+            "median_abs_error_cm": 22.400738213220983,
+            "mape_percent": 34.54890577292392
+          },
+          "mae_cm": {
+            "mean": 27.08507138506551,
+            "ci95_low": 23.000576928223726,
+            "ci95_high": 31.697026926808224
+          },
+          "rmse_cm": {
+            "mean": 33.42952680610536,
+            "ci95_low": 28.50530962901893,
+            "ci95_high": 39.00655726275003
+          },
+          "mape_percent": {
+            "mean": 34.541513750024,
+            "ci95_low": 26.7343581318003,
+            "ci95_high": 44.36197680962879
+          }
+        },
+        "predictions": [
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00001",
+            "file_name": "1774430024570838644287054889188-02631b6e.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 79.85425390746187,
+            "abs_error_cm": 9.854253907461867
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00002",
+            "file_name": "17744301502163781479087360760338-1fad2c6d.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 93.0,
+            "pred_height_cm": 79.5822461208543,
+            "abs_error_cm": 13.417753879145707
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00002",
+            "file_name": "17744301502163781479087360760338-1fad2c6d.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 120.0,
+            "pred_height_cm": 85.17377455241999,
+            "abs_error_cm": 34.826225447580015
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00002",
+            "file_name": "17744301502163781479087360760338-1fad2c6d.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 132.0,
+            "pred_height_cm": 118.32423756078832,
+            "abs_error_cm": 13.675762439211681
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00003",
+            "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 64.59636363636363,
+            "abs_error_cm": 5.403636363636366
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00003",
+            "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 132.0,
+            "pred_height_cm": 172.54058666219188,
+            "abs_error_cm": 40.540586662191885
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00003",
+            "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 50.0,
+            "pred_height_cm": 84.9263206252783,
+            "abs_error_cm": 34.926320625278294
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00003",
+            "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 67.0,
+            "pred_height_cm": 107.542892195516,
+            "abs_error_cm": 40.542892195516
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00003",
+            "file_name": "17744301828029026857203459751808-bd8d34f7.jpg",
+            "box_id": "box-005",
+            "true_height_cm": 93.0,
+            "pred_height_cm": 108.01890091905099,
+            "abs_error_cm": 15.018900919050992
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00004",
+            "file_name": "17744301993284573787410288776325-7480244a.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 54.0,
+            "pred_height_cm": 109.4185573172297,
+            "abs_error_cm": 55.4185573172297
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00004",
+            "file_name": "17744301993284573787410288776325-7480244a.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 68.0,
+            "pred_height_cm": 79.094111050319,
+            "abs_error_cm": 11.094111050319
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00004",
+            "file_name": "17744301993284573787410288776325-7480244a.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 78.87049108476921,
+            "abs_error_cm": 8.870491084769213
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00004",
+            "file_name": "17744301993284573787410288776325-7480244a.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 112.12208537407541,
+            "abs_error_cm": 42.12208537407541
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00005",
+            "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 80.8015383452463,
+            "abs_error_cm": 10.8015383452463
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00005",
+            "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 54.0,
+            "pred_height_cm": 112.06728034741379,
+            "abs_error_cm": 58.067280347413785
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00005",
+            "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 50.0,
+            "pred_height_cm": 80.46306953355271,
+            "abs_error_cm": 30.463069533552712
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00005",
+            "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 120.0,
+            "pred_height_cm": 80.1212526309606,
+            "abs_error_cm": 39.8787473690394
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00005",
+            "file_name": "17744302091893114009473247782460-d56cdbe0.jpg",
+            "box_id": "box-005",
+            "true_height_cm": 152.0,
+            "pred_height_cm": 112.40728570249412,
+            "abs_error_cm": 39.59271429750588
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00006",
+            "file_name": "1774430238852960689785442958145-464106e4.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 82.237068579363,
+            "abs_error_cm": 12.237068579362997
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00006",
+            "file_name": "1774430238852960689785442958145-464106e4.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 138.0,
+            "pred_height_cm": 146.2426101930465,
+            "abs_error_cm": 8.242610193046488
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00006",
+            "file_name": "1774430238852960689785442958145-464106e4.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 152.0,
+            "pred_height_cm": 146.67861019304647,
+            "abs_error_cm": 5.321389806953533
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00009",
+            "file_name": "17744303135233599081906654160060-ed92c39d.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 171.55449129838934,
+            "abs_error_cm": 101.55449129838934
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00009",
+            "file_name": "17744303135233599081906654160060-ed92c39d.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 152.0,
+            "pred_height_cm": 182.83798227674643,
+            "abs_error_cm": 30.83798227674643
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00015",
+            "file_name": "17744303589887365481729323921052-f269cae6.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 97.0,
+            "pred_height_cm": 79.49684822980619,
+            "abs_error_cm": 17.50315177019381
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00046",
+            "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 135.0,
+            "pred_height_cm": 148.14588013144146,
+            "abs_error_cm": 13.145880131441459
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00046",
+            "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 115.05619398952041,
+            "abs_error_cm": 45.05619398952041
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00046",
+            "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 159.0,
+            "pred_height_cm": 162.77105531941268,
+            "abs_error_cm": 3.7710553194126817
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00046",
+            "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 122.0,
+            "pred_height_cm": 149.78904425484367,
+            "abs_error_cm": 27.789044254843674
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00046",
+            "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+            "box_id": "box-005",
+            "true_height_cm": 135.0,
+            "pred_height_cm": 157.4054962069197,
+            "abs_error_cm": 22.405496206919707
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00046",
+            "file_name": "17744321704682538679914940279603-e0a1da2d.jpg",
+            "box_id": "box-006",
+            "true_height_cm": 88.0,
+            "pred_height_cm": 109.49710283922148,
+            "abs_error_cm": 21.497102839221483
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00047",
+            "file_name": "17744321793357439543515068175302-a13e2949.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 112.12728034741377,
+            "abs_error_cm": 42.12728034741377
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00047",
+            "file_name": "17744321793357439543515068175302-a13e2949.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 30.0,
+            "pred_height_cm": 112.61920342433686,
+            "abs_error_cm": 82.61920342433686
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00047",
+            "file_name": "17744321793357439543515068175302-a13e2949.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 90.0,
+            "pred_height_cm": 108.60685438259655,
+            "abs_error_cm": 18.606854382596552
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00054",
+            "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 112.83020342433687,
+            "abs_error_cm": 42.83020342433687
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00054",
+            "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 97.0,
+            "pred_height_cm": 146.58856844312976,
+            "abs_error_cm": 49.58856844312976
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00054",
+            "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 73.0,
+            "pred_height_cm": 78.06911105031901,
+            "abs_error_cm": 5.069111050319009
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00054",
+            "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 134.0,
+            "pred_height_cm": 159.24123540773803,
+            "abs_error_cm": 25.24123540773803
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00054",
+            "file_name": "17744322151695995958713403964223-93170ab9.jpg",
+            "box_id": "box-005",
+            "true_height_cm": 43.0,
+            "pred_height_cm": 79.76126489647285,
+            "abs_error_cm": 36.76126489647285
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00055",
+            "file_name": "17744322198111524063972955817959-f6c0d6b3.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 178.0,
+            "pred_height_cm": 237.0365127519405,
+            "abs_error_cm": 59.036512751940506
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00055",
+            "file_name": "17744322198111524063972955817959-f6c0d6b3.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 88.0,
+            "pred_height_cm": 79.75899505520302,
+            "abs_error_cm": 8.241004944796984
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00056",
+            "file_name": "17744322244413093210727838268043-bdc9c3a0.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 103.0,
+            "pred_height_cm": 79.06531251552047,
+            "abs_error_cm": 23.934687484479525
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00056",
+            "file_name": "17744322244413093210727838268043-bdc9c3a0.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 88.0,
+            "pred_height_cm": 80.1479245423825,
+            "abs_error_cm": 7.852075457617502
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00057",
+            "file_name": "17744322286635745009728053765240-1106569a.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 103.0,
+            "pred_height_cm": 80.60401978047774,
+            "abs_error_cm": 22.395980219522258
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00057",
+            "file_name": "17744322286635745009728053765240-1106569a.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 72.0,
+            "pred_height_cm": 104.98149893850228,
+            "abs_error_cm": 32.981498938502284
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00057",
+            "file_name": "17744322286635745009728053765240-1106569a.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 73.0,
+            "pred_height_cm": 109.33254971349767,
+            "abs_error_cm": 36.33254971349767
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00057",
+            "file_name": "17744322286635745009728053765240-1106569a.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 88.0,
+            "pred_height_cm": 87.34372335824793,
+            "abs_error_cm": 0.656276641752072
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00059",
+            "file_name": "17744322421967087302057130033382-ac0e1077.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 159.0,
+            "pred_height_cm": 146.88273519304647,
+            "abs_error_cm": 12.117264806953528
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00059",
+            "file_name": "17744322421967087302057130033382-ac0e1077.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 103.0,
+            "pred_height_cm": 110.01248424693475,
+            "abs_error_cm": 7.012484246934747
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00060",
+            "file_name": "17744322464787401147269120726982-84dbce12.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 134.0,
+            "pred_height_cm": 150.99636876086754,
+            "abs_error_cm": 16.99636876086754
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00060",
+            "file_name": "17744322464787401147269120726982-84dbce12.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 65.0,
+            "pred_height_cm": 109.23898589301793,
+            "abs_error_cm": 44.238985893017926
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00060",
+            "file_name": "17744322464787401147269120726982-84dbce12.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 78.0,
+            "pred_height_cm": 116.68324981306718,
+            "abs_error_cm": 38.68324981306718
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00063",
+            "file_name": "17744322671942308763368065297179-80109626.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 85.0,
+            "pred_height_cm": 114.68515552671029,
+            "abs_error_cm": 29.68515552671029
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00063",
+            "file_name": "17744322671942308763368065297179-80109626.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 78.0,
+            "pred_height_cm": 80.04595934091729,
+            "abs_error_cm": 2.0459593409172925
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00063",
+            "file_name": "17744322671942308763368065297179-80109626.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 159.0,
+            "pred_height_cm": 156.20852742479653,
+            "abs_error_cm": 2.7914725752034713
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00063",
+            "file_name": "17744322671942308763368065297179-80109626.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 135.0,
+            "pred_height_cm": 148.05648519304648,
+            "abs_error_cm": 13.056485193046484
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00063",
+            "file_name": "17744322671942308763368065297179-80109626.jpg",
+            "box_id": "box-005",
+            "true_height_cm": 122.0,
+            "pred_height_cm": 147.3343741790605,
+            "abs_error_cm": 25.33437417906049
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00063",
+            "file_name": "17744322671942308763368065297179-80109626.jpg",
+            "box_id": "box-006",
+            "true_height_cm": 178.0,
+            "pred_height_cm": 147.78575513144145,
+            "abs_error_cm": 30.214244868558552
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00064",
+            "file_name": "17744323136636410293405002256876-62c27dec.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 110.56893770155997,
+            "abs_error_cm": 40.568937701559975
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00064",
+            "file_name": "17744323136636410293405002256876-62c27dec.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 138.0,
+            "pred_height_cm": 122.19531021218408,
+            "abs_error_cm": 15.804689787815917
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00068",
+            "file_name": "17744323375852104299749593532205-59c3805d.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 54.0,
+            "pred_height_cm": 112.77020342433687,
+            "abs_error_cm": 58.77020342433687
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00068",
+            "file_name": "17744323375852104299749593532205-59c3805d.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 79.29142920458833,
+            "abs_error_cm": 9.291429204588326
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00068",
+            "file_name": "17744323375852104299749593532205-59c3805d.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 68.0,
+            "pred_height_cm": 79.31979267425064,
+            "abs_error_cm": 11.319792674250635
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00070",
+            "file_name": "17744323540247076606634106630807-51ce78b3.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 112.26095529881526,
+            "abs_error_cm": 42.26095529881526
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00070",
+            "file_name": "17744323540247076606634106630807-51ce78b3.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 120.0,
+            "pred_height_cm": 114.12660325223572,
+            "abs_error_cm": 5.873396747764275
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00070",
+            "file_name": "17744323540247076606634106630807-51ce78b3.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 68.0,
+            "pred_height_cm": 108.40845730676654,
+            "abs_error_cm": 40.408457306766536
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00071",
+            "file_name": "17744323578303571483999047935077-a88f78e2.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 70.0,
+            "pred_height_cm": 110.53342601755354,
+            "abs_error_cm": 40.53342601755354
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00071",
+            "file_name": "17744323578303571483999047935077-a88f78e2.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 120.0,
+            "pred_height_cm": 166.64764529408393,
+            "abs_error_cm": 46.64764529408393
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00071",
+            "file_name": "17744323578303571483999047935077-a88f78e2.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 132.0,
+            "pred_height_cm": 129.28710165055978,
+            "abs_error_cm": 2.7128983494402235
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00072",
+            "file_name": "17744323624581056279345005276368-21a8d29f.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 73.0,
+            "pred_height_cm": 147.65175513144143,
+            "abs_error_cm": 74.65175513144143
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00072",
+            "file_name": "17744323624581056279345005276368-21a8d29f.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 98.0,
+            "pred_height_cm": 148.14588013144146,
+            "abs_error_cm": 50.14588013144146
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00072",
+            "file_name": "17744323624581056279345005276368-21a8d29f.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 97.0,
+            "pred_height_cm": 146.54461019304648,
+            "abs_error_cm": 49.54461019304648
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00073",
+            "file_name": "17744323695882799430184163308300-9f5b8ffd.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 142.0,
+            "pred_height_cm": 154.07705060959998,
+            "abs_error_cm": 12.07705060959998
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00073",
+            "file_name": "17744323695882799430184163308300-9f5b8ffd.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 122.0,
+            "pred_height_cm": 138.9803047941311,
+            "abs_error_cm": 16.980304794131087
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00073",
+            "file_name": "17744323695882799430184163308300-9f5b8ffd.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 135.0,
+            "pred_height_cm": 132.86401916446175,
+            "abs_error_cm": 2.1359808355382484
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00074",
+            "file_name": "17744323780963222880256680053099-84d8cd17.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 97.0,
+            "pred_height_cm": 79.5030982298062,
+            "abs_error_cm": 17.4969017701938
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00074",
+            "file_name": "17744323780963222880256680053099-84d8cd17.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 166.0,
+            "pred_height_cm": 146.4467351930465,
+            "abs_error_cm": 19.553264806953507
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00074",
+            "file_name": "17744323780963222880256680053099-84d8cd17.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 178.0,
+            "pred_height_cm": 146.4467351930465,
+            "abs_error_cm": 31.553264806953507
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00074",
+            "file_name": "17744323780963222880256680053099-84d8cd17.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 100.0,
+            "pred_height_cm": 146.2426101930465,
+            "abs_error_cm": 46.24261019304649
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00075",
+            "file_name": "17744323850524704765040002271893-8726e634.jpg",
+            "box_id": "box-001",
+            "true_height_cm": 170.0,
+            "pred_height_cm": 151.7839200113766,
+            "abs_error_cm": 18.21607998862339
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00075",
+            "file_name": "17744323850524704765040002271893-8726e634.jpg",
+            "box_id": "box-002",
+            "true_height_cm": 178.0,
+            "pred_height_cm": 158.80259866605522,
+            "abs_error_cm": 19.197401333944782
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00075",
+            "file_name": "17744323850524704765040002271893-8726e634.jpg",
+            "box_id": "box-003",
+            "true_height_cm": 142.0,
+            "pred_height_cm": 146.67861019304647,
+            "abs_error_cm": 4.678610193046467
+          },
+          {
+            "baseline_label": "random_forest",
+            "image_id": "img-00075",
+            "file_name": "17744323850524704765040002271893-8726e634.jpg",
+            "box_id": "box-004",
+            "true_height_cm": 132.0,
+            "pred_height_cm": 147.46837417906048,
+            "abs_error_cm": 15.468374179060476
+          }
+        ]
+      }
+    }
+  },
   "uncertainty_summary": {
     "pred_std_vs_abs_error": {
       "pearson_r": 0.11174023202315639,

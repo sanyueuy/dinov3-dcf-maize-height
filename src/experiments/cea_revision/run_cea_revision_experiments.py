@@ -17,12 +17,18 @@ from typing import Any
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import RidgeCV
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 
 
 ROOT = Path(r"D:\cornTrain\DINOV3")
 OUT = ROOT / "experiments" / "cea_revision"
 MASK_DIR = OUT / "mask_examples"
 DATA325_IMAGE_DIR = ROOT / "images"
+SOURCE_BUNDLE = ROOT / "training_bundle_hand.pt"
+SOURCE_IMAGE_DIR = ROOT.parent / "ZeroShotCornPhenotypingAgent" / "dataset"
 SEED_RETRAIN_DIR = OUT / "seed_retraining"
 SEED_EVAL_JSON = SEED_RETRAIN_DIR / "data325_eval" / "data325_zero_shot_comparison_seed_retraining.json"
 
@@ -227,6 +233,34 @@ def green_mask(arr: np.ndarray) -> np.ndarray:
     return mask
 
 
+def mask_shape_features(mask: np.ndarray) -> dict[str, float]:
+    h, w = mask.shape[:2]
+    if h <= 0 or w <= 0 or not bool(mask.any()):
+        return {
+            "green_vertical_extent_ratio": 0.0,
+            "green_centroid_y_ratio": 0.5,
+        }
+    ys, _ = np.where(mask)
+    return {
+        "green_vertical_extent_ratio": float((ys.max() - ys.min() + 1) / h),
+        "green_centroid_y_ratio": float(ys.mean() / h),
+    }
+
+
+def morphometric_feature_names() -> list[str]:
+    return [
+        "bbox_width_ratio",
+        "bbox_height_ratio",
+        "bbox_area_fraction",
+        "bbox_aspect_ratio",
+        "camera_height_cm",
+        "camera_normalized_bbox_extent",
+        "foreground_fraction",
+        "green_vertical_extent_ratio",
+        "green_centroid_y_ratio",
+    ]
+
+
 def draw_mask_preview(row: dict[str, Any], mask: np.ndarray, roi: Image.Image, out_path: Path) -> None:
     w, h = roi.size
     max_w = 980
@@ -267,11 +301,13 @@ def roi_quality_metrics(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]
         mask = green_mask(arr)
         fg = float(mask.mean())
         bg = 1.0 - fg
+        shape = mask_shape_features(mask)
         bw = max(1, x2 - x1)
         bh = max(1, y2 - y1)
         rgb = arr.astype(np.float32)
         brightness = float(np.mean(rgb))
         edge_touch = int(x1 <= 8 or y1 <= 8 or x2 >= iw - 8 or y2 >= ih - 8)
+        camera_height = float(row["camera_height_cm"])
         row_metrics = {
             "image_id": row["image_id"],
             "file_name": row["file_name"],
@@ -280,14 +316,21 @@ def roi_quality_metrics(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]
             "pred_height_cm": float(row["pred_height_cm"]),
             "abs_error_cm": float(row["abs_error_cm"]),
             "pred_std_cm": float(row.get("pred_std_cm", 0.0)),
-            "camera_height_cm": float(row["camera_height_cm"]),
+            "camera_height_cm": camera_height,
+            "image_width_px": iw,
+            "image_height_px": ih,
             "bbox_width_px": bw,
             "bbox_height_px": bh,
+            "bbox_width_ratio": float(bw / iw),
+            "bbox_height_ratio": float(bh / ih),
             "bbox_area_fraction": float((bw * bh) / (iw * ih)),
             "bbox_aspect_ratio": float(bw / bh),
+            "camera_normalized_bbox_extent": float((bh / ih) / max(camera_height / 200.0, 1e-6)),
             "bbox_fill_ratio": fg,
             "foreground_fraction": fg,
             "background_fraction": bg,
+            "green_vertical_extent_ratio": shape["green_vertical_extent_ratio"],
+            "green_centroid_y_ratio": shape["green_centroid_y_ratio"],
             "mean_roi_brightness": brightness,
             "touches_image_edge": edge_touch,
         }
@@ -376,6 +419,144 @@ def ridge_loio_baseline(metrics: list[dict[str, Any]]) -> dict[str, Any]:
         }
     )
     return {"summary": summary, "predictions": preds}
+
+
+def source_morphometric_rows() -> list[dict[str, Any]]:
+    if not SOURCE_BUNDLE.exists():
+        return []
+    import torch
+
+    bundle = torch.load(SOURCE_BUNDLE, map_location="cpu", weights_only=False)
+    heights = bundle["heights"].detach().cpu().numpy().astype(float).tolist()
+    rows: list[dict[str, Any]] = []
+    for idx, (file_name, bbox, camera_height, true_height) in enumerate(
+        zip(bundle["filenames"], bundle["bbox_list"], bundle["cam_heights"], heights)
+    ):
+        img_path = SOURCE_IMAGE_DIR / file_name
+        if not img_path.exists():
+            continue
+        with Image.open(img_path) as img:
+            img = img.convert("RGB")
+            iw, ih = img.size
+            x1, y1, x2, y2 = bbox_xyxy(bbox, img.size)
+            roi = img.crop((x1, y1, x2, y2))
+        arr = np.array(roi)
+        mask = green_mask(arr)
+        shape = mask_shape_features(mask)
+        bw = max(1, x2 - x1)
+        bh = max(1, y2 - y1)
+        fg = float(mask.mean())
+        camera_height_f = float(camera_height)
+        rows.append(
+            {
+                "source_index": idx,
+                "file_name": file_name,
+                "true_height_cm": float(true_height),
+                "camera_height_cm": camera_height_f,
+                "image_width_px": iw,
+                "image_height_px": ih,
+                "bbox_width_px": bw,
+                "bbox_height_px": bh,
+                "bbox_width_ratio": float(bw / iw),
+                "bbox_height_ratio": float(bh / ih),
+                "bbox_area_fraction": float((bw * bh) / (iw * ih)),
+                "bbox_aspect_ratio": float(bw / bh),
+                "camera_normalized_bbox_extent": float((bh / ih) / max(camera_height_f / 200.0, 1e-6)),
+                "foreground_fraction": fg,
+                "green_vertical_extent_ratio": shape["green_vertical_extent_ratio"],
+                "green_centroid_y_ratio": shape["green_centroid_y_ratio"],
+            }
+        )
+    return rows
+
+
+def matrix_from_rows(rows: list[dict[str, Any]], features: list[str], fill_values: np.ndarray | None = None) -> tuple[np.ndarray, np.ndarray]:
+    x = np.array([[float(row.get(feature, float("nan"))) for feature in features] for row in rows], dtype=float)
+    if fill_values is None:
+        fill_values = np.nanmean(x, axis=0)
+        fill_values = np.where(np.isfinite(fill_values), fill_values, 0.0)
+    inds = np.where(~np.isfinite(x))
+    if inds[0].size:
+        x[inds] = np.take(fill_values, inds[1])
+    return x, fill_values
+
+
+def source_trained_morphometric_baseline(target_metrics: list[dict[str, Any]]) -> dict[str, Any]:
+    source_rows = source_morphometric_rows()
+    if not source_rows or not target_metrics:
+        return {
+            "available": False,
+            "reason": "Source bundle, source images, or target ROI metrics were unavailable.",
+        }
+
+    features = morphometric_feature_names()
+    x_source, fill_values = matrix_from_rows(source_rows, features)
+    y_source = np.array([float(row["true_height_cm"]) for row in source_rows], dtype=float)
+    x_target, _ = matrix_from_rows(target_metrics, features, fill_values)
+
+    models = {
+        "ridge_cv": make_pipeline(StandardScaler(), RidgeCV(alphas=np.array([0.01, 0.1, 1.0, 10.0, 100.0]))),
+        "random_forest": RandomForestRegressor(
+            n_estimators=200,
+            max_depth=5,
+            min_samples_leaf=4,
+            random_state=BOOTSTRAP_SEED,
+        ),
+    }
+    out_models: dict[str, Any] = {}
+    csv_rows: list[dict[str, Any]] = []
+    rng = np.random.default_rng(BOOTSTRAP_SEED + 83)
+    for model_name, estimator in models.items():
+        estimator.fit(x_source, y_source)
+        preds = estimator.predict(x_target)
+        pred_rows: list[dict[str, Any]] = []
+        for row, pred in zip(target_metrics, preds):
+            true = float(row["true_height_cm"])
+            pred_f = float(pred)
+            item = {
+                "baseline_label": model_name,
+                "image_id": row["image_id"],
+                "file_name": row["file_name"],
+                "box_id": row["box_id"],
+                "true_height_cm": true,
+                "pred_height_cm": pred_f,
+                "abs_error_cm": abs(pred_f - true),
+            }
+            pred_rows.append(item)
+            csv_rows.append(item)
+        out_models[model_name] = {
+            "summary": metric_values(pred_rows),
+            "bootstrap_ci": bootstrap_metrics(pred_rows, rng),
+            "predictions": pred_rows,
+        }
+        if model_name == "ridge_cv":
+            ridge = estimator.named_steps["ridgecv"]
+            out_models[model_name]["selected_alpha"] = float(ridge.alpha_)
+
+    write_csv(
+        OUT / "source_morphometric_baseline.csv",
+        csv_rows,
+        [
+            "baseline_label",
+            "image_id",
+            "file_name",
+            "box_id",
+            "true_height_cm",
+            "pred_height_cm",
+            "abs_error_cm",
+        ],
+    )
+
+    return {
+        "available": True,
+        "baseline_type": "source-trained morphometric baseline",
+        "training_policy": "Models are fitted on the 156 source hand-bbox ROIs only; DATA325 labels are used only for final metric calculation.",
+        "source_training_n": len(source_rows),
+        "data325_evaluation_n": len(target_metrics),
+        "source_bundle": SOURCE_BUNDLE.name,
+        "feature_names": features,
+        "models": out_models,
+    }
 
 
 def uncertainty_diagnostic(rows: list[dict[str, Any]], roi_metrics: list[dict[str, Any]]) -> dict[str, Any]:
@@ -619,6 +800,7 @@ def main() -> None:
     paired = paired_tests(models)
     roi_metrics_rows, roi_summary = roi_quality_metrics(target_rows)
     morphometric = ridge_loio_baseline(roi_metrics_rows)
+    source_morphometric = source_trained_morphometric_baseline(roi_metrics_rows)
     uncertainty = uncertainty_diagnostic(target_rows, roi_metrics_rows)
     taxonomy_rows, taxonomy_summary = error_taxonomy(target_rows, roi_metrics_rows)
     height_bins = height_bin_bootstrap(target_rows)
@@ -642,6 +824,7 @@ def main() -> None:
         "best_model_metrics": metric_values(target_rows),
         "roi_quality_summary": roi_summary,
         "morphometric_baseline_summary": morphometric.get("summary", {}),
+        "source_morphometric_baseline_summary": source_morphometric,
         "uncertainty_summary": uncertainty.get("overall", {}),
         "error_taxonomy_summary": taxonomy_summary,
         "height_bin_bootstrap": height_bins,
@@ -653,6 +836,7 @@ def main() -> None:
     write_csv(OUT / "roi_quality_metrics.csv", roi_metrics_rows)
     write_json(OUT / "roi_quality_summary.json", roi_summary)
     write_json(OUT / "morphometric_baseline.json", morphometric)
+    write_json(OUT / "source_morphometric_baseline.json", source_morphometric)
     write_json(OUT / "uncertainty_diagnostic.json", uncertainty)
     write_csv(OUT / "error_taxonomy.csv", taxonomy_rows)
     write_json(OUT / "error_taxonomy_summary.json", taxonomy_summary)

@@ -22,7 +22,7 @@ SLUG = "dinov3_dcf_maize_height_open_release_v0_1_0"
 AUTHOR = "Hong Wu; Jian Chen"
 AFFILIATION = "China Agricultural University"
 CONTACT_EMAIL = "jchen@cau.edu.cn"
-TITLE = "A reproducible cross-greenhouse maize height benchmark and attention-guided DINOv3-DCF evaluation pipeline"
+TITLE = "A reproducible external-greenhouse benchmark for diagnosing DINOv3 feature transfer in maize height estimation"
 REPOSITORY_URL = "https://github.com/sanyueuy/dinov3-dcf-maize-height"
 
 DATA325_IMAGE_DIR = ROOT / "images"
@@ -44,6 +44,7 @@ REPRO_JSONS = [
     CEA_EXP_DIR / "paired_tests.json",
     CEA_EXP_DIR / "roi_quality_summary.json",
     CEA_EXP_DIR / "morphometric_baseline.json",
+    CEA_EXP_DIR / "source_morphometric_baseline.json",
     CEA_EXP_DIR / "uncertainty_diagnostic.json",
     CEA_EXP_DIR / "error_taxonomy_summary.json",
     CEA_EXP_DIR / "height_bin_bootstrap.json",
@@ -133,6 +134,31 @@ def copy_file(src: Path, dst: Path) -> None:
         return
     dst.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(src, dst)
+
+
+def sanitize_checkpoint_value(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {key: sanitize_checkpoint_value(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [sanitize_checkpoint_value(item) for item in value]
+    if isinstance(value, tuple):
+        return tuple(sanitize_checkpoint_value(item) for item in value)
+    if isinstance(value, str):
+        return sanitize_json_value(value)
+    return value
+
+
+def copy_sanitized_checkpoint(src: Path, dst: Path) -> None:
+    if not src.exists():
+        return
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        import torch
+
+        checkpoint = torch.load(src, map_location="cpu", weights_only=False)
+        torch.save(sanitize_checkpoint_value(checkpoint), dst)
+    except Exception:
+        copy_file(src, dst)
 
 
 def sanitize_json_value(value: Any) -> Any:
@@ -344,9 +370,9 @@ def copy_sanitized_jsons() -> None:
 
 def copy_assets() -> None:
     for src in SOURCE_FEATURE_BUNDLES:
-        copy_file(src, OUT / "data" / "source_feature_bundles" / src.name)
+        copy_sanitized_checkpoint(src, OUT / "data" / "source_feature_bundles" / src.name)
     for src in CHECKPOINTS:
-        copy_file(src, OUT / "checkpoints" / src.name)
+        copy_sanitized_checkpoint(src, OUT / "checkpoints" / src.name)
     for name in CODE_FILES:
         copy_file(ROOT / name, OUT / "src" / name)
 
@@ -354,6 +380,8 @@ def copy_assets() -> None:
         copy_file(src, OUT / "paper_assets" / "tables" / src.name)
     for src in sorted((ROOT / "cea_submission" / "figures").glob("*.png")):
         copy_file(src, OUT / "paper_assets" / "figures" / src.name)
+    for src in sorted((ROOT / "cea_submission" / "supplementary_figures").glob("*.png")):
+        copy_file(src, OUT / "paper_assets" / "supplementary_figures" / src.name)
     for src in [ROOT / "cea_submission" / "graphical_abstract_non_ai.png", ROOT / "cea_submission" / "submission_asset_manifest.md"]:
         copy_file(src, OUT / "paper_assets" / src.name)
     for src in sorted(CEA_EXP_DIR.glob("*.csv")):
@@ -387,7 +415,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
         - DATA325 greenhouse photographs in `data/DATA325/images/`.
         - Clean DATA325 image metadata, bounding boxes, plant-height labels, camera-height values, and final Attn+aug+TTA8 predictions in `data/DATA325/annotations/` and `data/DATA325/predictions/`.
         - Sanitized evaluation JSON files in `results/reproducibility_json/`.
-        - CEA revision diagnostics in `results/cea_revision/`, including ROI quality metrics, error taxonomy, mask QA examples, bootstrap confidence intervals, paired tests, and 3-seed DCF-head retraining summaries.
+        - CEA diagnostic outputs in `results/cea_revision/`, including ROI quality metrics, source-trained morphometric baselines, error taxonomy, mask QA examples, bootstrap confidence intervals, paired tests, and 3-seed DCF-head retraining summaries.
         - Selected DiffCorn-Fusion/DCF checkpoints in `checkpoints/`.
         - Source-domain feature bundles in `data/source_feature_bundles/`.
         - Paper figures and table sidecars in `paper_assets/`.
@@ -417,7 +445,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
 
         ## Notes for public upload
 
-        This release is prepared for GitHub at {REPOSITORY_URL}. Use Git LFS for `*.jpg`, `*.png`, `*.pt`, and `*.pth` files. If a Zenodo DOI is minted from a GitHub release, add that DOI to the manuscript before final submission.
+        This release is prepared for GitHub at {REPOSITORY_URL}. Use Git LFS for `*.jpg`, `*.png`, `*.pt`, and `*.pth` files. No Zenodo DOI is assigned in this release.
         """,
     )
     write_text(
@@ -466,11 +494,11 @@ def write_release_docs(stats: dict[str, Any]) -> None:
         2. Inspect final predictions in `data/DATA325/predictions/data325_predictions_attn_aug_tta8.csv`.
         3. Run `python scripts/summarize_data325.py` to recompute MAE/RMSE/median absolute error from the CSV.
         4. Compare detailed method outputs in `results/reproducibility_json/`.
-        5. Inspect `results/cea_revision/` for bootstrap CI, paired tests, ROI contamination diagnostics, morphometric baseline output, uncertainty diagnostics, 3-seed DCF-head retraining summaries, and rule-based error taxonomy.
+        5. Inspect `results/cea_revision/` for bootstrap CI, paired tests, ROI contamination diagnostics, source-trained and target-label morphometric baseline output, uncertainty diagnostics, 3-seed DCF-head retraining summaries, and rule-based error taxonomy.
 
         ## Full model path
 
-        Full feature extraction requires the upstream DINOv3 model and its license-compliant weights. The archival scripts in `src/` preserve the exact code used during preparation; some of them retain project-specific path constants and may need path edits when run outside `D:\\cornTrain\\DINOV3`. Revision diagnostics are reproducible from released prediction CSV/JSON files and real DATA325 images without redistributing DINOv3 weights.
+        Full feature extraction requires the upstream DINOv3 model and its license-compliant weights. The archival scripts in `src/` preserve the exact code used during preparation; some of them retain project-specific path constants and may need path edits when run outside the original project root. CEA diagnostics are reproducible from released prediction CSV/JSON files and real DATA325 images without redistributing DINOv3 weights.
 
         ## Excluded large/upstream files
 
@@ -548,7 +576,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
         date-released: "{date.today().isoformat()}"
         license: "CC-BY-4.0"
         repository-code: "{REPOSITORY_URL}"
-        abstract: "Open data, code, checkpoints, and reproducibility assets for zero-shot cross-greenhouse maize height estimation with DINOv3-DCF."
+        abstract: "Open data, code, checkpoints, and reproducibility assets for zero-shot external-greenhouse maize height estimation with DINOv3-DCF."
         """,
     )
     write_text(
