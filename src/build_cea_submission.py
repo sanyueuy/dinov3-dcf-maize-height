@@ -807,15 +807,9 @@ def add_title_page(doc: Document) -> None:
     run.bold = True
     run.font.size = Pt(17)
     run.font.color.rgb = RGBColor.from_string(BLUE)
-    add_p(doc, "Article type: Original research paper", "Subtitle")
-    add_p(doc, "Target journal: Computers and Electronics in Agriculture")
     add_p(doc, f"Authors: {AUTHOR_NAME}^1, {COAUTHOR_NAME}^1,*")
     add_p(doc, f"^1 {AFFILIATION}")
     add_p(doc, f"*Corresponding author: {COAUTHOR_NAME}, {CORRESPONDING_EMAIL}")
-    add_p(doc, "Highlights file: included separately. Graphical abstract: optional non-AI code-generated file included.")
-    add_p(doc, "Figure files: 10. Editable tables: 2. Supplementary material: 1.")
-    add_p(doc, f"Code and data repository: {REPOSITORY_URL}")
-    add_p(doc, "Optional archive DOI, optional ORCID ID, and any required CEA submission-system fields must be completed before online submission.")
     doc.add_page_break()
 
 
@@ -2278,7 +2272,6 @@ def add_title_page(doc: Document) -> None:
         f"a {AFFILIATION}",
         f"First author email: {AUTHOR_EMAIL}",
         f"* Corresponding author. Email: {CORRESPONDING_EMAIL}",
-        "Article type: Original research paper",
     ]:
         p2 = doc.add_paragraph(style="Els-Affiliation")
         p2.paragraph_format.line_spacing = 1.0
@@ -2287,6 +2280,51 @@ def add_title_page(doc: Document) -> None:
         r.font.name = "Times New Roman"
         r._element.rPr.rFonts.set(qn("w:eastAsia"), "Times New Roman")
         r.font.size = Pt(9.5)
+
+
+def validate_manuscript_title_page(path: Path) -> None:
+    """Keep submission-system metadata out of the manuscript source title page."""
+    doc = Document(path)
+    paragraphs = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
+    if "Abstract" not in paragraphs:
+        raise RuntimeError(f"{path.name}: missing Abstract heading for title-page QA")
+    front_matter = "\n".join(paragraphs[: paragraphs.index("Abstract")])
+    full_text = "\n".join(paragraphs)
+    required = [
+        TITLE,
+        f"{AUTHOR_NAME} a, {COAUTHOR_NAME} a,*",
+        f"a {AFFILIATION}",
+        f"First author email: {AUTHOR_EMAIL}",
+        f"* Corresponding author. Email: {CORRESPONDING_EMAIL}",
+    ]
+    forbidden_front_matter = [
+        "Article type",
+        "Original research paper",
+        "Target journal",
+        "Highlights file",
+        "Graphical abstract",
+        "Figure files",
+        "Repository",
+        "Planned archive",
+        "Submission package",
+    ]
+    forbidden_full_text = [
+        "Article type",
+        "Target journal",
+        "Highlights file",
+        "Figure files",
+        "Planned archive",
+        "Submission package",
+    ]
+    missing = [item for item in required if item not in front_matter]
+    if missing:
+        raise RuntimeError(f"{path.name}: title page missing required fields: {missing}")
+    found_front = [item for item in forbidden_front_matter if item in front_matter]
+    if found_front:
+        raise RuntimeError(f"{path.name}: title page contains submission metadata: {found_front}")
+    found_full = [item for item in forbidden_full_text if item in full_text]
+    if found_full:
+        raise RuntimeError(f"{path.name}: manuscript contains submission metadata: {found_full}")
 
 
 def revision_refs() -> list[str]:
@@ -2723,6 +2761,8 @@ def main() -> None:
     highlights = build_highlights()
     cover = build_cover_letter()
     supplement = build_supplement(m)
+    validate_manuscript_title_page(manuscript)
+    validate_manuscript_title_page(OUT / "manuscript_cea_elsevier_style.docx")
     write_sidecars(m)
     package = zip_package()
     print("CEA_DIR", OUT)
