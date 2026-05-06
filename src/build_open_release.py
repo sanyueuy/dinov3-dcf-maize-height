@@ -698,14 +698,18 @@ def write_helper_scripts() -> None:
 
 
 def write_checksums_and_manifest() -> None:
-    files = sorted(p for p in OUT.rglob("*") if p.is_file() and p.name not in {"MANIFEST.tsv", "checksums_sha256.txt"})
+    def release_file(path: Path) -> bool:
+        rel = path.relative_to(OUT).parts
+        return path.is_file() and ".git" not in rel and path.name not in {"MANIFEST.tsv", "checksums_sha256.txt"}
+
+    files = sorted(p for p in OUT.rglob("*") if release_file(p))
     with (OUT / "MANIFEST.tsv").open("w", encoding="utf-8", newline="") as f:
         writer = csv.writer(f, delimiter="\t")
         writer.writerow(["path", "bytes", "sha256"])
         for p in files:
             writer.writerow([p.relative_to(OUT).as_posix(), p.stat().st_size, sha256(p)])
     with (OUT / "checksums_sha256.txt").open("w", encoding="utf-8", newline="\n") as f:
-        for p in sorted(q for q in OUT.rglob("*") if q.is_file() and q.name != "checksums_sha256.txt"):
+        for p in sorted(q for q in OUT.rglob("*") if release_file(q) or q.name == "MANIFEST.tsv"):
             f.write(f"{sha256(p)}  {p.relative_to(OUT).as_posix()}\n")
 
 
@@ -714,7 +718,8 @@ def zip_release() -> Path:
     zip_path = DIST / f"{SLUG}.zip"
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED, allowZip64=True) as z:
         for p in sorted(OUT.rglob("*")):
-            if p.is_file():
+            rel_parts = p.relative_to(OUT).parts
+            if p.is_file() and ".git" not in rel_parts:
                 z.write(p, Path(SLUG) / p.relative_to(OUT))
     (DIST / f"{SLUG}.zip.sha256").write_text(f"{sha256(zip_path)}  {zip_path.name}\n", encoding="utf-8")
     return zip_path

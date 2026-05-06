@@ -2,6 +2,7 @@
 
 ## Main files
 - manuscript_cea.docx
+- manuscript_cea_elsevier_style.docx
 - highlights.docx
 - highlights.txt
 - cover_letter_cea.docx

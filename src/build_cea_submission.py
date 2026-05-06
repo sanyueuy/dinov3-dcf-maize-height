@@ -150,62 +150,90 @@ def fmt(value: float, ndigits: int = 2) -> str:
 def setup_doc() -> Document:
     doc = Document()
     sec = doc.sections[0]
-    sec.page_width = Cm(21.0)
-    sec.page_height = Cm(29.7)
-    sec.top_margin = Cm(2.15)
-    sec.bottom_margin = Cm(2.15)
-    sec.left_margin = Cm(2.0)
-    sec.right_margin = Cm(2.0)
+    # Match the compact Elsevier manuscript-source feel used in the reference
+    # document rather than a report-style A4 cover-page layout.
+    sec.page_width = Cm(19.0)
+    sec.page_height = Cm(26.0)
+    sec.top_margin = Cm(1.35)
+    sec.bottom_margin = Cm(2.65)
+    sec.left_margin = Cm(1.35)
+    sec.right_margin = Cm(2.1)
 
     styles = doc.styles
     normal = styles["Normal"]
-    normal.font.name = "Arial"
-    normal._element.rPr.rFonts.set(qn("w:eastAsia"), "Arial")
-    normal.font.size = Pt(10.5)
+    normal.font.name = "Times New Roman"
+    normal._element.rPr.rFonts.set(qn("w:eastAsia"), "Times New Roman")
+    normal.font.size = Pt(10)
+    normal.font.color.rgb = RGBColor(0, 0, 0)
+    normal.paragraph_format.line_spacing = 2.0
+    normal.paragraph_format.space_after = Pt(0)
 
-    for name, size, color, bold in [
-        ("Title", 16.5, BLUE, True),
-        ("Subtitle", 10.5, GRAY, False),
-        ("Heading 1", 13.5, BLUE, True),
-        ("Heading 2", 11.5, GREEN, True),
-        ("Heading 3", 10.5, BLACK, True),
-    ]:
-        style = styles[name]
-        style.font.name = "Arial"
-        style._element.rPr.rFonts.set(qn("w:eastAsia"), "Arial")
+    def ensure_style(name: str, base: str = "Normal"):
+        if name in styles:
+            return styles[name]
+        return styles.add_style(name, 1)
+
+    style_specs = [
+        ("Title", 13.5, BLACK, True, False),
+        ("Subtitle", 10, BLACK, False, False),
+        ("Heading 1", 10.5, BLACK, True, False),
+        ("Heading 2", 10, BLACK, True, False),
+        ("Heading 3", 10, BLACK, True, True),
+        ("Els-Title", 13.5, BLACK, True, False),
+        ("Els-Affiliation", 9.5, BLACK, False, False),
+        ("Els-body-text", 10, BLACK, False, False),
+        ("Els-reference", 9, BLACK, False, False),
+        ("Els-1storder-head", 10.5, BLACK, True, False),
+        ("Els-2ndorder-head", 10, BLACK, True, False),
+    ]
+    for name, size, color, bold, italic in style_specs:
+        style = styles[name] if name in styles else styles.add_style(name, 1)
+        style.font.name = "Times New Roman"
+        style._element.rPr.rFonts.set(qn("w:eastAsia"), "Times New Roman")
         style.font.size = Pt(size)
         style.font.color.rgb = RGBColor.from_string(color)
         style.font.bold = bold
+        style.font.italic = italic
+        style.paragraph_format.line_spacing = 2.0
+        style.paragraph_format.space_after = Pt(0)
 
     if "CaptionClean" not in styles:
         caption = styles.add_style("CaptionClean", 1)
     else:
         caption = styles["CaptionClean"]
-    caption.font.name = "Arial"
-    caption._element.rPr.rFonts.set(qn("w:eastAsia"), "Arial")
-    caption.font.size = Pt(8.2)
+    caption.font.name = "Times New Roman"
+    caption._element.rPr.rFonts.set(qn("w:eastAsia"), "Times New Roman")
+    caption.font.size = Pt(8.5)
     caption.font.italic = True
-    caption.font.color.rgb = RGBColor.from_string(GRAY)
+    caption.font.color.rgb = RGBColor(0, 0, 0)
+    caption.paragraph_format.line_spacing = 1.0
+    caption.paragraph_format.space_after = Pt(6)
     return doc
 
 
 def add_p(doc: Document, text: str = "", style: str | None = None) -> None:
-    p = doc.add_paragraph(style=style)
-    p.paragraph_format.space_after = Pt(6)
-    p.paragraph_format.line_spacing = 1.12
-    p.add_run(text)
+    p = doc.add_paragraph(style=style or "Els-body-text")
+    p.paragraph_format.space_after = Pt(0)
+    p.paragraph_format.line_spacing = 2.0
+    run = p.add_run(text)
+    run.font.name = "Times New Roman"
+    run._element.rPr.rFonts.set(qn("w:eastAsia"), "Times New Roman")
+    run.font.size = Pt(10)
 
 
 def add_caption(doc: Document, text: str) -> None:
     p = doc.add_paragraph(text, style="CaptionClean")
-    p.paragraph_format.space_after = Pt(8)
+    p.paragraph_format.line_spacing = 1.0
+    p.paragraph_format.space_after = Pt(6)
 
 
 def add_figure(doc: Document, stem: str, caption: str, width_in: float) -> None:
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.keep_with_next = True
-    p.add_run().add_picture(str(FIG_OUT / f"{FIG_NAME_BY_STEM.get(stem, stem)}.png"), width=Inches(width_in))
+    p.paragraph_format.space_before = Pt(6)
+    p.paragraph_format.space_after = Pt(0)
+    p.add_run().add_picture(str(FIG_OUT / f"{FIG_NAME_BY_STEM.get(stem, stem)}.png"), width=Inches(min(width_in, 5.45)))
     add_caption(doc, caption)
 
 
@@ -236,7 +264,7 @@ def set_cell_width(cell, width_cm: float) -> None:
     tc_w.set(qn("w:w"), str(int(width_cm * 567)))
 
 
-def set_table_borders(table, color: str = "C8D0D8", size: str = "4") -> None:
+def set_table_borders(table, color: str = "808080", size: str = "4") -> None:
     tbl_pr = table._tbl.tblPr
     borders = tbl_pr.first_child_found_in("w:tblBorders")
     if borders is None:
@@ -261,7 +289,8 @@ def fill_cell(cell, text: str, bold: bool = False, align: int = WD_ALIGN_PARAGRA
     p.paragraph_format.line_spacing = 1.0
     run = p.add_run(text)
     run.bold = bold
-    run.font.name = "Arial"
+    run.font.name = "Times New Roman"
+    run._element.rPr.rFonts.set(qn("w:eastAsia"), "Times New Roman")
     run.font.size = Pt(size)
     cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 
@@ -279,7 +308,7 @@ def add_table(doc: Document, headers: list[str], rows: list[list[str]], widths_c
 
     for idx, text in enumerate(headers):
         cell = table.rows[0].cells[idx]
-        shade_cell(cell, HEADER)
+        shade_cell(cell, "FFFFFF")
         set_cell_width(cell, widths_cm[idx])
         fill_cell(cell, text, bold=True, size=8.0)
     for row_idx, row_values in enumerate(rows, start=1):
@@ -287,8 +316,7 @@ def add_table(doc: Document, headers: list[str], rows: list[list[str]], widths_c
         for col_idx, text in enumerate(row_values):
             cell = cells[col_idx]
             set_cell_width(cell, widths_cm[col_idx])
-            if row_idx % 2 == 0:
-                shade_cell(cell, "F7F9FB")
+            shade_cell(cell, "FFFFFF")
             align = WD_ALIGN_PARAGRAPH.LEFT if col_idx in (0, 1, len(headers) - 1) else WD_ALIGN_PARAGRAPH.CENTER
             fill_cell(cell, text, align=align, size=7.8)
     doc.add_paragraph()
@@ -1009,6 +1037,7 @@ def build_manuscript(m: dict) -> Path:
 
     out = OUT / "manuscript_cea.docx"
     doc.save(out)
+    doc.save(OUT / "manuscript_cea_elsevier_style.docx")
     return out
 
 
@@ -1380,12 +1409,12 @@ REPRO_FILES = [
 
 
 def add_figure(doc: Document, stem: str, caption: str, width_in: float) -> None:
-    # Start each main figure on a fresh page to avoid image or caption splits in DOCX rendering.
-    doc.add_page_break()
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.keep_with_next = True
-    p.add_run().add_picture(str(FIG_OUT / f"{FIG_NAME_BY_STEM.get(stem, stem)}.png"), width=Inches(width_in))
+    p.paragraph_format.space_before = Pt(6)
+    p.paragraph_format.space_after = Pt(0)
+    p.add_run().add_picture(str(FIG_OUT / f"{FIG_NAME_BY_STEM.get(stem, stem)}.png"), width=Inches(min(width_in, 5.45)))
     add_caption(doc, caption)
 
 
@@ -2234,22 +2263,30 @@ def move_supplementary_figures() -> None:
 
 
 def add_title_page(doc: Document) -> None:
-    p = doc.add_paragraph()
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p = doc.add_paragraph(style="Els-Title")
+    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.paragraph_format.line_spacing = 1.0
+    p.paragraph_format.space_after = Pt(6)
     run = p.add_run(TITLE)
     run.bold = True
-    run.font.size = Pt(17)
-    run.font.color.rgb = RGBColor.from_string(BLUE)
-    add_p(doc, "Article type: Original research paper", "Subtitle")
-    add_p(doc, "Target journal: Computers and Electronics in Agriculture")
-    add_p(doc, f"Authors: {AUTHOR_NAME}^1, {COAUTHOR_NAME}^1,*")
-    add_p(doc, f"^1 {AFFILIATION}")
-    add_p(doc, f"Author email: {AUTHOR_NAME}, {AUTHOR_EMAIL}")
-    add_p(doc, f"*Corresponding author: {COAUTHOR_NAME}, {CORRESPONDING_EMAIL}")
-    add_p(doc, "Highlights file: included separately. Graphical abstract: optional code-generated file included.")
-    add_p(doc, "Main figure files: 9. Supplementary figures: 7. Editable table/diagnostic CSV files: 6. Supplementary material: 1.")
-    add_p(doc, f"Code and data repository: {REPOSITORY_URL}")
-    doc.add_page_break()
+    run.font.name = "Times New Roman"
+    run._element.rPr.rFonts.set(qn("w:eastAsia"), "Times New Roman")
+    run.font.size = Pt(13.5)
+    run.font.color.rgb = RGBColor(0, 0, 0)
+    for line in [
+        f"{AUTHOR_NAME} a, {COAUTHOR_NAME} a,*",
+        f"a {AFFILIATION}",
+        f"First author email: {AUTHOR_EMAIL}",
+        f"* Corresponding author. Email: {CORRESPONDING_EMAIL}",
+        "Article type: Original research paper",
+    ]:
+        p2 = doc.add_paragraph(style="Els-Affiliation")
+        p2.paragraph_format.line_spacing = 1.0
+        p2.paragraph_format.space_after = Pt(0)
+        r = p2.add_run(line)
+        r.font.name = "Times New Roman"
+        r._element.rPr.rFonts.set(qn("w:eastAsia"), "Times New Roman")
+        r.font.size = Pt(9.5)
 
 
 def revision_refs() -> list[str]:
@@ -2410,18 +2447,18 @@ def build_manuscript(m: dict) -> Path:
     rf_summary = source_models.get("random_forest", {}).get("summary", {})
     add_p(doc, f"The source-trained morphometric baseline provides a direct agricultural-geometry comparator that does not use DATA325 labels for fitting. RidgeCV reached {fmt(ridge_summary.get('mae_cm'))} cm MAE and the small RandomForestRegressor reached {fmt(rf_summary.get('mae_cm'))} cm MAE on DATA325. The random-forest result shows that manual bbox geometry and green-mask extent can be very strong cues under this benchmark, so DINOv3-DCF should be interpreted as a feature-transfer diagnostic rather than as the sole best possible height estimator.")
     add_p(doc, f"The target-label morphometric baseline reached {fmt(morph.get('mae_cm', 0))} cm MAE under leave-one-image-out evaluation. Because this baseline uses DATA325 labels, it is a diagnostic lower-bound check, not a deployable zero-shot result. Together with the source-trained baseline, it shows that bbox geometry is important but does not remove the need to diagnose early-stage and domain-shift failures.")
-    add_p(doc, "Detailed ROI-contamination scatter plots and morphometric-baseline panels are provided as Supplementary Fig. 5 so that the main Results section can focus on the primary model, seed, and height-bin evidence.")
+    add_p(doc, "Detailed ROI-contamination scatter plots and morphometric-baseline panels are provided as Supplementary Fig. 5 to preserve the audit trail for geometry and foreground-mask diagnostics.")
 
     doc.add_heading("3.5. Real-image galleries and negative controls localize the residual problem", level=2)
     add_p(doc, "The qualitative galleries show that high-error examples are often early, sparse, background-heavy, or TTA-unstable. The rule-based error taxonomy assigned 32 boxes to early-stage sparse structure, 15 to unstable TTA prediction, 10 to bbox ambiguity, and 25 to residual cross-domain shift. These categories are intended as diagnostic labels for future benchmark development rather than as ground-truth biological classes.")
-    add_p(doc, "The full stage-wise and attention/error gallery is provided as Supplementary Fig. 6. Keeping the gallery supplementary avoids over-weighting qualitative panels in the main paper while preserving the traceable real-image evidence.")
+    add_p(doc, "The full stage-wise and attention/error gallery is provided as Supplementary Fig. 6. These supplementary panels preserve traceable real-image evidence for cases that are not shown in the main benchmark figures.")
     add_p(doc, f"Negative controls further narrow the interpretation. Camera-height correction changed MAE by only about 0.03 cm. Bbox geometry reached Pearson r={fmt(m['bbox_r'], 3)} and MAE {fmt(m['bbox_mae'])} cm. Feature-statistic alignment worsened MAE to 45.98 cm, and the tested DANN model reached 34.20 cm MAE while the domain classifier remained near {fmt(m['dann_final_acc'] * 100, 0)}% accuracy.")
     add_p(doc, "Diagnostic negative controls are summarized in Supplementary Fig. 7. They are discussed as explanatory checks rather than as competing deployment models.")
 
     doc.add_heading("4. Discussion", level=1)
     for para in [
         "The benchmark component matters because DATA325 is an external target greenhouse with real image clutter, stage imbalance, manual annotation, and released evaluation records. This improves the credibility of the result and aligns the manuscript with CEA data-resource papers such as Wheat3D PartNet, while remaining focused on a 2D crop-height evaluation problem (Reena et al., 2025).",
-        "The nine main figures serve distinct evidential roles: data-resource documentation, model workflow, domain shift, statistical performance, seed robustness, and early-stage failure. ROI-contamination details, qualitative galleries, negative controls, preprocessing examples, and release-map panels are retained as supplementary material so the main manuscript remains interpretable without losing auditability.",
+        "The released supplementary material extends the main resource description with ROI-contamination plots, qualitative galleries, negative controls, preprocessing examples, and an open-release map. This structure keeps the benchmark narrative focused while preserving traceable evidence for reanalysis.",
         "The method contribution is deliberately scoped. DINOv3-DCF does not rebuild a complete agricultural robot, UAS, or stereo geometry system; instead it tests frozen foundation features under a strict ROI-level external-greenhouse setting. This distinguishes it from UAS/SfM crop-height models, stereo crop-height estimation, and protected-facility geometry pipelines (Chang et al., 2017; Xie et al., 2021; Kim et al., 2021; Jayasuriya et al., 2024).",
         "The practical lesson is two-sided. Within DINOv3-DCF, plant-focused attention pooling matters more than CLS or uniform patch averaging. Across baseline families, the source-trained random-forest morphometric baseline shows that manual bbox geometry and green-mask extent are powerful cues in this small benchmark. This does not invalidate the foundation-feature diagnostic; it clarifies that the current setting is an ROI-level transfer benchmark rather than a complete automatic height system.",
         "The corrected camera-height result deserves cautious interpretation. Its MAE is close to the attention result, but it changes the metadata assumption rather than the learned representation. It therefore does not replace attention pooling as the primary computational result. Instead, it shows that camera metadata is important enough to check carefully, while the broader diagnostic set shows that metadata correction alone does not explain the remaining early-stage errors.",
@@ -2454,6 +2491,7 @@ def build_manuscript(m: dict) -> Path:
 
     out = OUT / "manuscript_cea.docx"
     doc.save(out)
+    doc.save(OUT / "manuscript_cea_elsevier_style.docx")
     return out
 
 
@@ -2543,7 +2581,7 @@ def build_supplement(m: dict) -> Path:
     for path in sorted(MASK_EXAMPLE_DIR.glob("*.jpg"))[:6]:
         p = doc.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p.add_run().add_picture(str(path), width=Inches(5.7))
+        p.add_run().add_picture(str(path), width=Inches(4.25))
         add_caption(doc, f"Supplementary mask QA example: {path.name}.")
     doc.add_heading("S4. Main figure list", level=2)
     for _, upload, caption, _ in FIGURES:
@@ -2594,6 +2632,7 @@ def write_sidecars(m: dict) -> None:
 
             ## Included
             - manuscript_cea.docx
+            - manuscript_cea_elsevier_style.docx
             - highlights.docx and highlights.txt
             - cover_letter_cea.docx
             - supplementary_material.docx
@@ -2624,6 +2663,7 @@ def write_sidecars(m: dict) -> None:
         "",
         "## Main files",
         "- manuscript_cea.docx",
+        "- manuscript_cea_elsevier_style.docx",
         "- highlights.docx",
         "- highlights.txt",
         "- cover_letter_cea.docx",
