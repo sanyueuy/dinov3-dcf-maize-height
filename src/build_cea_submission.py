@@ -13,7 +13,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from docx import Document
 from docx.enum.table import WD_ALIGN_VERTICAL, WD_TABLE_ALIGNMENT
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Cm, Inches, Pt, RGBColor
@@ -233,7 +233,7 @@ def add_figure(doc: Document, stem: str, caption: str, width_in: float) -> None:
     p.paragraph_format.keep_with_next = True
     p.paragraph_format.space_before = Pt(6)
     p.paragraph_format.space_after = Pt(0)
-    p.add_run().add_picture(str(FIG_OUT / f"{FIG_NAME_BY_STEM.get(stem, stem)}.png"), width=Inches(min(width_in, 5.45)))
+    p.add_run().add_picture(str(FIG_OUT / f"{FIG_NAME_BY_STEM.get(stem, stem)}.png"), width=Inches(min(width_in, 6.05)))
     add_caption(doc, caption)
 
 
@@ -279,6 +279,23 @@ def set_table_borders(table, color: str = "808080", size: str = "4") -> None:
         element.set(qn("w:sz"), size)
         element.set(qn("w:space"), "0")
         element.set(qn("w:color"), color)
+
+
+def set_table_no_borders(table) -> None:
+    tbl_pr = table._tbl.tblPr
+    borders = tbl_pr.first_child_found_in("w:tblBorders")
+    if borders is None:
+        borders = OxmlElement("w:tblBorders")
+        tbl_pr.append(borders)
+    for edge in ("top", "left", "bottom", "right", "insideH", "insideV"):
+        element = borders.find(qn(f"w:{edge}"))
+        if element is None:
+            element = OxmlElement(f"w:{edge}")
+            borders.append(element)
+        element.set(qn("w:val"), "nil")
+        element.set(qn("w:sz"), "0")
+        element.set(qn("w:space"), "0")
+        element.set(qn("w:color"), "FFFFFF")
 
 
 def fill_cell(cell, text: str, bold: bool = False, align: int = WD_ALIGN_PARAGRAPH.CENTER, size: float = 8.2) -> None:
@@ -1076,7 +1093,7 @@ def build_cover_letter() -> Path:
         CORRESPONDING_EMAIL,
     ]
     for para in paragraphs:
-        add_p(doc, para)
+        add_cover_p(doc, para)
     out = OUT / "cover_letter_cea.docx"
     doc.save(out)
     return out
@@ -1295,7 +1312,7 @@ FIGURES = [
     (
         "fig1",
         "Figure_4_DINOv3_DCF_zero_shot_workflow",
-        "Fig. 4. DINOv3-DiffCorn-Fusion (DINOv3-DCF) zero-shot workflow. Frozen DINOv3 ROI tokens are aggregated by CLS, patch-mean, or attention-weighted pooling and passed with camera-height context to a phytomer-inspired structured latent DCF head before external DATA325 evaluation.",
+        "Fig. 4. Mind-map workflow for DATA325 and DINOv3-DiffCorn-Fusion (DINOv3-DCF). The benchmark, frozen tokens, pooling equation, camera-height conditioning, structured latent head, zero-shot metrics, and failure diagnostics are shown as connected branches.",
         6.15,
     ),
     (
@@ -1326,6 +1343,12 @@ FIGURES = [
         "fig10_height_bin_ci",
         "Figure_9_Height_bin_error_early_stage_failure",
         "Fig. 9. Height-bin error and early-stage failure concentration. Bootstrap intervals confirm that plants below 80 cm dominate relative error and remain the key target for future stage-aware adaptation.",
+        6.15,
+    ),
+    (
+        "fig12_real_photo_matrix",
+        "Figure_10_Real_photo_DATA325_prediction_matrix",
+        "Fig. 10. Real-photo DATA325 prediction matrix. Each case shows a manual ground-truth box on the original image, the ROI used for model prediction, and a deterministic height-error diagnostic. \"Difference\" denotes plant-height error, foreground mask, and failure category; it is not a pixel-level segmentation or 3D point-cloud difference.",
         6.15,
     ),
 ]
@@ -1373,6 +1396,12 @@ SUPPLEMENTARY_FIGURES = [
         "Supplementary Fig. 7. Diagnostic negative controls. Camera-height correction, bbox geometry, feature-statistic alignment, and DANN do not remove the external-greenhouse gap, so the remaining error is not a single metadata or marginal-alignment artifact.",
         5.7,
     ),
+    (
+        "fig12_extended_real_photo_matrix",
+        "Supplementary_Figure_8_Extended_DATA325_real_photo_matrix",
+        "Supplementary Fig. 8. Extended real-photo DATA325 matrix covering successful predictions, over-estimation, under-estimation, early sparse plants, high-background ROIs, and high TTA uncertainty.",
+        5.7,
+    ),
 ]
 FIG_NAME_BY_STEM = {source_stem: upload_stem for source_stem, upload_stem, _, _ in FIGURES + SUPPLEMENTARY_FIGURES}
 
@@ -1408,8 +1437,35 @@ def add_figure(doc: Document, stem: str, caption: str, width_in: float) -> None:
     p.paragraph_format.keep_with_next = True
     p.paragraph_format.space_before = Pt(6)
     p.paragraph_format.space_after = Pt(0)
-    p.add_run().add_picture(str(FIG_OUT / f"{FIG_NAME_BY_STEM.get(stem, stem)}.png"), width=Inches(min(width_in, 5.45)))
+    p.add_run().add_picture(str(FIG_OUT / f"{FIG_NAME_BY_STEM.get(stem, stem)}.png"), width=Inches(min(width_in, 6.05)))
     add_caption(doc, caption)
+
+
+def add_display_equation(doc: Document, equation_text: str, number: int) -> None:
+    p = doc.add_paragraph(style="Els-body-text")
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.space_before = Pt(0)
+    p.paragraph_format.space_after = Pt(2)
+    p.paragraph_format.line_spacing = 1.0
+    p.paragraph_format.tab_stops.add_tab_stop(Inches(5.9), WD_TAB_ALIGNMENT.RIGHT)
+    eq_run = p.add_run(equation_text)
+    eq_run.font.name = "Cambria Math"
+    eq_run._element.rPr.rFonts.set(qn("w:eastAsia"), "Cambria Math")
+    eq_run.font.size = Pt(9.2)
+    num_run = p.add_run(f"\tEq. ({number})")
+    num_run.font.name = "Times New Roman"
+    num_run._element.rPr.rFonts.set(qn("w:eastAsia"), "Times New Roman")
+    num_run.font.size = Pt(9.2)
+
+
+def add_cover_p(doc: Document, text: str) -> None:
+    p = doc.add_paragraph(style="Els-body-text")
+    p.paragraph_format.space_after = Pt(3)
+    p.paragraph_format.line_spacing = 1.0
+    run = p.add_run(text)
+    run.font.name = "Times New Roman"
+    run._element.rPr.rFonts.set(qn("w:eastAsia"), "Times New Roman")
+    run.font.size = Pt(9.5)
 
 
 def bbox_xyxy(bbox: list[float], image_size: tuple[int, int] | None = None) -> tuple[int, int, int, int]:
@@ -1716,6 +1772,364 @@ def build_fig3_distribution(records: list[dict], rev: dict) -> None:
     save_matplotlib(fig, upload)
 
 
+def record_key(record: dict) -> tuple[str, str]:
+    return (str(record.get("file_name", "")), str(record.get("box_id", "")))
+
+
+def row_lookup(rows: list[dict[str, str]]) -> dict[tuple[str, str], dict[str, str]]:
+    return {(str(row.get("file_name", "")), str(row.get("box_id", ""))): row for row in rows}
+
+
+def record_stage(record: dict) -> str:
+    h = float(record["true_height_cm"])
+    if h < 80:
+        return "early <80 cm"
+    if h < 120:
+        return "mid 80-120 cm"
+    return "tall >=120 cm"
+
+
+def category_text(record: dict, taxonomy: dict[tuple[str, str], dict[str, str]]) -> str:
+    row = taxonomy.get(record_key(record), {})
+    cat = row.get("primary_error_category") or row.get("category") or ""
+    return cat.replace("_", " ").strip() or "height-error diagnostic"
+
+
+def choose_error_rank(records: list[dict], lo: float, hi: float | None, rank: str) -> dict:
+    subset = [r for r in records if float(r["true_height_cm"]) >= lo and (hi is None or float(r["true_height_cm"]) < hi)]
+    if not subset:
+        subset = records
+    subset = sorted(subset, key=lambda r: float(r["abs_error_cm"]))
+    if rank == "high":
+        return subset[-1]
+    if rank == "mid":
+        return subset[len(subset) // 2]
+    return subset[0]
+
+
+def build_fig4_mindmap_workflow() -> None:
+    upload = FIG_NAME_BY_STEM["fig1"]
+    canvas = Image.new("RGB", (2600, 1700), "white")
+    draw = ImageDraw.Draw(canvas)
+    title_font = pil_font(54, True)
+    center_font = pil_font(36, True)
+    head_font = pil_font(30, True)
+    body_font = pil_font(23)
+    formula_font = pil_font(23, True)
+    small_font = pil_font(20)
+    black = (32, 33, 36)
+    gray = (98, 105, 115)
+    green = (29, 158, 117)
+    blue = (68, 114, 196)
+    orange = (216, 90, 48)
+    purple = (116, 82, 180)
+    teal = (0, 135, 150)
+    slate = (82, 92, 105)
+    colors = [green, blue, orange, purple, teal, slate]
+
+    draw.text((90, 55), "DATA325 external-greenhouse diagnostic benchmark", font=title_font, fill=black)
+    draw.text(
+        (90, 125),
+        "A mind-map view of how real images, frozen DINOv3 tokens, DCF prediction, and diagnostic release assets connect.",
+        font=body_font,
+        fill=gray,
+    )
+
+    center = (910, 600, 1690, 1040)
+    draw.rounded_rectangle(center, radius=42, fill=(245, 249, 247), outline=green, width=5)
+    draw_wrapped(
+        draw,
+        (center[0] + 62, center[1] + 95),
+        "DATA325 external-greenhouse diagnostic benchmark",
+        center_font,
+        black,
+        center[2] - center[0] - 124,
+        8,
+    )
+    draw_wrapped(
+        draw,
+        (center[0] + 65, center[1] + 255),
+        "82 evaluated boxes from 25 real target-greenhouse images, held out from source-domain DCF training.",
+        body_font,
+        gray,
+        center[2] - center[0] - 130,
+        5,
+    )
+
+    branches = [
+        ((105, 285, 735, 520), "Real images / ROI labels", "I, b, h, h_cam", "Manual boxes isolate model transfer from detector errors."),
+        ((105, 690, 735, 925), "DINOv3 frozen tokens", "{z_cls, z_i}=F_DINO(r)", "The backbone is frozen; only the DCF head is trained on source ROIs."),
+        ((105, 1095, 735, 1330), "Feature pooling", "f_attn=sum_i alpha_i z_i", "CLS, patch-mean, and attention pooling test ROI representation transfer."),
+        ((1865, 285, 2495, 520), "Camera-height context", "x=[f; h_cam/200]", "A scalar acquisition context is concatenated with visual features."),
+        ((1865, 690, 2495, 925), "DCF latent head", "h_hat=sum_k p[k,0]", "The 64D output is a phytomer-inspired latent vector, supervised by derived height."),
+        ((1865, 1095, 2495, 1330), "Metrics, failures, release", "MAE, RMSE, MAPE, CI", "Bootstrap, paired tests, error taxonomy, and open files make the benchmark auditable."),
+    ]
+    anchor_points = [
+        (center[0], center[1] + 70),
+        (center[0], center[1] + 220),
+        (center[0], center[3] - 70),
+        (center[2], center[1] + 70),
+        (center[2], center[1] + 220),
+        (center[2], center[3] - 70),
+    ]
+    for idx, (box, title, formula, note) in enumerate(branches):
+        color = colors[idx]
+        bx0, by0, bx1, by1 = box
+        if bx1 < center[0]:
+            end = (bx1, (by0 + by1) // 2)
+        else:
+            end = (bx0, (by0 + by1) // 2)
+        draw.line((anchor_points[idx][0], anchor_points[idx][1], end[0], end[1]), fill=color, width=6)
+        draw.ellipse((end[0] - 11, end[1] - 11, end[0] + 11, end[1] + 11), fill=color)
+        draw.rounded_rectangle(box, radius=28, fill=(250, 252, 252), outline=color, width=4)
+        draw.text((bx0 + 30, by0 + 25), title, font=head_font, fill=color)
+        draw.rounded_rectangle((bx0 + 30, by0 + 75, bx1 - 30, by0 + 126), radius=14, fill=(246, 247, 249), outline=(224, 229, 235), width=2)
+        draw.text((bx0 + 48, by0 + 88), formula, font=formula_font, fill=black)
+        draw_wrapped(draw, (bx0 + 32, by0 + 145), note, body_font, gray, bx1 - bx0 - 64, 4)
+
+    draw.rounded_rectangle((210, 1430, 2390, 1575), radius=26, fill=(251, 247, 240), outline=orange, width=3)
+    draw.text((250, 1460), "Interpretation boundary", font=head_font, fill=orange)
+    draw_wrapped(
+        draw,
+        (650, 1455),
+        "The figure summarizes the evaluation pipeline. Evidence figures elsewhere use only real DATA325/source images, recorded boxes, model outputs, and deterministic diagnostics.",
+        body_font,
+        black,
+        1670,
+        5,
+    )
+    draw.text((90, 1620), "Deterministic drawing script; no generative image editing was used.", font=small_font, fill=gray)
+    save_png_pdf(canvas, upload)
+
+
+def draw_height_difference_panel(
+    canvas: Image.Image,
+    record: dict,
+    box: tuple[int, int, int, int],
+    category: str,
+    label: str,
+) -> None:
+    draw = ImageDraw.Draw(canvas)
+    x0, y0, x1, y1 = box
+    head_font = pil_font(20, True)
+    body_font = pil_font(17)
+    small_font = pil_font(14)
+    black = (32, 33, 36)
+    gray = (99, 107, 116)
+    green = (29, 158, 117)
+    orange = (216, 90, 48)
+    blue = (68, 114, 196)
+    draw.rectangle(box, fill=(255, 255, 255), outline=(218, 224, 230), width=2)
+    draw.text((x0 + 12, y0 + 10), "Difference", font=head_font, fill=black)
+    gt = float(record["true_height_cm"])
+    pred = float(record["pred_height_cm"])
+    ae = abs(pred - gt)
+    signed = pred - gt
+    scale_max = max(200.0, gt, pred)
+    base_y = y0 + 220
+    bar_w = 36
+    bar_h_gt = int(150 * gt / scale_max)
+    bar_h_pred = int(150 * pred / scale_max)
+    gx = x0 + 35
+    px = x0 + 90
+    draw.rectangle((gx, base_y - bar_h_gt, gx + bar_w, base_y), fill=green)
+    draw.rectangle((px, base_y - bar_h_pred, px + bar_w, base_y), fill=orange if signed > 0 else blue)
+    draw.line((x0 + 25, base_y, x0 + 145, base_y), fill=(170, 178, 188), width=2)
+    draw.text((gx - 2, base_y + 8), "GT", font=small_font, fill=green)
+    draw.text((px - 8, base_y + 8), "Pred", font=small_font, fill=orange if signed > 0 else blue)
+    draw.text((x0 + 150, y0 + 58), f"AE {ae:.1f} cm", font=head_font, fill=orange if ae >= 30 else black)
+    draw.text((x0 + 150, y0 + 90), f"Delta {signed:+.1f} cm", font=body_font, fill=orange if signed > 0 else blue)
+    draw_wrapped(draw, (x0 + 150, y0 + 123), category, body_font, gray, x1 - x0 - 170, 2)
+    draw.text((x0 + 150, y0 + 226), label, font=small_font, fill=gray)
+
+    roi = crop_roi(DATA325_IMAGE_DIR / record["file_name"], record["bbox"])
+    overlay = mask_overlay(roi)
+    paste_fit(canvas, overlay, (x0 + 255, y0 + 55, x1 - 16, y1 - 18), (249, 250, 251))
+
+
+def build_real_photo_prediction_matrix(records: list[dict], rev: dict) -> None:
+    upload = FIG_NAME_BY_STEM["fig12_real_photo_matrix"]
+    taxonomy = row_lookup(rev["taxonomy"])
+    selections = [
+        ("Early <80 cm", [
+            choose_error_rank(records, 0, 80, "low"),
+            choose_error_rank(records, 0, 80, "mid"),
+            choose_error_rank(records, 0, 80, "high"),
+        ]),
+        ("Mid 80-120 cm", [
+            choose_error_rank(records, 80, 120, "low"),
+            choose_error_rank(records, 80, 120, "mid"),
+            choose_error_rank(records, 80, 120, "high"),
+        ]),
+        ("Tall >=120 cm", [
+            choose_error_rank(records, 120, None, "low"),
+            choose_error_rank(records, 120, None, "mid"),
+            choose_error_rank(records, 120, None, "high"),
+        ]),
+    ]
+    canvas = Image.new("RGB", (3600, 2550), "white")
+    draw = ImageDraw.Draw(canvas)
+    title_font = pil_font(58, True)
+    stage_font = pil_font(34, True)
+    head_font = pil_font(25, True)
+    body_font = pil_font(20)
+    small_font = pil_font(17)
+    black = (32, 33, 36)
+    gray = (100, 107, 116)
+    green = (29, 158, 117)
+    orange = (216, 90, 48)
+    blue = (68, 114, 196)
+    draw.text((80, 55), "Real-photo DATA325 prediction matrix", font=title_font, fill=black)
+    draw.text(
+        (80, 130),
+        "Rows follow growth stage; columns select low-, median-, and high-error cases within each stage.",
+        font=body_font,
+        fill=gray,
+    )
+
+    group_w = 1120
+    row_h = 735
+    start_y = 250
+    start_x = 125
+    panel_gap = 15
+    panel_w = 345
+    panel_h = 465
+    sample_labels = ["low error", "median error", "high error"]
+    for row_idx, (stage, row_records) in enumerate(selections):
+        y = start_y + row_idx * row_h
+        draw.rounded_rectangle((45, y - 68, 3555, y + row_h - 78), radius=22, fill=(249, 251, 252), outline=(224, 229, 235), width=2)
+        draw.text((80, y - 50), stage, font=stage_font, fill=green if row_idx == 0 else blue if row_idx == 1 else orange)
+        for col_idx, record in enumerate(row_records):
+            x = start_x + col_idx * group_w
+            draw.text((x + 445, y - 48), sample_labels[col_idx], font=head_font, fill=gray)
+            raw_box = (x, y, x + panel_w, y + panel_h)
+            pred_box = (x + panel_w + panel_gap, y, x + panel_w * 2 + panel_gap, y + panel_h)
+            diff_box = (x + panel_w * 2 + panel_gap * 2, y, x + panel_w * 3 + panel_gap * 2, y + panel_h)
+
+            path = DATA325_IMAGE_DIR / record["file_name"]
+            raw = draw_bbox_on_image(path, record["bbox"], green)
+            paste_fit(canvas, raw, raw_box, (250, 250, 250))
+            draw.rectangle(raw_box, outline=(218, 224, 230), width=2)
+            draw.text((raw_box[0] + 10, raw_box[1] + 10), "Ground truth", font=head_font, fill=black)
+            draw.rectangle((raw_box[0] + 8, raw_box[3] - 72, raw_box[2] - 8, raw_box[3] - 8), fill=(255, 255, 255), outline=(224, 229, 235), width=1)
+            draw.text((raw_box[0] + 18, raw_box[3] - 62), f"GT {float(record['true_height_cm']):.0f} cm", font=body_font, fill=green)
+            draw.text((raw_box[0] + 18, raw_box[3] - 33), f"Camera {float(record['camera_height_cm']):.0f} cm", font=small_font, fill=gray)
+
+            roi = crop_roi(path, record["bbox"])
+            paste_fit(canvas, roi, pred_box, (250, 250, 250))
+            draw.rectangle(pred_box, outline=(218, 224, 230), width=2)
+            draw.text((pred_box[0] + 10, pred_box[1] + 10), "Prediction", font=head_font, fill=black)
+            draw.rectangle((pred_box[0] + 8, pred_box[3] - 78, pred_box[2] - 8, pred_box[3] - 8), fill=(255, 255, 255), outline=(224, 229, 235), width=1)
+            draw.text((pred_box[0] + 18, pred_box[3] - 67), f"Pred {float(record['pred_height_cm']):.1f} cm", font=body_font, fill=orange)
+            draw.text((pred_box[0] + 18, pred_box[3] - 38), f"TTA std {float(record.get('pred_std_cm', 0.0)):.1f} cm", font=small_font, fill=gray)
+
+            draw_height_difference_panel(canvas, record, diff_box, category_text(record, taxonomy), record["box_id"])
+
+    draw.text(
+        (80, 2440),
+        "Difference panels report height-error diagnostics and deterministic foreground masks, not pixel-level or 3D difference ground truth.",
+        font=body_font,
+        fill=gray,
+    )
+    save_png_pdf(canvas, upload)
+
+
+def unique_record_add(out: list[tuple[str, dict]], used: set[tuple[str, str]], label: str, candidates: list[dict], count: int) -> None:
+    for rec in candidates:
+        key = record_key(rec)
+        if key in used:
+            continue
+        out.append((label, rec))
+        used.add(key)
+        if sum(1 for item_label, _ in out if item_label == label) >= count:
+            return
+
+
+def build_extended_real_photo_matrix(records: list[dict], rev: dict) -> None:
+    upload = FIG_NAME_BY_STEM["fig12_extended_real_photo_matrix"]
+    taxonomy = row_lookup(rev["taxonomy"])
+    quality = row_lookup(rev["roi_metrics"])
+    by_error = sorted(records, key=lambda r: float(r["abs_error_cm"]))
+    over = sorted(records, key=lambda r: float(r["pred_height_cm"]) - float(r["true_height_cm"]), reverse=True)
+    under = sorted(records, key=lambda r: float(r["pred_height_cm"]) - float(r["true_height_cm"]))
+    early = sorted([r for r in records if float(r["true_height_cm"]) < 80], key=lambda r: float(r["abs_error_cm"]), reverse=True)
+
+    def bg_score(rec: dict) -> float:
+        row = quality.get(record_key(rec), {})
+        return float(row.get("background_fraction") or 0.0)
+
+    high_bg = sorted(records, key=bg_score, reverse=True)
+    high_unc = sorted(records, key=lambda r: float(r.get("pred_std_cm", 0.0)), reverse=True)
+    selected: list[tuple[str, dict]] = []
+    used: set[tuple[str, str]] = set()
+    unique_record_add(selected, used, "success", by_error, 3)
+    unique_record_add(selected, used, "over-estimation", over, 3)
+    unique_record_add(selected, used, "under-estimation", under, 3)
+    unique_record_add(selected, used, "early sparse", early, 3)
+    unique_record_add(selected, used, "high background", high_bg, 3)
+    unique_record_add(selected, used, "high uncertainty", high_unc, 3)
+
+    canvas = Image.new("RGB", (3600, 3050), "white")
+    draw = ImageDraw.Draw(canvas)
+    title_font = pil_font(56, True)
+    head_font = pil_font(24, True)
+    body_font = pil_font(18)
+    small_font = pil_font(15)
+    black = (32, 33, 36)
+    gray = (98, 105, 115)
+    green = (29, 158, 117)
+    orange = (216, 90, 48)
+    blue = (68, 114, 196)
+    draw.text((80, 55), "Extended DATA325 real-photo matrix", font=title_font, fill=black)
+    draw.text(
+        (80, 128),
+        "Each card uses the original image, manual bbox, ROI crop, deterministic foreground mask, and recorded DINOv3-DCF prediction.",
+        font=body_font,
+        fill=gray,
+    )
+    card_w = 560
+    card_h = 880
+    x0 = 70
+    y0 = 225
+    gap_x = 28
+    gap_y = 55
+    for idx, (label, rec) in enumerate(selected[:18]):
+        row = idx // 6
+        col = idx % 6
+        x = x0 + col * (card_w + gap_x)
+        y = y0 + row * (card_h + gap_y)
+        draw.rounded_rectangle((x, y, x + card_w, y + card_h), radius=20, fill=(249, 251, 252), outline=(220, 226, 232), width=2)
+        color = green if label == "success" else orange if "over" in label or "early" in label else blue
+        draw.text((x + 18, y + 16), label, font=head_font, fill=color)
+        draw.text((x + 18, y + 48), record_stage(rec), font=small_font, fill=gray)
+        path = DATA325_IMAGE_DIR / rec["file_name"]
+        raw = draw_bbox_on_image(path, rec["bbox"], green)
+        paste_fit(canvas, raw, (x + 18, y + 82, x + card_w - 18, y + 380), (250, 250, 250))
+        roi = crop_roi(path, rec["bbox"])
+        overlay = mask_overlay(roi)
+        paste_fit(canvas, roi, (x + 18, y + 405, x + card_w // 2 - 8, y + 620), (250, 250, 250))
+        paste_fit(canvas, overlay, (x + card_w // 2 + 8, y + 405, x + card_w - 18, y + 620), (250, 250, 250))
+        gt = float(rec["true_height_cm"])
+        pred = float(rec["pred_height_cm"])
+        ae = abs(pred - gt)
+        std = float(rec.get("pred_std_cm", 0.0))
+        draw.text((x + 18, y + 650), f"GT {gt:.0f} cm | pred {pred:.1f} cm | AE {ae:.1f} cm", font=body_font, fill=black)
+        draw.text((x + 18, y + 681), f"TTA std {std:.1f} cm | box {rec['box_id']}", font=small_font, fill=gray)
+        draw_wrapped(draw, (x + 18, y + 713), category_text(rec, taxonomy), body_font, gray, card_w - 36, 2)
+        q = quality.get(record_key(rec), {})
+        fg = q.get("foreground_fraction")
+        bg = q.get("background_fraction")
+        if fg is not None and bg is not None:
+            draw.text((x + 18, y + 820), f"foreground {float(fg) * 100:.0f}% | background {float(bg) * 100:.0f}%", font=small_font, fill=gray)
+    draw.text(
+        (80, 2970),
+        "The matrix is a qualitative audit sheet; mask overlays are deterministic color-index diagnostics and are not segmentation labels.",
+        font=body_font,
+        fill=gray,
+    )
+    save_png_pdf(canvas, upload)
+
+
 def build_fig4_preprocessing(records: list[dict], rev: dict) -> None:
     upload = FIG_NAME_BY_STEM["fig4_preprocessing"]
     recs = [choose_by_height(records, 0, 80, "mid"), choose_by_height(records, 80, 120, "mid"), choose_by_height(records, 120, 220, "mid")]
@@ -1821,7 +2235,7 @@ def build_fig6_attention_roi(records: list[dict], rev: dict) -> None:
     draw_wrapped(
         draw,
         (x0 + 65, 1350),
-        "The overlay at left is not a DINO attention map; it is a deterministic color-index diagnostic used to quantify ROI contamination. Real DINO attention examples are shown in Fig. 13.",
+        "The overlay at left is not a DINO attention map; it is a deterministic color-index diagnostic used to quantify ROI contamination. Additional attention/error examples are shown in Supplementary Fig. 3.",
         body_font,
         gray,
         1050,
@@ -2230,16 +2644,19 @@ def build_real_image_figures() -> None:
     build_real_image_protocol_figure(records)
     build_fig2_benchmark_comparison(records, rev)
     build_fig3_distribution(records, rev)
+    build_fig4_mindmap_workflow()
     build_fig4_preprocessing(records, rev)
     build_fig6_attention_roi(records, rev)
     build_fig7_domain_shift_thumbnails(records, rev)
     build_fig8_ablation_ci(metrics(), rev)
     build_fig9_resampling_stats(rev)
     build_fig10_height_bin_ci(rev)
+    build_real_photo_prediction_matrix(records, rev)
     build_fig11_roi_contamination(rev)
     build_real_stage_error_gallery(records)
     build_fig13_attention_error_clean(records, rev)
     build_fig11_qualitative_combined(records, rev)
+    build_extended_real_photo_matrix(records, rev)
     build_fig15_release_map(rev)
     move_supplementary_figures()
 
@@ -2325,6 +2742,19 @@ def validate_manuscript_title_page(path: Path) -> None:
     found_full = [item for item in forbidden_full_text if item in full_text]
     if found_full:
         raise RuntimeError(f"{path.name}: manuscript contains submission metadata: {found_full}")
+
+
+def validate_manuscript_equations(path: Path) -> None:
+    doc = Document(path)
+    parts = [p.text for p in doc.paragraphs]
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                parts.append(cell.text)
+    text = "\n".join(parts)
+    missing = [f"Eq. ({idx})" for idx in range(1, 9) if f"Eq. ({idx})" not in text]
+    if missing:
+        raise RuntimeError(f"{path.name}: missing display equation labels: {', '.join(missing)}")
 
 
 def revision_refs() -> list[str]:
@@ -2433,10 +2863,53 @@ def build_manuscript(m: dict) -> Path:
         "Visual augmentation and TTA8 were applied as limited robustness interventions. Training-time augmentation perturbed color and peripheral ROI appearance. TTA8 averaged one original prediction and seven color-perturbed predictions at inference. Prediction standard deviation from TTA8 was retained for uncertainty diagnostics.",
     ]:
         add_p(doc, para)
+
+    doc.add_heading("2.3. Mathematical formulation", level=2)
+    add_p(
+        doc,
+        "Equations (1)-(8) define the ROI-level DINOv3-DCF computation used in this paper. The notation is intentionally tied to the released scripts: b is the manual ROI box, r is the resized crop, z_cls and z_i are DINOv3 tokens, A is final-layer attention, h_cam is camera height in centimeters, and h_hat is predicted plant height. The 64-dimensional output is a phytomer-inspired structured latent vector; only the derived height in Eq. (6) is supervised by measured plant height.",
+    )
+    add_display_equation(
+        doc,
+        "r = R(crop(I,b));  {z_cls,z_1,...,z_N}, A = F_DINO(r),  z_i in R^1024",
+        1,
+    )
+    add_display_equation(doc, "f_CLS = z_cls;  f_mean = (1/N) sum_{i=1..N} z_i", 2)
+    add_display_equation(
+        doc,
+        "a_i = (1/H) sum_{j=1..H} A_{j,cls->i};  alpha_i = a_i / sum_{k=1..N} a_k;  f_attn = sum_{i=1..N} alpha_i z_i",
+        3,
+    )
+    add_display_equation(doc, "x = [f ; h_cam/200] in R^1025", 4)
+    add_display_equation(
+        doc,
+        "p = p_min + (p_max - p_min) * sigmoid(W3 phi(BN2(W2 phi(BN1(W1 x)))))",
+        5,
+    )
+    add_display_equation(
+        doc,
+        "p = {p_{k,m}} for k=1..16 and m=1..4;  h_hat = sum_{k=1..16} p_{k,1}",
+        6,
+    )
+    add_display_equation(
+        doc,
+        "L = Huber_delta=1(h_hat,h) + lambda_prior L_prior",
+        7,
+    )
+    add_display_equation(
+        doc,
+        "MAE=(1/n)sum_i |h_i-h_hat_i|;  RMSE=sqrt((1/n)sum_i(h_i-h_hat_i)^2);  MAPE=(100/n)sum_i |(h_i-h_hat_i)/h_i|",
+        8,
+    )
+    add_p(
+        doc,
+        "The first latent component in each group, p_{k,1}, is the internode-length-related component used for the height sum. The other three components keep the DCF head in a structured latent space but are not evaluated as annotated leaf-angle, leaf-length, or inclination traits in DATA325-v0.1.",
+    )
+    doc.add_page_break()
     add_named_figure(doc, "fig1")
     add_named_figure(doc, "fig6_attention_roi")
 
-    doc.add_heading("2.3. Diagnostics and statistics", level=2)
+    doc.add_heading("2.4. Diagnostics and statistics", level=2)
     for para in [
         "The diagnostic analysis uses deterministic statistics from existing prediction outputs and real DATA325 crops. Bootstrap 95% confidence intervals were computed for MAE, RMSE, and MAPE with 5000 resamples. Paired bootstrap differences and exact sign tests compared per-box absolute errors against the Attn+aug+TTA8 model. Independent DCF-head re-training was also run for CLS, patch-mean, attention, and attention+augmentation feature modes using three random seeds (11, 42, and 73), followed by DATA325 zero-shot evaluation with TTA1.",
         "ROI contamination was quantified using non-generative color-index masks. The diagnostic mask estimates foreground fraction, background fraction, bbox fill ratio, bbox area fraction, aspect ratio, brightness, and edge contact. It is used only for error analysis and figure QA, not as a training label or a replacement for plant segmentation.",
@@ -2449,7 +2922,7 @@ def build_manuscript(m: dict) -> Path:
 
     doc.add_heading("3. Results", level=1)
     doc.add_heading("3.1. DATA325 exposes feature-space domain shift", level=2)
-    add_p(doc, f"DINOv3 feature analysis showed a source-target centroid distance of {fmt(m['centroid_distance'])}, relative mean shift of {fmt(m['mean_shift'])}%, and relative standard-deviation shift of {fmt(m['std_shift'])}%. The thumbnails in Fig. 7 show that the embedding separation corresponds to visible greenhouse and growth-stage differences rather than an abstract numerical artifact.")
+    add_p(doc, f"DINOv3 feature analysis showed a source-target centroid distance of {fmt(m['centroid_distance'])}, relative mean shift of {fmt(m['mean_shift'])}%, and relative standard-deviation shift of {fmt(m['std_shift'])}%. The thumbnails in Fig. 6 show that the embedding separation corresponds to visible greenhouse and growth-stage differences rather than an abstract numerical artifact.")
     add_named_figure(doc, "fig7_domain_shift_thumb")
 
     doc.add_heading("3.2. Attention pooling gives the largest zero-shot gain", level=2)
@@ -2489,7 +2962,9 @@ def build_manuscript(m: dict) -> Path:
 
     doc.add_heading("3.5. Real-image galleries and negative controls localize the residual problem", level=2)
     add_p(doc, "The qualitative galleries show that high-error examples are often early, sparse, background-heavy, or TTA-unstable. The rule-based error taxonomy assigned 32 boxes to early-stage sparse structure, 15 to unstable TTA prediction, 10 to bbox ambiguity, and 25 to residual cross-domain shift. These categories are intended as diagnostic labels for future benchmark development rather than as ground-truth biological classes.")
-    add_p(doc, "The full stage-wise and attention/error gallery is provided as Supplementary Fig. 6. These supplementary panels preserve traceable real-image evidence for cases that are not shown in the main benchmark figures.")
+    add_p(doc, "Figure 10 uses a real-photo matrix format to show low-, median-, and high-error cases within early, mid, and tall height ranges. The layout follows a ground-truth/prediction/difference logic, but the difference panel is explicitly a height-error diagnostic that combines absolute error, signed error, TTA uncertainty, foreground mask, and taxonomy label. It is not a pixel-level segmentation difference or 3D reconstruction error.")
+    add_named_figure(doc, "fig12_real_photo_matrix")
+    add_p(doc, "The full stage-wise and attention/error gallery is provided as Supplementary Fig. 6, and an extended real-photo matrix is provided as Supplementary Fig. 8. These supplementary panels preserve traceable real-image evidence for cases that are not shown in the main benchmark figures.")
     add_p(doc, f"Negative controls further narrow the interpretation. Camera-height correction changed MAE by only about 0.03 cm. Bbox geometry reached Pearson r={fmt(m['bbox_r'], 3)} and MAE {fmt(m['bbox_mae'])} cm. Feature-statistic alignment worsened MAE to 45.98 cm, and the tested DANN model reached 34.20 cm MAE while the domain classifier remained near {fmt(m['dann_final_acc'] * 100, 0)}% accuracy.")
     add_p(doc, "Diagnostic negative controls are summarized in Supplementary Fig. 7. They are discussed as explanatory checks rather than as competing deployment models.")
 
@@ -2569,10 +3044,10 @@ def build_cover_letter() -> Path:
     paragraphs = [
         "Dear Editors,",
         f"I submit the manuscript entitled \"{TITLE}\" for consideration as an Original research paper in Computers and Electronics in Agriculture.",
-        "This manuscript presents DATA325-v0.1 as a reproducible external-greenhouse maize height benchmark and evaluates DINOv3-DiffCorn-Fusion (DINOv3-DCF) as a frozen-foundation-feature diagnostic pipeline. This framing matches the journal's emphasis on computational innovation in agricultural imaging rather than a simple application of an existing AI model.",
-        "The manuscript follows a data-resource logic: it first documents DATA325-v0.1 acquisition, manual ROI annotation, data distributions, preprocessing, and open-release assets; it then reports zero-shot model results, bootstrap confidence intervals, paired tests, ROI contamination diagnostics, source-trained morphometric baselines, uncertainty analysis, error taxonomy, and negative controls.",
-        f"The main DINOv3-DCF result is that attention-weighted pooling reduced DATA325 MAE from {fmt(old_mae)} to {fmt(attn_mae)} cm, while corrected camera-height metadata reached {fmt(corrected_mae)} cm as a diagnostic control. The best attention plus augmentation plus TTA8 variant reached {fmt(best.get('mae_cm', 29.573550898854325))} cm MAE, {fmt(best.get('rmse_cm', 38.97683219161265))} cm RMSE, and {fmt(best.get('median_abs_error_cm', 23.64422082901001))} cm median absolute error on 82 boxes. A source-trained random-forest morphometric baseline reached {fmt(rf_mae)} cm MAE, showing that manual ROI geometry is a strong cue and that the paper should be read as a benchmark and transfer diagnostic rather than a complete automatic height system.",
-        "The figure set contains 9 main figures plus 7 supplementary figures using real DATA325/source images, true annotations, true prediction outputs, deterministic statistical plots, and code-drawn conceptual diagrams. Generative AI was not used to create or modify scientific evidence figures or the graphical abstract.",
+        "This manuscript presents DATA325-v0.1 as a reproducible external-greenhouse maize height benchmark and evaluates DINOv3-DiffCorn-Fusion (DINOv3-DCF) as a frozen-foundation-feature diagnostic pipeline. This framing matches the journal's emphasis on computational innovation in agricultural imaging.",
+        "The manuscript documents DATA325-v0.1 acquisition, manual ROI annotation, distributions, preprocessing, and open-release assets, then reports zero-shot model results, bootstrap confidence intervals, paired tests, ROI contamination diagnostics, source-trained morphometric baselines, uncertainty analysis, error taxonomy, and negative controls.",
+        f"Attention-weighted pooling reduced DATA325 MAE from {fmt(old_mae)} to {fmt(attn_mae)} cm, while corrected camera-height metadata reached {fmt(corrected_mae)} cm as a diagnostic control. The best attention plus augmentation plus TTA8 variant reached {fmt(best.get('mae_cm', 29.573550898854325))} cm MAE and {fmt(best.get('rmse_cm', 38.97683219161265))} cm RMSE on 82 boxes. A source-trained random-forest morphometric baseline reached {fmt(rf_mae)} cm MAE, showing that manual ROI geometry is a strong cue and that the paper is a benchmark and transfer diagnostic rather than a complete automatic height system.",
+        "The figure set contains 10 main figures plus 8 supplementary figures using real DATA325/source images, true annotations, true prediction outputs, deterministic statistical plots, and code-drawn conceptual diagrams. Generative AI was not used to create or modify scientific evidence figures or the graphical abstract.",
         f"Data, code, predictions, diagnostics, and selected DCF checkpoints are organized for public release at {REPOSITORY_URL}. The companion data-acquisition utility is available at {CAPTURE_TOOL_URL}.",
         "This manuscript is original and is not under consideration elsewhere.",
         "Sincerely,",
@@ -2675,8 +3150,8 @@ def write_sidecars(m: dict) -> None:
             - cover_letter_cea.docx
             - supplementary_material.docx
             - graphical_abstract_non_ai.png/tif/pdf
-            - figures/Figure_1...Figure_9 as PNG/PDF
-            - supplementary_figures/Supplementary_Figure_1...Supplementary_Figure_7 as PNG/PDF
+            - figures/Figure_1...Figure_10 as PNG/PDF
+            - supplementary_figures/Supplementary_Figure_1...Supplementary_Figure_8 as PNG/PDF
             - tables/table1_ablation.csv and table2_height_bins.csv
             - tables/roi_quality_metrics.csv, error_taxonomy.csv, seed_retraining_summary.csv, and source_morphometric_baseline.csv
             - reproducibility_json/*.json
@@ -2753,6 +3228,7 @@ def main() -> None:
     build_real_image_figures()
     patch_embedded_figure_titles()
     build_diagnostic_figure()
+    build_fig4_mindmap_workflow()
     move_supplementary_figures()
     m = metrics()
     write_csvs(m)
@@ -2763,6 +3239,8 @@ def main() -> None:
     supplement = build_supplement(m)
     validate_manuscript_title_page(manuscript)
     validate_manuscript_title_page(OUT / "manuscript_cea_elsevier_style.docx")
+    validate_manuscript_equations(manuscript)
+    validate_manuscript_equations(OUT / "manuscript_cea_elsevier_style.docx")
     write_sidecars(m)
     package = zip_package()
     print("CEA_DIR", OUT)
