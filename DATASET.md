@@ -25,4 +25,4 @@
 
 ## Evaluation protocol
 
-DATA325 is treated as an external target-greenhouse benchmark. No DATA325 plant-height labels are used for training in the manuscript protocol.
+DATA325 is treated as an external target-greenhouse benchmark. No DATA325 plant-height labels are used for training in the manuscript protocol. The companion maize image-acquisition utility is available separately at https://github.com/sanyueuy/corn-capture.

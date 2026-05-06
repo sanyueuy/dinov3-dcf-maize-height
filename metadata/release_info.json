@@ -6,6 +6,7 @@
   "affiliation": "China Agricultural University",
   "contact_email": "jchen@cau.edu.cn",
   "repository_url": "https://github.com/sanyueuy/dinov3-dcf-maize-height",
+  "capture_tool_repository_url": "https://github.com/sanyueuy/corn-capture",
   "raw_image_count": 75,
   "annotated_image_count": 25,
   "box_count": 82,

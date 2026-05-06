@@ -10,6 +10,8 @@ The release is designed to preserve the manuscript evaluation assets rather than
 4. Compare detailed method outputs in `results/reproducibility_json/`.
 5. Inspect `results/cea_revision/` for bootstrap CI, paired tests, ROI contamination diagnostics, source-trained and target-label morphometric baseline output, uncertainty diagnostics, 3-seed DCF-head retraining summaries, and rule-based error taxonomy.
 
+The companion image-acquisition utility is maintained at https://github.com/sanyueuy/corn-capture. It is referenced as collection-support software, not as a model-training dependency.
+
 ## Full model path
 
 Full feature extraction requires the upstream DINOv3 model and its license-compliant weights. The archival scripts in `src/` preserve the exact code used during preparation; some of them retain project-specific path constants and may need path edits when run outside the original project root. CEA diagnostics are reproducible from released prediction CSV/JSON files and real DATA325 images without redistributing DINOv3 weights.

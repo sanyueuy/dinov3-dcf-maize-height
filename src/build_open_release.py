@@ -24,6 +24,7 @@ AFFILIATION = "China Agricultural University"
 CONTACT_EMAIL = "jchen@cau.edu.cn"
 TITLE = "A reproducible external-greenhouse benchmark for diagnosing DINOv3 feature transfer in maize height estimation"
 REPOSITORY_URL = "https://github.com/sanyueuy/dinov3-dcf-maize-height"
+CAPTURE_TOOL_URL = "https://github.com/sanyueuy/corn-capture"
 
 DATA325_IMAGE_DIR = ROOT / "images"
 FINAL_JSON = ROOT / "data325_zero_shot_attn_aug_tta8" / "data325_zero_shot_comparison_attn_aug_tta8.json"
@@ -409,6 +410,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
         Affiliation: {AFFILIATION}
         Correspondence: {CONTACT_EMAIL}
         Repository: {REPOSITORY_URL}
+        Companion data-acquisition utility: {CAPTURE_TOOL_URL}
 
         ## What is included
 
@@ -420,6 +422,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
         - Source-domain feature bundles in `data/source_feature_bundles/`.
         - Paper figures and table sidecars in `paper_assets/`.
         - Reproducibility helper scripts in `scripts/` and archival project scripts in `src/`.
+        - Companion maize image-acquisition utility: {CAPTURE_TOOL_URL}.
 
         ## Dataset summary
 
@@ -445,7 +448,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
 
         ## Notes for public upload
 
-        This release is prepared for GitHub at {REPOSITORY_URL}. Use Git LFS for `*.jpg`, `*.png`, `*.pt`, and `*.pth` files. No Zenodo DOI is assigned in this release.
+        This release is prepared for GitHub at {REPOSITORY_URL}. The companion data-acquisition utility is maintained separately at {CAPTURE_TOOL_URL}. Use Git LFS for `*.jpg`, `*.png`, `*.pt`, and `*.pth` files. No Zenodo DOI is assigned in this release.
         """,
     )
     write_text(
@@ -478,7 +481,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
 
         ## Evaluation protocol
 
-        DATA325 is treated as an external target-greenhouse benchmark. No DATA325 plant-height labels are used for training in the manuscript protocol.
+        DATA325 is treated as an external target-greenhouse benchmark. No DATA325 plant-height labels are used for training in the manuscript protocol. The companion maize image-acquisition utility is available separately at https://github.com/sanyueuy/corn-capture.
         """,
     )
     write_text(
@@ -495,6 +498,8 @@ def write_release_docs(stats: dict[str, Any]) -> None:
         3. Run `python scripts/summarize_data325.py` to recompute MAE/RMSE/median absolute error from the CSV.
         4. Compare detailed method outputs in `results/reproducibility_json/`.
         5. Inspect `results/cea_revision/` for bootstrap CI, paired tests, ROI contamination diagnostics, source-trained and target-label morphometric baseline output, uncertainty diagnostics, 3-seed DCF-head retraining summaries, and rule-based error taxonomy.
+
+        The companion image-acquisition utility is maintained at https://github.com/sanyueuy/corn-capture. It is referenced as collection-support software, not as a model-training dependency.
 
         ## Full model path
 
@@ -622,6 +627,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
                 "affiliation": AFFILIATION,
                 "contact_email": CONTACT_EMAIL,
                 "repository_url": REPOSITORY_URL,
+                "capture_tool_repository_url": CAPTURE_TOOL_URL,
                 **stats,
             },
             indent=2,

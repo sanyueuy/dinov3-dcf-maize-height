@@ -41,6 +41,7 @@
 
 ## Open-source release
 - Repository: https://github.com/sanyueuy/dinov3-dcf-maize-height
+- Companion data-acquisition utility: https://github.com/sanyueuy/corn-capture
 - Planned archive: dinov3_dcf_maize_height_open_release_v0_1_0.zip
 
 ## Added literature sources

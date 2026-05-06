@@ -8,6 +8,7 @@ Author: Hong Wu; Jian Chen
 Affiliation: China Agricultural University
 Correspondence: jchen@cau.edu.cn
 Repository: https://github.com/sanyueuy/dinov3-dcf-maize-height
+Companion data-acquisition utility: https://github.com/sanyueuy/corn-capture
 
 ## What is included
 
@@ -19,6 +20,7 @@ Repository: https://github.com/sanyueuy/dinov3-dcf-maize-height
 - Source-domain feature bundles in `data/source_feature_bundles/`.
 - Paper figures and table sidecars in `paper_assets/`.
 - Reproducibility helper scripts in `scripts/` and archival project scripts in `src/`.
+- Companion maize image-acquisition utility: https://github.com/sanyueuy/corn-capture.
 
 ## Dataset summary
 
@@ -44,4 +46,4 @@ python scripts/summarize_data325.py
 
 ## Notes for public upload
 
-This release is prepared for GitHub at https://github.com/sanyueuy/dinov3-dcf-maize-height. Use Git LFS for `*.jpg`, `*.png`, `*.pt`, and `*.pth` files. No Zenodo DOI is assigned in this release.
+This release is prepared for GitHub at https://github.com/sanyueuy/dinov3-dcf-maize-height. The companion data-acquisition utility is maintained separately at https://github.com/sanyueuy/corn-capture. Use Git LFS for `*.jpg`, `*.png`, `*.pt`, and `*.pth` files. No Zenodo DOI is assigned in this release.
