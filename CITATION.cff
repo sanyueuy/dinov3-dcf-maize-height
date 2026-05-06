@@ -5,10 +5,10 @@ type: dataset
 authors:
   - family-names: "Wu"
     given-names: "Hong"
-    affiliation: "China Agricultural University"
+    affiliation: "College of Engineering, China Agricultural University, Beijing 100083, China"
   - family-names: "Chen"
     given-names: "Jian"
-    affiliation: "China Agricultural University"
+    affiliation: "College of Engineering, China Agricultural University, Beijing 100083, China"
     email: "jchen@cau.edu.cn"
 version: "v0.1.0"
 date-released: "2026-05-06"

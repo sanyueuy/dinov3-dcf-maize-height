@@ -5,7 +5,8 @@ This release supports the manuscript:
 **A reproducible external-greenhouse benchmark for diagnosing DINOv3 feature transfer in maize height estimation**
 
 Author: Hong Wu; Jian Chen
-Affiliation: China Agricultural University
+Affiliation: College of Engineering, China Agricultural University, Beijing 100083, China
+First-author email: wuhong@cau.edu.cn
 Correspondence: jchen@cau.edu.cn
 Repository: https://github.com/sanyueuy/dinov3-dcf-maize-height
 Companion data-acquisition utility: https://github.com/sanyueuy/corn-capture

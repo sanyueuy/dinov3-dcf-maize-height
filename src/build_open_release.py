@@ -20,7 +20,8 @@ DIST = ROOT / "open_release_dist"
 VERSION = "v0.1.0"
 SLUG = "dinov3_dcf_maize_height_open_release_v0_1_0"
 AUTHOR = "Hong Wu; Jian Chen"
-AFFILIATION = "China Agricultural University"
+AUTHOR_EMAIL = "wuhong@cau.edu.cn"
+AFFILIATION = "College of Engineering, China Agricultural University, Beijing 100083, China"
 CONTACT_EMAIL = "jchen@cau.edu.cn"
 TITLE = "A reproducible external-greenhouse benchmark for diagnosing DINOv3 feature transfer in maize height estimation"
 REPOSITORY_URL = "https://github.com/sanyueuy/dinov3-dcf-maize-height"
@@ -408,6 +409,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
 
         Author: {AUTHOR}
         Affiliation: {AFFILIATION}
+        First-author email: {AUTHOR_EMAIL}
         Correspondence: {CONTACT_EMAIL}
         Repository: {REPOSITORY_URL}
         Companion data-acquisition utility: {CAPTURE_TOOL_URL}
@@ -624,6 +626,7 @@ def write_release_docs(stats: dict[str, Any]) -> None:
                 "version": VERSION,
                 "date": date.today().isoformat(),
                 "author": AUTHOR,
+                "author_email": AUTHOR_EMAIL,
                 "affiliation": AFFILIATION,
                 "contact_email": CONTACT_EMAIL,
                 "repository_url": REPOSITORY_URL,

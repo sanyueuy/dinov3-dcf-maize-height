@@ -45,8 +45,9 @@ TITLE = (
     "cross-greenhouse maize height estimation"
 )
 AUTHOR_NAME = "Hong Wu"
+AUTHOR_EMAIL = "wuhong@cau.edu.cn"
 COAUTHOR_NAME = "Jian Chen"
-AFFILIATION = "China Agricultural University"
+AFFILIATION = "College of Engineering, China Agricultural University, Beijing 100083, China"
 CORRESPONDING_EMAIL = "jchen@cau.edu.cn"
 OPEN_RELEASE_ARCHIVE = "dinov3_dcf_maize_height_open_release_v0_1_0.zip"
 REPOSITORY_URL = "https://github.com/sanyueuy/dinov3-dcf-maize-height"
@@ -745,18 +746,16 @@ def build_graphical_abstract(m: dict) -> Path:
             ax.annotate("", xy=(x + w + 0.045, y + h / 2), xytext=(x + w + 0.01, y + h / 2), arrowprops=dict(arrowstyle="->", lw=2, color=c(GRAY)))
 
     ax.text(0.04, 0.91, "Zero-shot external-greenhouse maize height estimation", fontsize=21, weight="bold", color=c(BLACK))
-    ax.text(0.04, 0.09, "Non-AI graphical abstract generated from code, real evaluation metrics, and schematic vector elements.", fontsize=9.5, color=c(GRAY))
-
     # Compact result panel
     ax.add_patch(plt.Rectangle((0.05, 0.22), 0.42, 0.22, fc=c(LIGHT_GREEN), ec=c(GREEN), lw=1.5))
     ax.text(0.07, 0.39, "Main gain", weight="bold", color=c(GREEN), fontsize=13)
-    ax.text(0.07, 0.31, "CLS baseline: 41.76 cm MAE", color=c(BLACK), fontsize=12)
+    ax.text(0.07, 0.335, "CLS baseline: 41.76 cm MAE", color=c(BLACK), fontsize=11.5)
     rev = load_revision_results()
     attn_mae = rev["summary"].get("model_summary", {}).get("attn", {}).get("mae_cm", 30.407656506794254)
-    ax.text(0.07, 0.25, f"Attention pooling: {fmt(attn_mae)} cm MAE", color=c(BLACK), fontsize=12)
+    ax.text(0.07, 0.285, f"Attention pooling: {fmt(attn_mae)} cm MAE", color=c(BLACK), fontsize=11.5)
     source_morph = load_revision_results().get("source_morphometric", {})
     rf_mae = source_morph.get("models", {}).get("random_forest", {}).get("summary", {}).get("mae_cm", 27.10317886989101)
-    ax.text(0.28, 0.31, f"Source morph RF: {fmt(rf_mae)} cm MAE", color=c(BLACK), fontsize=12)
+    ax.text(0.07, 0.235, f"Source morph RF: {fmt(rf_mae)} cm MAE", color=c(BLACK), fontsize=11.5)
 
     ax.add_patch(plt.Rectangle((0.53, 0.22), 0.42, 0.22, fc=c(LIGHT_ORANGE), ec=c(ORANGE), lw=1.5))
     ax.text(0.55, 0.39, "Remaining bottleneck", weight="bold", color=c(ORANGE), fontsize=13)
@@ -845,7 +844,7 @@ def build_manuscript(m: dict) -> Path:
         "These results show that attention-guided foundation-model feature aggregation improves zero-shot maize height transfer, while early-stage plants require stage-aware and plant-focused adaptation."
     )
     add_p(doc, abstract)
-    add_p(doc, "Keywords: maize phenotyping; plant height; greenhouse imaging; DINOv3; foundation model; zero-shot transfer; domain shift; attention pooling; DiffCorn-Fusion")
+    add_p(doc, "Keywords: maize phenotyping; plant height; DINOv3; foundation model; zero-shot transfer; domain shift; attention pooling")
 
     doc.add_heading("1. Introduction", level=1)
     for para in [
@@ -1306,24 +1305,6 @@ FIGURES = [
         "Fig. 9. Height-bin error and early-stage failure concentration. Bootstrap intervals confirm that plants below 80 cm dominate relative error and remain the key target for future stage-aware adaptation.",
         6.15,
     ),
-    (
-        "fig11_roi_contamination",
-        "Figure_10_ROI_contamination_morphometric_diagnostics",
-        "Fig. 10. ROI contamination and morphometric diagnostics. Foreground/background fractions from deterministic color-index masks are weakly correlated with absolute error, while source-trained bbox/mask baselines quantify the strength and limits of simple agricultural geometry.",
-        6.15,
-    ),
-    (
-        "fig11_qualitative_combined",
-        "Figure_11_Qualitative_stage_attention_error_gallery",
-        "Fig. 11. Qualitative stage-wise and attention/error gallery. Real DATA325 examples combine low-, mid-, and tall-stage cases with success, over-estimation, under-estimation, sparse-plant, and high-uncertainty ROIs.",
-        6.15,
-    ),
-    (
-        "fig7",
-        "Figure_12_Diagnostic_negative_controls",
-        "Fig. 12. Diagnostic negative controls. Camera-height correction, bbox geometry, feature-statistic alignment, and DANN do not remove the external-greenhouse gap, so the remaining error is not a single metadata or marginal-alignment artifact.",
-        6.15,
-    ),
 ]
 
 SUPPLEMENTARY_FIGURES = [
@@ -1349,6 +1330,24 @@ SUPPLEMENTARY_FIGURES = [
         "fig15_release_map",
         "Supplementary_Figure_4_Open_release_future_deployment_map",
         "Supplementary Fig. 4. Open-release and future-deployment map. The release packages DATA325 images, annotations, predictions, diagnostics, scripts, and checkpoints, while future work connects automatic detection, segmentation-guided ROI normalization, and multi-greenhouse adaptation.",
+        5.7,
+    ),
+    (
+        "fig11_roi_contamination",
+        "Supplementary_Figure_5_ROI_contamination_morphometric_diagnostics",
+        "Supplementary Fig. 5. ROI contamination and morphometric diagnostics. Foreground/background fractions from deterministic color-index masks are weakly correlated with absolute error, while source-trained bbox/mask baselines quantify the strength and limits of simple agricultural geometry.",
+        5.7,
+    ),
+    (
+        "fig11_qualitative_combined",
+        "Supplementary_Figure_6_Qualitative_stage_attention_error_gallery",
+        "Supplementary Fig. 6. Qualitative stage-wise and attention/error gallery. Real DATA325 examples combine low-, mid-, and tall-stage cases with success, over-estimation, under-estimation, sparse-plant, and high-uncertainty ROIs.",
+        5.7,
+    ),
+    (
+        "fig7",
+        "Supplementary_Figure_7_Diagnostic_negative_controls",
+        "Supplementary Fig. 7. Diagnostic negative controls. Camera-height correction, bbox geometry, feature-statistic alignment, and DANN do not remove the external-greenhouse gap, so the remaining error is not a single metadata or marginal-alignment artifact.",
         5.7,
     ),
 ]
@@ -2245,9 +2244,10 @@ def add_title_page(doc: Document) -> None:
     add_p(doc, "Target journal: Computers and Electronics in Agriculture")
     add_p(doc, f"Authors: {AUTHOR_NAME}^1, {COAUTHOR_NAME}^1,*")
     add_p(doc, f"^1 {AFFILIATION}")
+    add_p(doc, f"Author email: {AUTHOR_NAME}, {AUTHOR_EMAIL}")
     add_p(doc, f"*Corresponding author: {COAUTHOR_NAME}, {CORRESPONDING_EMAIL}")
     add_p(doc, "Highlights file: included separately. Graphical abstract: optional code-generated file included.")
-    add_p(doc, "Main figure files: 12. Supplementary figures: 4. Editable table/diagnostic CSV files: 6. Supplementary material: 1.")
+    add_p(doc, "Main figure files: 9. Supplementary figures: 7. Editable table/diagnostic CSV files: 6. Supplementary material: 1.")
     add_p(doc, f"Code and data repository: {REPOSITORY_URL}")
     doc.add_page_break()
 
@@ -2310,14 +2310,14 @@ def build_manuscript(m: dict) -> Path:
     abstract = (
         "External-greenhouse crop-height estimation is difficult because model training images and deployment images differ in plant stage, background, imaging geometry, and ROI quality. "
         "We present DATA325 as a reproducible diagnostic benchmark for external maize height evaluation and test DINOv3-DiffCorn-Fusion (DINOv3-DCF), an ROI-level pipeline that connects frozen DINOv3 features to a DCF regression head. "
-        "The source hand-box set contains 156 maize ROIs, and DATA325 contains 82 evaluated boxes from 25 independent greenhouse images. "
+        "The source hand-box set contains 156 maize ROIs, and DATA325-v0.1 contains 75 raw greenhouse photographs with an evaluated subset of 82 boxes from 25 completed independent images. "
         f"Compared with the original CLS baseline ({fmt(old_mae)} cm MAE), attention-weighted patch pooling reduced zero-shot DATA325 MAE to {fmt(attn_mae)} cm, and the best attention plus augmentation plus TTA8 variant reached {fmt(best_mae)} cm MAE, {fmt(best_rmse)} cm RMSE, and {fmt(best_mape)}% MAPE. "
         f"A source-trained random-forest morphometric baseline reached {fmt(rf_summary.get('mae_cm', 27.10317886989101))} cm MAE, showing that manual bbox geometry is a strong cue in this benchmark. "
         "Bootstrap confidence intervals, paired per-box comparisons, ROI foreground diagnostics, uncertainty analysis, and error taxonomy show that the remaining gap concentrates in early-stage plants below 80 cm and is not explained by camera-height correction, feature-statistic alignment, or the tested DANN setup. "
         "The open release provides images, annotations, predictions, diagnostics, scripts, and selected DCF checkpoints for future external-greenhouse phenotyping research."
     )
     add_p(doc, abstract)
-    add_p(doc, "Keywords: maize phenotyping; plant height; greenhouse imaging; foundation model; DINOv3; domain shift; attention pooling; benchmark")
+    add_p(doc, "Keywords: maize phenotyping; plant height; foundation model; DINOv3; domain shift; attention pooling; benchmark")
 
     doc.add_heading("1. Introduction", level=1)
     for para in [
@@ -2326,16 +2326,16 @@ def build_manuscript(m: dict) -> Path:
         "A central risk is data leakage and weak external validation. Random image splits can put visually near-identical plants, dates, benches, or backgrounds in both training and testing. Broader distribution-shift work shows that source-domain accuracy is not a reliable substitute for deployment evaluation (Koh et al., 2021; Gulrajani and Lopez-Paz, 2021). Greenhouse maize height estimation is especially sensitive because early plants occupy small portions of the ROI and share the crop with pots, labels, substrate, benches, and shadows.",
         "Foundation-model features are attractive because self-supervised ViTs learn reusable visual representations and attention maps with emergent localization behavior (Dosovitskiy et al., 2021; Caron et al., 2021; Oquab et al., 2024; Simeoni et al., 2025). However, a global CLS token can summarize background context together with plant tissue. For ROI-level phenotyping, attention-weighted patch pooling may better match the biological object than a single global token, while keeping the visual backbone frozen and reproducible.",
         "For plant-height estimation, the external-validation problem is not only a matter of model accuracy. A credible agricultural computer vision paper must specify where the images came from, how plant instances were isolated, how height labels and camera metadata were linked to each ROI, and whether the test images are genuinely independent of the training images. Without this protocol detail, a strong MAE can be caused by background similarity, leakage across adjacent frames, or a hidden dependence on one camera setup rather than by transferable plant representation.",
-        "DATA325 was therefore designed as a small but auditable diagnostic target set. Its value is not the number of images alone; it is the combination of real greenhouse photographs, manually inspectable boxes, measured height labels, camera-height metadata, per-box predictions, and released sidecar files that make each reported error traceable. This framing follows the spirit of dataset-oriented CEA papers: the benchmark must be understandable before the model result can be trusted.",
-        "This study presents DATA325 as an external-greenhouse benchmark and DINOv3-DCF as the evaluation pipeline. Following the logic of Wheat3D PartNet, which first establishes data resource quality before presenting model results (Reena et al., 2025), we first document DATA325 acquisition, annotation, distributions, and preprocessing. We then evaluate feature aggregation, statistical robustness, ROI contamination, uncertainty, and failure categories. The goal is not to claim a complete deployed height system, but to identify what frozen foundation features can and cannot solve under zero-shot external-greenhouse transfer.",
+        "DATA325-v0.1 was therefore designed as a small but auditable diagnostic target set. Its value is not the number of images alone; it is the combination of real greenhouse photographs, manually inspectable boxes, measured height labels, camera-height metadata, per-box predictions, and released sidecar files that make each reported error traceable. The v0.1 label is used deliberately because the current release contains 75 raw photographs but only a completed evaluated subset of 25 annotated images and 82 plant boxes. This framing follows the spirit of dataset-oriented CEA papers: the benchmark must be understandable before the model result can be trusted.",
+        "This study presents DATA325-v0.1 as an external-greenhouse benchmark and DINOv3-DCF as the evaluation pipeline. Following the logic of Wheat3D PartNet, which first establishes data resource quality before presenting model results (Reena et al., 2025), we first document DATA325-v0.1 acquisition, annotation, distributions, and preprocessing. We then evaluate feature aggregation, statistical robustness, ROI contamination, uncertainty, and failure categories. The goal is not to claim a complete deployed height system, but to identify what frozen foundation features can and cannot solve under zero-shot external-greenhouse transfer.",
     ]:
         add_p(doc, para)
 
     doc.add_heading("2. Materials and methods", level=1)
-    doc.add_heading("2.1. Benchmark acquisition, annotation, and open release", level=2)
+    doc.add_heading("2.1. DATA325-v0.1 acquisition, annotation, and open release", level=2)
     for para in [
-        "Model development used a source-domain hand-bounding-box maize dataset; external testing used the independent DATA325 target greenhouse. DATA325 target labels were used only for final evaluation, statistical diagnostics, and visualization, not for training, hyperparameter selection, or early stopping. This defines the reported results as zero-shot external-greenhouse evaluation.",
-        "DATA325 currently contains 75 raw greenhouse photographs. The evaluated subset contains 25 completed images and 82 manually annotated plant boxes with measured plant heights and camera-height metadata. The source hand-box set contains 156 ROIs and spans 64-270 cm, while DATA325 spans 30-178 cm and contains more early-stage plants. Manual ROIs were used as an experimental control because automatic detection, tracking, and segmentation errors can confound trait-regression evaluation under agricultural clutter (Ariza-Sentis et al., 2024; Xing et al., 2023; Kirillov et al., 2023).",
+        "Model development used a source-domain hand-bounding-box maize dataset; external testing used the independent DATA325-v0.1 target greenhouse. DATA325-v0.1 target labels were used only for final evaluation, statistical diagnostics, and visualization, not for training, hyperparameter selection, or early stopping. This defines the reported results as zero-shot external-greenhouse evaluation.",
+        "DATA325-v0.1 currently contains 75 raw greenhouse photographs. The evaluated subset contains 25 completed images and 82 manually annotated plant boxes with measured plant heights and camera-height metadata; the remaining raw photographs are released as collection context rather than scored test instances. The source hand-box set contains 156 ROIs and spans 64-270 cm, while the evaluated DATA325-v0.1 subset spans 30-178 cm and contains more early-stage plants. Manual ROIs were used as an experimental control because automatic detection, tracking, and segmentation errors can confound trait-regression evaluation under agricultural clutter (Ariza-Sentis et al., 2024; Xing et al., 2023; Kirillov et al., 2023).",
         "The annotation unit is one maize plant bounding box. Each DATA325 record links an image identifier, file name, box identifier, bounding-box coordinates, measured plant height, camera-height value, predicted height, absolute error, and TTA standard deviation. This record-level design makes the benchmark inspectable: a reader can move from a table row to the raw photograph, verify the box placement, crop the ROI, and reproduce the same error calculation.",
         "The source and target sets differ in both biology and imaging context. The source hand-box data contain taller plants and two camera-height regimes, whereas DATA325 includes many shorter, sparse plants whose leaves occupy a smaller fraction of the ROI. The target images also include greenhouse-specific clutter such as pots, labels, substrate, bench structure, and shadow patterns. These differences are exactly the conditions under which random image splits are likely to overestimate deployment performance.",
         "The source split used for DCF-head checkpoint selection is a random ROI-level 80/20 split of the 156 source ROIs. It is reported for source-domain fitting transparency, not as an independent greenhouse validation result. The paper's external claim rests on DATA325, whose images and labels are held outside training and checkpoint selection.",
@@ -2410,23 +2410,23 @@ def build_manuscript(m: dict) -> Path:
     rf_summary = source_models.get("random_forest", {}).get("summary", {})
     add_p(doc, f"The source-trained morphometric baseline provides a direct agricultural-geometry comparator that does not use DATA325 labels for fitting. RidgeCV reached {fmt(ridge_summary.get('mae_cm'))} cm MAE and the small RandomForestRegressor reached {fmt(rf_summary.get('mae_cm'))} cm MAE on DATA325. The random-forest result shows that manual bbox geometry and green-mask extent can be very strong cues under this benchmark, so DINOv3-DCF should be interpreted as a feature-transfer diagnostic rather than as the sole best possible height estimator.")
     add_p(doc, f"The target-label morphometric baseline reached {fmt(morph.get('mae_cm', 0))} cm MAE under leave-one-image-out evaluation. Because this baseline uses DATA325 labels, it is a diagnostic lower-bound check, not a deployable zero-shot result. Together with the source-trained baseline, it shows that bbox geometry is important but does not remove the need to diagnose early-stage and domain-shift failures.")
-    add_named_figure(doc, "fig11_roi_contamination")
+    add_p(doc, "Detailed ROI-contamination scatter plots and morphometric-baseline panels are provided as Supplementary Fig. 5 so that the main Results section can focus on the primary model, seed, and height-bin evidence.")
 
     doc.add_heading("3.5. Real-image galleries and negative controls localize the residual problem", level=2)
     add_p(doc, "The qualitative galleries show that high-error examples are often early, sparse, background-heavy, or TTA-unstable. The rule-based error taxonomy assigned 32 boxes to early-stage sparse structure, 15 to unstable TTA prediction, 10 to bbox ambiguity, and 25 to residual cross-domain shift. These categories are intended as diagnostic labels for future benchmark development rather than as ground-truth biological classes.")
-    add_named_figure(doc, "fig11_qualitative_combined")
+    add_p(doc, "The full stage-wise and attention/error gallery is provided as Supplementary Fig. 6. Keeping the gallery supplementary avoids over-weighting qualitative panels in the main paper while preserving the traceable real-image evidence.")
     add_p(doc, f"Negative controls further narrow the interpretation. Camera-height correction changed MAE by only about 0.03 cm. Bbox geometry reached Pearson r={fmt(m['bbox_r'], 3)} and MAE {fmt(m['bbox_mae'])} cm. Feature-statistic alignment worsened MAE to 45.98 cm, and the tested DANN model reached 34.20 cm MAE while the domain classifier remained near {fmt(m['dann_final_acc'] * 100, 0)}% accuracy.")
-    add_named_figure(doc, "fig7")
+    add_p(doc, "Diagnostic negative controls are summarized in Supplementary Fig. 7. They are discussed as explanatory checks rather than as competing deployment models.")
 
     doc.add_heading("4. Discussion", level=1)
     for para in [
         "The benchmark component matters because DATA325 is an external target greenhouse with real image clutter, stage imbalance, manual annotation, and released evaluation records. This improves the credibility of the result and aligns the manuscript with CEA data-resource papers such as Wheat3D PartNet, while remaining focused on a 2D crop-height evaluation problem (Reena et al., 2025).",
-        "The 12 main figures serve distinct evidential roles: data-resource documentation, model workflow, domain shift, statistical performance, seed robustness, early-stage failure, ROI diagnostics, qualitative examples, and negative controls. Additional preprocessing and release-map panels are retained as supplementary material so the main manuscript remains interpretable without losing auditability.",
+        "The nine main figures serve distinct evidential roles: data-resource documentation, model workflow, domain shift, statistical performance, seed robustness, and early-stage failure. ROI-contamination details, qualitative galleries, negative controls, preprocessing examples, and release-map panels are retained as supplementary material so the main manuscript remains interpretable without losing auditability.",
         "The method contribution is deliberately scoped. DINOv3-DCF does not rebuild a complete agricultural robot, UAS, or stereo geometry system; instead it tests frozen foundation features under a strict ROI-level external-greenhouse setting. This distinguishes it from UAS/SfM crop-height models, stereo crop-height estimation, and protected-facility geometry pipelines (Chang et al., 2017; Xie et al., 2021; Kim et al., 2021; Jayasuriya et al., 2024).",
         "The practical lesson is two-sided. Within DINOv3-DCF, plant-focused attention pooling matters more than CLS or uniform patch averaging. Across baseline families, the source-trained random-forest morphometric baseline shows that manual bbox geometry and green-mask extent are powerful cues in this small benchmark. This does not invalidate the foundation-feature diagnostic; it clarifies that the current setting is an ROI-level transfer benchmark rather than a complete automatic height system.",
         "The corrected camera-height result deserves cautious interpretation. Its MAE is close to the attention result, but it changes the metadata assumption rather than the learned representation. It therefore does not replace attention pooling as the primary computational result. Instead, it shows that camera metadata is important enough to check carefully, while the broader diagnostic set shows that metadata correction alone does not explain the remaining early-stage errors.",
         "The failed or partial negative controls are also informative. Feature-statistic alignment worsened external performance, which argues against a simple mean-and-covariance mismatch explanation. The tested DANN configuration did not eliminate the gap even though adversarial training encouraged source-target confusion. These outcomes support the interpretation that the residual problem is structured: early maize morphology, background contamination, ROI ambiguity, and greenhouse-specific context interact with the frozen representation.",
-        "The main limitation is scale. DATA325 is intentionally presented as a diagnostic benchmark, not a complete deployment dataset. It contains 82 evaluated boxes from 25 annotated images, and the source/target split covers one external greenhouse rather than multiple locations, seasons, cultivars, cameras, and management regimes. The source-domain split used for DCF checkpoint selection is random at the ROI level, so its low MAE is evidence of source fitting rather than independent validation. The three-seed robustness experiment retrains only the DCF head on pre-extracted features and evaluates DATA325 with TTA1; it does not represent full foundation-backbone fine-tuning or a multi-site deployment trial.",
+        "The main limitation is scale. DATA325-v0.1 is intentionally presented as a diagnostic benchmark, not a complete deployment dataset. It contains 75 raw photographs, but only 82 evaluated boxes from 25 completed annotated images are used for scored external testing in this paper. The source/target split covers one external greenhouse rather than multiple locations, seasons, cultivars, cameras, and management regimes. The source-domain split used for DCF checkpoint selection is random at the ROI level, so its low MAE is evidence of source fitting rather than independent validation. The three-seed robustness experiment retrains only the DCF head on pre-extracted features and evaluates DATA325-v0.1 with TTA1; it does not represent full foundation-backbone fine-tuning or a multi-site deployment trial.",
         "A second limitation is that manual ROI annotation removes detector error from the main result. This is a necessary experimental control for the current question, but a fieldable greenhouse system will need automatic instance detection, temporal association when videos are used, box-quality rejection, and segmentation-aware normalization. The current release is designed to support those next steps by making the existing boxes, crops, predictions, and errors auditable.",
         "Future work should replace manual boxes with an automatic detector evaluated under the same leakage controls, add segmentation-guided ROI normalization using crop-specific masks or SAM-style prompts, develop plant-mask pooling and structural priors inspired by 3D phenotyping resources, and expand DATA325 across additional greenhouses and growth stages (Kirillov et al., 2023; Liu et al., 2020; Reena et al., 2025).",
     ]:
@@ -2493,10 +2493,10 @@ def build_cover_letter() -> Path:
     paragraphs = [
         "Dear Editors,",
         f"I submit the manuscript entitled \"{TITLE}\" for consideration as an Original research paper in Computers and Electronics in Agriculture.",
-        "This manuscript presents DATA325 as a reproducible external-greenhouse maize height benchmark and evaluates DINOv3-DiffCorn-Fusion (DINOv3-DCF) as a frozen-foundation-feature diagnostic pipeline. This framing matches the journal's emphasis on computational innovation in agricultural imaging rather than a simple application of an existing AI model.",
-        "The manuscript follows a data-resource logic: it first documents DATA325 acquisition, manual ROI annotation, data distributions, preprocessing, and open-release assets; it then reports zero-shot model results, bootstrap confidence intervals, paired tests, ROI contamination diagnostics, source-trained morphometric baselines, uncertainty analysis, error taxonomy, and negative controls.",
+        "This manuscript presents DATA325-v0.1 as a reproducible external-greenhouse maize height benchmark and evaluates DINOv3-DiffCorn-Fusion (DINOv3-DCF) as a frozen-foundation-feature diagnostic pipeline. This framing matches the journal's emphasis on computational innovation in agricultural imaging rather than a simple application of an existing AI model.",
+        "The manuscript follows a data-resource logic: it first documents DATA325-v0.1 acquisition, manual ROI annotation, data distributions, preprocessing, and open-release assets; it then reports zero-shot model results, bootstrap confidence intervals, paired tests, ROI contamination diagnostics, source-trained morphometric baselines, uncertainty analysis, error taxonomy, and negative controls.",
         f"The main DINOv3-DCF result is that attention-weighted pooling reduced DATA325 MAE from {fmt(old_mae)} to {fmt(attn_mae)} cm, while corrected camera-height metadata reached {fmt(corrected_mae)} cm as a diagnostic control. The best attention plus augmentation plus TTA8 variant reached {fmt(best.get('mae_cm', 29.573550898854325))} cm MAE, {fmt(best.get('rmse_cm', 38.97683219161265))} cm RMSE, and {fmt(best.get('median_abs_error_cm', 23.64422082901001))} cm median absolute error on 82 boxes. A source-trained random-forest morphometric baseline reached {fmt(rf_mae)} cm MAE, showing that manual ROI geometry is a strong cue and that the paper should be read as a benchmark and transfer diagnostic rather than a complete automatic height system.",
-        "The figure set contains 12 main figures plus supplementary figures using real DATA325/source images, true annotations, true prediction outputs, deterministic statistical plots, and code-drawn conceptual diagrams. Generative AI was not used to create or modify scientific evidence figures or the graphical abstract.",
+        "The figure set contains 9 main figures plus 7 supplementary figures using real DATA325/source images, true annotations, true prediction outputs, deterministic statistical plots, and code-drawn conceptual diagrams. Generative AI was not used to create or modify scientific evidence figures or the graphical abstract.",
         f"Data, code, predictions, diagnostics, and selected DCF checkpoints are organized for public release at {REPOSITORY_URL}. The companion data-acquisition utility is available at {CAPTURE_TOOL_URL}.",
         "This manuscript is original and is not under consideration elsewhere.",
         "Sincerely,",
@@ -2598,8 +2598,8 @@ def write_sidecars(m: dict) -> None:
             - cover_letter_cea.docx
             - supplementary_material.docx
             - graphical_abstract_non_ai.png/tif/pdf
-            - figures/Figure_1...Figure_12 as PNG/PDF
-            - supplementary_figures/Supplementary_Figure_1...Supplementary_Figure_4 as PNG/PDF
+            - figures/Figure_1...Figure_9 as PNG/PDF
+            - supplementary_figures/Supplementary_Figure_1...Supplementary_Figure_7 as PNG/PDF
             - tables/table1_ablation.csv and table2_height_bins.csv
             - tables/roi_quality_metrics.csv, error_taxonomy.csv, seed_retraining_summary.csv, and source_morphometric_baseline.csv
             - reproducibility_json/*.json
@@ -2675,6 +2675,7 @@ def main() -> None:
     build_real_image_figures()
     patch_embedded_figure_titles()
     build_diagnostic_figure()
+    move_supplementary_figures()
     m = metrics()
     write_csvs(m)
     build_graphical_abstract(m)
