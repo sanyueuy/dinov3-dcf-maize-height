@@ -11,7 +11,7 @@ authors:
     affiliation: "College of Engineering, China Agricultural University, Beijing 100083, China"
     email: "jchen@cau.edu.cn"
 version: "v0.1.0"
-date-released: "2026-05-06"
+date-released: "2026-05-07"
 license: "CC-BY-4.0"
 repository-code: "https://github.com/sanyueuy/dinov3-dcf-maize-height"
 abstract: "Open data, code, checkpoints, and reproducibility assets for zero-shot external-greenhouse maize height estimation with DINOv3-DCF."

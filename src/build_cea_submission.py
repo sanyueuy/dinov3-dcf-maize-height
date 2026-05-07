@@ -1442,16 +1442,16 @@ def add_figure(doc: Document, stem: str, caption: str, width_in: float) -> None:
 
 
 def add_display_equation(doc: Document, equation_text: str, number: int) -> None:
-    p = doc.add_paragraph(style="Els-body-text")
+    p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_before = Pt(0)
-    p.paragraph_format.space_after = Pt(2)
+    p.paragraph_format.space_after = Pt(4)
     p.paragraph_format.line_spacing = 1.0
     p.paragraph_format.tab_stops.add_tab_stop(Inches(5.9), WD_TAB_ALIGNMENT.RIGHT)
     eq_run = p.add_run(equation_text)
     eq_run.font.name = "Cambria Math"
     eq_run._element.rPr.rFonts.set(qn("w:eastAsia"), "Cambria Math")
-    eq_run.font.size = Pt(9.2)
+    eq_run.font.size = Pt(9.4)
     num_run = p.add_run(f"\tEq. ({number})")
     num_run.font.name = "Times New Roman"
     num_run._element.rPr.rFonts.set(qn("w:eastAsia"), "Times New Roman")
@@ -2752,7 +2752,7 @@ def validate_manuscript_equations(path: Path) -> None:
             for cell in row.cells:
                 parts.append(cell.text)
     text = "\n".join(parts)
-    missing = [f"Eq. ({idx})" for idx in range(1, 9) if f"Eq. ({idx})" not in text]
+    missing = [f"Eq. ({idx})" for idx in range(1, 17) if f"Eq. ({idx})" not in text]
     if missing:
         raise RuntimeError(f"{path.name}: missing display equation labels: {', '.join(missing)}")
 
@@ -2867,43 +2867,27 @@ def build_manuscript(m: dict) -> Path:
     doc.add_heading("2.3. Mathematical formulation", level=2)
     add_p(
         doc,
-        "Equations (1)-(8) define the ROI-level DINOv3-DCF computation used in this paper. The notation is intentionally tied to the released scripts: b is the manual ROI box, r is the resized crop, z_cls and z_i are DINOv3 tokens, A is final-layer attention, h_cam is camera height in centimeters, and h_hat is predicted plant height. The 64-dimensional output is a phytomer-inspired structured latent vector; only the derived height in Eq. (6) is supervised by measured plant height.",
+        "Equations (1)-(16) define the ROI-level computation, training objective, diagnostics, and statistical summaries used in this paper. The equations are inserted as editable Cambria Math text formulas, not screenshots. The notation is tied to the released scripts: b is the manual ROI box, r_b is the resized crop, z_cls and z_i are DINOv3 tokens, A is final-layer attention, h_cam is camera height in centimeters, and h_hat is predicted plant height. The 64-dimensional output is a phytomer-inspired structured latent vector; only the derived height in Eq. (8) is supervised by measured plant height.",
     )
-    add_display_equation(
-        doc,
-        "r = R(crop(I,b));  {z_cls,z_1,...,z_N}, A = F_DINO(r),  z_i in R^1024",
-        1,
-    )
-    add_display_equation(doc, "f_CLS = z_cls;  f_mean = (1/N) sum_{i=1..N} z_i", 2)
-    add_display_equation(
-        doc,
-        "a_i = (1/H) sum_{j=1..H} A_{j,cls->i};  alpha_i = a_i / sum_{k=1..N} a_k;  f_attn = sum_{i=1..N} alpha_i z_i",
-        3,
-    )
-    add_display_equation(doc, "x = [f ; h_cam/200] in R^1025", 4)
-    add_display_equation(
-        doc,
-        "p = p_min + (p_max - p_min) * sigmoid(W3 phi(BN2(W2 phi(BN1(W1 x)))))",
-        5,
-    )
-    add_display_equation(
-        doc,
-        "p = {p_{k,m}} for k=1..16 and m=1..4;  h_hat = sum_{k=1..16} p_{k,1}",
-        6,
-    )
-    add_display_equation(
-        doc,
-        "L = Huber_delta=1(h_hat,h) + lambda_prior L_prior",
-        7,
-    )
-    add_display_equation(
-        doc,
-        "MAE=(1/n)sum_i |h_i-h_hat_i|;  RMSE=sqrt((1/n)sum_i(h_i-h_hat_i)^2);  MAPE=(100/n)sum_i |(h_i-h_hat_i)/h_i|",
-        8,
-    )
+    add_display_equation(doc, "r_b = R(crop(I,b)),   {z_cls,z_1,...,z_N}, A = F_DINO(r_b),   z_i ∈ ℝ^1024", 1)
+    add_display_equation(doc, "f_CLS = z_cls,      f_mean = (1/N) ∑_(i=1)^N z_i", 2)
+    add_display_equation(doc, "a_i = (1/H) ∑_(j=1)^H A_(j,cls→i),      α_i = a_i / ∑_(k=1)^N a_k", 3)
+    add_display_equation(doc, "f_attn = ∑_(i=1)^N α_i z_i", 4)
+    add_display_equation(doc, "x = [f ; h_cam/200] ∈ ℝ^1025", 5)
+    add_display_equation(doc, "u = W_3 φ(BN_2(W_2 φ(BN_1(W_1 x))))", 6)
+    add_display_equation(doc, "p = p_min + (p_max − p_min) ⊙ σ(u),      p ∈ ℝ^64", 7)
+    add_display_equation(doc, "p = {p_(k,m)}_(k=1..16,m=1..4),      h_hat = ∑_(k=1)^16 p_(k,1)", 8)
+    add_display_equation(doc, "ℓ_δ(e) = 0.5 e^2 if |e| ≤ δ;      ℓ_δ(e) = δ(|e| − 0.5δ) otherwise,      δ = 1", 9)
+    add_display_equation(doc, "L = (1/B) ∑_(i=1)^B ℓ_1(h_hat_i − h_i) + λ_prior L_prior", 10)
+    add_display_equation(doc, "h_bar_i = (1/T) ∑_(t=1)^T h_hat_i^(t),      s_i = sqrt((1/(T−1)) ∑_(t=1)^T (h_hat_i^(t) − h_bar_i)^2)", 11)
+    add_display_equation(doc, "MAE = (1/n) ∑_(i=1)^n |h_i − h_hat_i|,      RMSE = sqrt((1/n) ∑_(i=1)^n (h_i − h_hat_i)^2)", 12)
+    add_display_equation(doc, "MAPE = (100/n) ∑_(i=1)^n |(h_i − h_hat_i)/h_i|", 13)
+    add_display_equation(doc, "ExG = 2G − R − B,      M = 1{ExG > q_0.60(ExG) or G > 1.04R and G > 1.04B}", 14)
+    add_display_equation(doc, "g = [w/W, h_b/H, wh_b/(WH), w/h_b, h_cam, h_b/h_cam, ρ_fg, v_green, c_y]", 15)
+    add_display_equation(doc, "CI_95(Q) = [q_0.025({Q*}), q_0.975({Q*})],      d_i = |e_i^A| − |e_i^B|", 16)
     add_p(
         doc,
-        "The first latent component in each group, p_{k,1}, is the internode-length-related component used for the height sum. The other three components keep the DCF head in a structured latent space but are not evaluated as annotated leaf-angle, leaf-length, or inclination traits in DATA325-v0.1.",
+        "In Eq. (8), p_(k,1) is the internode-length-related latent component used for the height sum. The other three components in each group keep the DCF head in a structured latent space but are not evaluated as annotated leaf-angle, leaf-length, or inclination traits in DATA325-v0.1. Equations (14)-(15) describe deterministic foreground and morphometric diagnostics only; they are not segmentation labels and do not alter the evidence images.",
     )
     doc.add_page_break()
     add_named_figure(doc, "fig1")
