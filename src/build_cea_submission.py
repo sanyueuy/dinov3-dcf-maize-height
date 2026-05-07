@@ -2826,6 +2826,12 @@ def validate_manuscript_equations(path: Path) -> None:
     missing = [f"Eq. ({idx})" for idx in range(1, 17) if f"Eq. ({idx})" not in text]
     if missing:
         raise RuntimeError(f"{path.name}: missing display equation labels: {', '.join(missing)}")
+    if "Mathematical formulation" in text:
+        raise RuntimeError(f"{path.name}: standalone mathematical formulation section still present")
+    if "2.4. Diagnostics and statistics" in text:
+        raise RuntimeError(f"{path.name}: diagnostics section was not renumbered to 2.3")
+    if "native Word equation objects, not screenshots" in text:
+        raise RuntimeError(f"{path.name}: internal equation-rendering note still present in manuscript")
     with zipfile.ZipFile(path) as z:
         xml = z.read("word/document.xml").decode("utf-8", errors="ignore")
     math_count = xml.count("<m:oMath")
@@ -2929,56 +2935,43 @@ def build_manuscript(m: dict) -> Path:
     add_named_figure(doc, "fig3_distribution")
 
     doc.add_heading("2.2. DINOv3-DCF model and feature aggregation", level=2)
-    for para in [
-        "DINOv3-DiffCorn-Fusion (DINOv3-DCF) receives an ROI crop and camera-height context. Each crop is resized to 224 x 224 pixels and processed by a frozen DINOv3 ViT-L backbone. The DCF head receives a 1024-dimensional visual descriptor plus one camera-height scalar and predicts a 64-dimensional phytomer-inspired structured latent output, from which plant height is computed through internode-length-related components.",
-        "The DCF head is a camera-conditioned DiffCorn-Fusion MLP. The camera-height scalar is normalized as camera height divided by 200 cm and concatenated to the 1024-dimensional DINOv3 descriptor, giving a 1025-dimensional input. The MLP uses Linear(1025, 512), BatchNorm, ReLU, Linear(512, 256), BatchNorm, ReLU, and Linear(256, 64). A sigmoid maps the raw output to [0, 1], and fixed physical ranges scale the 64 outputs to a phytomer-inspired latent range.",
-        "The 64-dimensional output is organized as 16 phytomer-inspired groups with four latent variables per group. Only the derived plant height is supervised by measured height labels; the non-height latent variables should not be interpreted as validated leaf angle, leaf length, or inclination measurements. This design constrains the regression head to a structured height-producing latent space rather than a single unconstrained scalar output.",
-        "The DINOv3 backbone remains frozen in all reported experiments. Only the DCF head is trained for the main source-domain models, except for the DANN diagnostic where an additional domain classifier is added for adversarial training. The released best attention checkpoints record an ADEL prior configuration where available (L2 prior, lambda = 0.01); the three-seed robustness run disables this prior to isolate the effect of feature aggregation over fixed feature bundles.",
-        "Three frozen-backbone aggregation modes were compared. CLS pooling uses the final CLS token. Patch-mean pooling averages all patch tokens. Attention-weighted pooling averages final-layer CLS-to-patch attention over heads, normalizes weights over patch positions, and computes a weighted patch-token descriptor. The descriptor dimension is unchanged, so the experiment isolates the aggregation choice rather than redesigning the regressor.",
-        "DCF-head training used Huber loss on derived plant height with delta = 1.0, Adam optimization with learning rate 5e-4 and weight decay 1e-4, batch size 16, 300 epochs, gradient clipping at norm 1.0, and cosine learning-rate scheduling to 1e-6. Checkpoint selection used source-domain random ROI-level test MAE. DATA325 labels were never used for checkpoint selection, so the external target set remains a held-out diagnostic benchmark.",
-        "Visual augmentation and TTA8 were applied as limited robustness interventions. Training-time augmentation perturbed color and peripheral ROI appearance. TTA8 averaged one original prediction and seven color-perturbed predictions at inference. Prediction standard deviation from TTA8 was retained for uncertainty diagnostics.",
-    ]:
-        add_p(doc, para)
-
-    doc.add_heading("2.3. Mathematical formulation", level=2)
-    add_p(
-        doc,
-        "Equations (1)-(16) define the ROI-level computation, training objective, diagnostics, and statistical summaries used in this paper. The equations are inserted as native Word equation objects, not screenshots or plain-text formulas. The notation is tied to the released scripts: b is the manual ROI box, r_b is the resized crop, z_cls and z_i are DINOv3 tokens, A is final-layer attention, h_cam is camera height in centimeters, and h_hat is predicted plant height. The 64-dimensional output is a phytomer-inspired structured latent vector; only the derived height in Eq. (8) is supervised by measured plant height.",
-    )
+    add_p(doc, "DINOv3-DiffCorn-Fusion (DINOv3-DCF) receives a manually annotated plant ROI and camera-height context. Each crop is resized to 224 x 224 pixels and processed by a frozen DINOv3 ViT-L backbone. The ROI-to-token step is written as:")
     add_display_equation(doc, "r_b = R(crop(I,b)),   {z_cls,z_1,...,z_N}, A = F_DINO(r_b),   z_i ∈ ℝ^1024", 1)
+    add_p(doc, "Here b is the manual ROI box, r_b is the resized crop, z_cls and z_i are the final DINOv3 CLS and patch tokens, and A is the final-layer attention tensor. The DINOv3 backbone remains frozen in all reported experiments; only the DCF head is trained for the main source-domain models, except for the DANN diagnostic where an additional domain classifier is added for adversarial training.")
+    add_p(doc, "Three frozen-backbone aggregation modes were compared. CLS pooling uses the final CLS token, patch-mean pooling averages all patch tokens, and attention-weighted pooling uses final-layer CLS-to-patch attention averaged across heads:")
     add_display_equation(doc, "f_CLS = z_cls,      f_mean = (1/N) ∑_(i=1)^N z_i", 2)
     add_display_equation(doc, "a_i = (1/H) ∑_(j=1)^H A_(j,cls→i),      α_i = a_i / ∑_(k=1)^N a_k", 3)
     add_display_equation(doc, "f_attn = ∑_(i=1)^N α_i z_i", 4)
+    add_p(doc, "The descriptor dimension is unchanged across pooling modes, so the experiment isolates the aggregation choice rather than redesigning the regressor. The selected visual descriptor is then concatenated with camera height normalized by 200 cm:")
     add_display_equation(doc, "x = [f ; h_cam/200] ∈ ℝ^1025", 5)
+    add_p(doc, "The camera-conditioned DCF head is a DiffCorn-Fusion MLP with Linear(1025, 512), BatchNorm, ReLU, Linear(512, 256), BatchNorm, ReLU, and Linear(256, 64). Its raw output is mapped to fixed latent ranges by a sigmoid scaling step:")
     add_display_equation(doc, "u = W_3 φ(BN_2(W_2 φ(BN_1(W_1 x))))", 6)
     add_display_equation(doc, "p = p_min + (p_max − p_min) ⊙ σ(u),      p ∈ ℝ^64", 7)
+    add_p(doc, "The 64-dimensional output is organized as 16 phytomer-inspired groups with four latent variables per group. Only the derived plant height is supervised by measured height labels; the non-height latent variables should not be interpreted as validated leaf angle, leaf length, or inclination measurements:")
     add_display_equation(doc, "p = {p_(k,m)}_(k=1..16,m=1..4),      h_hat = ∑_(k=1)^16 p_(k,1)", 8)
+    add_p(doc, "In Eq. (8), p_(k,1) is the internode-length-related latent component used for the height sum. The other three components in each group keep the DCF head in a structured latent space but are not evaluated as annotated leaf-angle, leaf-length, or inclination traits in DATA325-v0.1.")
+    add_p(doc, "DCF-head training used Huber loss on derived plant height with delta = 1.0. The released best attention checkpoints record an ADEL prior configuration where available (L2 prior, lambda = 0.01); the three-seed robustness run disables this prior to isolate the effect of feature aggregation over fixed feature bundles.")
     add_display_equation(doc, "ℓ_δ(e) = 0.5 e^2 if |e| ≤ δ;      ℓ_δ(e) = δ(|e| − 0.5δ) otherwise,      δ = 1", 9)
     add_display_equation(doc, "L = (1/B) ∑_(i=1)^B ℓ_1(h_hat_i − h_i) + λ_prior L_prior", 10)
-    add_display_equation(doc, "h_bar_i = (1/T) ∑_(t=1)^T h_hat_i^(t),      s_i = sqrt((1/(T−1)) ∑_(t=1)^T (h_hat_i^(t) − h_bar_i)^2)", 11)
-    add_display_equation(doc, "MAE = (1/n) ∑_(i=1)^n |h_i − h_hat_i|,      RMSE = sqrt((1/n) ∑_(i=1)^n (h_i − h_hat_i)^2)", 12)
-    add_display_equation(doc, "MAPE = (100/n) ∑_(i=1)^n |(h_i − h_hat_i)/h_i|", 13)
-    add_display_equation(doc, "ExG = 2G − R − B,      M = 1{ExG > q_0.60(ExG) or G > 1.04R and G > 1.04B}", 14)
-    add_display_equation(doc, "g = [w/W, h_b/H, wh_b/(WH), w/h_b, h_cam, h_b/h_cam, ρ_fg, v_green, c_y]", 15)
-    add_display_equation(doc, "CI_95(Q) = [q_0.025({Q*}), q_0.975({Q*})],      d_i = |e_i^A| − |e_i^B|", 16)
-    add_p(
-        doc,
-        "In Eq. (8), p_(k,1) is the internode-length-related latent component used for the height sum. The other three components in each group keep the DCF head in a structured latent space but are not evaluated as annotated leaf-angle, leaf-length, or inclination traits in DATA325-v0.1. Equations (14)-(15) describe deterministic foreground and morphometric diagnostics only; they are not segmentation labels and do not alter the evidence images.",
-    )
+    add_p(doc, "Optimization used Adam with learning rate 5e-4 and weight decay 1e-4, batch size 16, 300 epochs, gradient clipping at norm 1.0, and cosine learning-rate scheduling to 1e-6. Checkpoint selection used source-domain random ROI-level test MAE. DATA325 labels were never used for checkpoint selection, so the external target set remains a held-out diagnostic benchmark.")
     doc.add_page_break()
     add_named_figure(doc, "fig1")
     add_named_figure(doc, "fig6_attention_roi")
 
-    doc.add_heading("2.4. Diagnostics and statistics", level=2)
-    for para in [
-        "The diagnostic analysis uses deterministic statistics from existing prediction outputs and real DATA325 crops. Bootstrap 95% confidence intervals were computed for MAE, RMSE, and MAPE with 5000 resamples. Paired bootstrap differences and exact sign tests compared per-box absolute errors against the Attn+aug+TTA8 model. Independent DCF-head re-training was also run for CLS, patch-mean, attention, and attention+augmentation feature modes using three random seeds (11, 42, and 73), followed by DATA325 zero-shot evaluation with TTA1.",
-        "ROI contamination was quantified using non-generative color-index masks. The diagnostic mask estimates foreground fraction, background fraction, bbox fill ratio, bbox area fraction, aspect ratio, brightness, and edge contact. It is used only for error analysis and figure QA, not as a training label or a replacement for plant segmentation.",
-        "Two morphometric checks were included. First, a source-trained baseline fitted RidgeCV and a small deterministic RandomForestRegressor on source hand-bbox geometry, camera height, and ExG mask features, then evaluated those models directly on DATA325 without using DATA325 labels for training. Second, a leave-one-image-out ridge regression using DATA325 morphometric and mask features was retained as a target-label diagnostic lower bound, not as a zero-shot comparator.",
-        "The existing negative controls were retained: per-image camera-height correction, bbox geometry, attention-map geometry priors, feature-statistic alignment inspired by Deep CORAL, and a DANN-style adversarial model (Sun and Saenko, 2016; Ganin et al., 2016).",
-        "The feature-statistic alignment and DANN results are interpreted as domain-gap diagnostics rather than as the main deployment protocol. Their purpose is to test whether a simple marginal feature correction or adversarial source-target confusion is sufficient to explain the remaining error. They are therefore discussed separately from the strict frozen-feature zero-shot comparisons.",
-        "All confidence intervals and paired tests operate at the DATA325 box level. This choice is intentionally transparent for a small diagnostic benchmark: every resampled unit corresponds to a real annotated plant instance, and the same records are released in JSON and CSV form for independent recalculation.",
-    ]:
-        add_p(doc, para)
+    doc.add_heading("2.3. Diagnostics and statistics", level=2)
+    add_p(doc, "Visual augmentation and TTA8 were applied as limited robustness interventions. Training-time augmentation perturbed color and peripheral ROI appearance. TTA8 averaged one original prediction and seven color-perturbed predictions at inference, and prediction standard deviation from these T predictions was retained for uncertainty diagnostics:")
+    add_display_equation(doc, "h_bar_i = (1/T) ∑_(t=1)^T h_hat_i^(t),      s_i = sqrt((1/(T−1)) ∑_(t=1)^T (h_hat_i^(t) − h_bar_i)^2)", 11)
+    add_p(doc, "Evaluation used MAE, RMSE, and MAPE at the DATA325 box level:")
+    add_display_equation(doc, "MAE = (1/n) ∑_(i=1)^n |h_i − h_hat_i|,      RMSE = sqrt((1/n) ∑_(i=1)^n (h_i − h_hat_i)^2)", 12)
+    add_display_equation(doc, "MAPE = (100/n) ∑_(i=1)^n |(h_i − h_hat_i)/h_i|", 13)
+    add_p(doc, "ROI contamination was quantified using non-generative color-index masks. The diagnostic mask estimates foreground fraction, background fraction, bbox fill ratio, bbox area fraction, aspect ratio, brightness, and edge contact. It is used only for error analysis and figure QA, not as a training label or a replacement for plant segmentation:")
+    add_display_equation(doc, "ExG = 2G − R − B,      M = 1{ExG > q_0.60(ExG) or G > 1.04R and G > 1.04B}", 14)
+    add_p(doc, "Two morphometric checks were included. First, a source-trained baseline fitted RidgeCV and a small deterministic RandomForestRegressor on source hand-bbox geometry, camera height, and ExG mask features, then evaluated those models directly on DATA325 without using DATA325 labels for training. The source-trained feature vector was:")
+    add_display_equation(doc, "g = [w/W, h_b/H, wh_b/(WH), w/h_b, h_cam, h_b/h_cam, ρ_fg, v_green, c_y]", 15)
+    add_p(doc, "Second, a leave-one-image-out ridge regression using DATA325 morphometric and mask features was retained as a target-label diagnostic lower bound, not as a zero-shot comparator. Bootstrap 95% confidence intervals were computed for MAE, RMSE, and MAPE with 5000 resamples. Paired bootstrap differences and exact sign tests compared per-box absolute errors against the Attn+aug+TTA8 model:")
+    add_display_equation(doc, "CI_95(Q) = [q_0.025({Q*}), q_0.975({Q*})],      d_i = |e_i^A| − |e_i^B|", 16)
+    add_p(doc, "Independent DCF-head re-training was also run for CLS, patch-mean, attention, and attention+augmentation feature modes using three random seeds (11, 42, and 73), followed by DATA325 zero-shot evaluation with TTA1. The existing negative controls were retained: per-image camera-height correction, bbox geometry, attention-map geometry priors, feature-statistic alignment inspired by Deep CORAL, and a DANN-style adversarial model (Sun and Saenko, 2016; Ganin et al., 2016).")
+    add_p(doc, "The feature-statistic alignment and DANN results are interpreted as domain-gap diagnostics rather than as the main deployment protocol. Their purpose is to test whether a simple marginal feature correction or adversarial source-target confusion is sufficient to explain the remaining error. All confidence intervals and paired tests operate at the DATA325 box level, so every resampled unit corresponds to a released annotated plant instance.")
 
     doc.add_heading("3. Results", level=1)
     doc.add_heading("3.1. DATA325 exposes feature-space domain shift", level=2)
