@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 import json
 import shutil
+import subprocess
 import textwrap
 import zipfile
 from pathlib import Path
@@ -1047,8 +1048,11 @@ def build_manuscript(m: dict) -> Path:
         add_p(doc, ref)
 
     out = OUT / "manuscript_cea.docx"
+    elsevier = OUT / "manuscript_cea_elsevier_style.docx"
     doc.save(out)
-    doc.save(OUT / "manuscript_cea_elsevier_style.docx")
+    doc.save(elsevier)
+    build_up_word_equations(out)
+    build_up_word_equations(elsevier)
     return out
 
 
@@ -1442,20 +1446,87 @@ def add_figure(doc: Document, stem: str, caption: str, width_in: float) -> None:
 
 
 def add_display_equation(doc: Document, equation_text: str, number: int) -> None:
-    p = doc.add_paragraph()
+    table = doc.add_table(rows=1, cols=2)
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    table.autofit = False
+    tbl_pr = table._tbl.tblPr
+    borders = OxmlElement("w:tblBorders")
+    for edge in ("top", "left", "bottom", "right", "insideH", "insideV"):
+        elem = OxmlElement(f"w:{edge}")
+        elem.set(qn("w:val"), "nil")
+        borders.append(elem)
+    tbl_pr.append(borders)
+    eq_cell, num_cell = table.rows[0].cells
+    eq_cell.width = Inches(5.35)
+    num_cell.width = Inches(0.7)
+    for cell in (eq_cell, num_cell):
+        cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+        for paragraph in cell.paragraphs:
+            paragraph.paragraph_format.space_before = Pt(0)
+            paragraph.paragraph_format.space_after = Pt(0)
+            paragraph.paragraph_format.line_spacing = 1.0
+
+    p = eq_cell.paragraphs[0]
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_before = Pt(0)
-    p.paragraph_format.space_after = Pt(4)
-    p.paragraph_format.line_spacing = 1.0
-    p.paragraph_format.tab_stops.add_tab_stop(Inches(5.9), WD_TAB_ALIGNMENT.RIGHT)
     eq_run = p.add_run(equation_text)
     eq_run.font.name = "Cambria Math"
     eq_run._element.rPr.rFonts.set(qn("w:eastAsia"), "Cambria Math")
-    eq_run.font.size = Pt(9.4)
-    num_run = p.add_run(f"\tEq. ({number})")
+    eq_run.font.size = Pt(10)
+
+    p_num = num_cell.paragraphs[0]
+    p_num.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+    num_run = p_num.add_run(f"Eq. ({number})")
     num_run.font.name = "Times New Roman"
     num_run._element.rPr.rFonts.set(qn("w:eastAsia"), "Times New Roman")
     num_run.font.size = Pt(9.2)
+
+
+def build_up_word_equations(path: Path) -> None:
+    """Convert linear equation paragraphs into native Word Office Math objects."""
+    script = f"""
+$ErrorActionPreference = 'Stop'
+$docPath = '{str(path).replace("'", "''")}'
+$word = New-Object -ComObject Word.Application
+$word.Visible = $false
+$word.DisplayAlerts = 0
+try {{
+    $doc = $word.Documents.Open($docPath, $false, $false)
+    foreach ($para in @($doc.Paragraphs)) {{
+        $text = $para.Range.Text.Trim()
+        $fontName = $para.Range.Font.Name
+        if ($text.Length -gt 0 -and $text -notmatch 'Eq\\. \\([0-9]+\\)' -and $fontName -eq 'Cambria Math' -and $para.Range.OMaths.Count -eq 0) {{
+            $eqRange = $para.Range.Duplicate
+            while ($eqRange.End -gt $eqRange.Start) {{
+                $last = $doc.Range($eqRange.End - 1, $eqRange.End).Text
+                if ($last -eq "`r" -or ([int][char]$last[0]) -eq 7) {{
+                    $eqRange.End = $eqRange.End - 1
+                }} else {{
+                    break
+                }}
+            }}
+            if ($eqRange.Text.Trim().Length -gt 0) {{
+                [void]$doc.OMaths.Add($eqRange)
+                $doc.OMaths.Item($doc.OMaths.Count).BuildUp()
+            }}
+        }}
+    }}
+    $doc.Save()
+    $doc.Close()
+}} finally {{
+    $word.Quit()
+}}
+"""
+    result = subprocess.run(
+        ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", script],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+        timeout=180,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"Word equation build-up failed for {path.name}:\n{result.stdout}\n{result.stderr}"
+        )
 
 
 def add_cover_p(doc: Document, text: str) -> None:
@@ -2676,7 +2747,7 @@ def move_supplementary_figures() -> None:
 def add_title_page(doc: Document) -> None:
     p = doc.add_paragraph(style="Els-Title")
     p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.paragraph_format.line_spacing = 1.0
+    p.paragraph_format.line_spacing = 2.0
     p.paragraph_format.space_after = Pt(6)
     run = p.add_run(TITLE)
     run.bold = True
@@ -2691,7 +2762,7 @@ def add_title_page(doc: Document) -> None:
         f"* Corresponding author. Email: {CORRESPONDING_EMAIL}",
     ]:
         p2 = doc.add_paragraph(style="Els-Affiliation")
-        p2.paragraph_format.line_spacing = 1.0
+        p2.paragraph_format.line_spacing = 2.0
         p2.paragraph_format.space_after = Pt(0)
         r = p2.add_run(line)
         r.font.name = "Times New Roman"
@@ -2755,6 +2826,11 @@ def validate_manuscript_equations(path: Path) -> None:
     missing = [f"Eq. ({idx})" for idx in range(1, 17) if f"Eq. ({idx})" not in text]
     if missing:
         raise RuntimeError(f"{path.name}: missing display equation labels: {', '.join(missing)}")
+    with zipfile.ZipFile(path) as z:
+        xml = z.read("word/document.xml").decode("utf-8", errors="ignore")
+    math_count = xml.count("<m:oMath")
+    if math_count < 16:
+        raise RuntimeError(f"{path.name}: expected native Word math objects, found {math_count}")
 
 
 def revision_refs() -> list[str]:
@@ -2867,7 +2943,7 @@ def build_manuscript(m: dict) -> Path:
     doc.add_heading("2.3. Mathematical formulation", level=2)
     add_p(
         doc,
-        "Equations (1)-(16) define the ROI-level computation, training objective, diagnostics, and statistical summaries used in this paper. The equations are inserted as editable Cambria Math text formulas, not screenshots. The notation is tied to the released scripts: b is the manual ROI box, r_b is the resized crop, z_cls and z_i are DINOv3 tokens, A is final-layer attention, h_cam is camera height in centimeters, and h_hat is predicted plant height. The 64-dimensional output is a phytomer-inspired structured latent vector; only the derived height in Eq. (8) is supervised by measured plant height.",
+        "Equations (1)-(16) define the ROI-level computation, training objective, diagnostics, and statistical summaries used in this paper. The equations are inserted as native Word equation objects, not screenshots or plain-text formulas. The notation is tied to the released scripts: b is the manual ROI box, r_b is the resized crop, z_cls and z_i are DINOv3 tokens, A is final-layer attention, h_cam is camera height in centimeters, and h_hat is predicted plant height. The 64-dimensional output is a phytomer-inspired structured latent vector; only the derived height in Eq. (8) is supervised by measured plant height.",
     )
     add_display_equation(doc, "r_b = R(crop(I,b)),   {z_cls,z_1,...,z_N}, A = F_DINO(r_b),   z_i ∈ ℝ^1024", 1)
     add_display_equation(doc, "f_CLS = z_cls,      f_mean = (1/N) ∑_(i=1)^N z_i", 2)
@@ -2987,8 +3063,11 @@ def build_manuscript(m: dict) -> Path:
         add_p(doc, ref)
 
     out = OUT / "manuscript_cea.docx"
+    elsevier = OUT / "manuscript_cea_elsevier_style.docx"
     doc.save(out)
-    doc.save(OUT / "manuscript_cea_elsevier_style.docx")
+    doc.save(elsevier)
+    build_up_word_equations(out)
+    build_up_word_equations(elsevier)
     return out
 
 
